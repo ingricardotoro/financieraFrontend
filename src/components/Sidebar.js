@@ -1,8 +1,11 @@
 import React from 'react'
-
+import {Link} from 'react-router-dom'
 function Sidebar() {
     return (
         
+        // <div className="pcoded-main-container">
+        <div className="pcoded-wrapper">
+
         <nav className="pcoded-navbar" >
                     <div className="sidebar_toggle"><a href="#"><i className="icon-close icons"></i></a></div>
                     <div className="pcoded-inner-navbar main-menu" >
@@ -36,11 +39,11 @@ function Sidebar() {
 
                                 <ul className="pcoded-submenu">
                                     <li className="">
-                                        <a href="index.html">
+                                        <Link  to="clientes">
                                             <span className="pcoded-micon"><i className="ti-angle-right"></i></span>
                                             <span className="pcoded-mtext" data-i18n="nav.dash.default">Ver Clientes</span>
                                             <span className="pcoded-mcaret"></span>
-                                        </a>
+                                        </Link>
                                     </li>
                                     <li className=" ">
                                         <a href="dashboard-ecommerce.html">
@@ -165,7 +168,11 @@ function Sidebar() {
                           </ul>
 
                       </div>
-                  </nav>
+        
+        </nav>
+
+        </div>
+        // </div>
     )
 }
 

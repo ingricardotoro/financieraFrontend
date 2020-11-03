@@ -7,10 +7,14 @@ function Navbar() {
     }
 
     return (
-   
+
+      <div id="pcoded" className="pcoded">
+      <div className="pcoded-overlay-box"></div>
+        <div className="pcoded-container navbar-wrapper">
+          
        
         <nav className="navbar header-navbar pcoded-header">
-         <div className="navbar-wrapper">
+           <div className="navbar-wrapper">
           <div className="navbar-logo">
             <a className="mobile-menu" id="mobile-collapse" href="#!">
               <i className="ti-menu" />
@@ -114,9 +118,12 @@ function Navbar() {
               {/* search end */}
             </div>
           </div>        
-        </div>
+          </div>
+        
         </nav>
       
+        </div>
+        </div>
     )
 }
 

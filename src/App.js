@@ -1,32 +1,42 @@
-
-import './App.css';
+import React from "react";
+import {BrowserRouter as Router, Route} from "react-router-dom"
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
+import './App.css';
+
+import ListCustomers from './components/customers/ListCustomers'
+import Inicio from "./components/Inicio";
 
 function App() {
   return (
     <div className="App">
 
-       <div id="pcoded" className="pcoded">
-        <div className="pcoded-overlay-box"></div>
-          <div className="pcoded-container navbar-wrapper">
-              
+      <Router>
+
+      
               {/**************MODULO NAVBAR */}
               <Navbar />
               {/**********FIN MODULO NAVBAR */}
 
-          </div>
-        </div>
+          
 
-        <div className="pcoded-main-container">
-            <div className="pcoded-wrapper">
+       
 
               {/**************MODULO SIDEBAR */}
               <Sidebar />
               {/**********FIN MODULO SIDEBAR */}
 
-            </div>
-        </div>
+            
+
+
+        
+
+
+        <Route exact path="/inicio" component={Inicio} />
+        <Route exact path="/clientes" component={ListCustomers} />
+
+      </Router>
+
 
         <div id="styleSelector">
 
