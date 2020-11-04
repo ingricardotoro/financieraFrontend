@@ -114,32 +114,13 @@ function ListCustomers() {
                         {/* Linked in card end */}
                         {/* Google-plus card start */}
                         <div className=" col-sm-12 col-md-3 col-xl-2">
-                            <button className="col-sm-12 mt-3 btn btn-success btn-round f-right d-inline-flex">
+                            <button className="col-sm-12 mt-3 btn btn-success btn-round f-right d-inline-flex" data-toggle="modal" data-target="#modalNewCustomer">
                                 {<AddCircleIcon />}     
                                 Nuevo Cliente  
                             </button>
                         </div>
 
                     </div>
-
-                    
-                    <div className="row">
-                        <div className="col-md-8 col-sm-12">
-                        </div>
-                        <div className="col-md-2 col-sm-12">
-                             
-                        </div>
-                        <div className="col-md-2 col-sm-12">
-                             
-                        </div>
-                    </div>
-                        
-                        <div className="form-group" >
-                        
-                            <div className="col-sm-12 d-flex">
-                            
-                            </div>
-                        </div>
                            
                     </div>
 
@@ -240,6 +221,8 @@ function ListCustomers() {
                             </tr>
                             </tbody>
                         </table>
+                       
+
                         </div>
                     </div>
                     </div>
@@ -254,6 +237,174 @@ function ListCustomers() {
             
             <div id="styleSelector">
             </div>
+
+                {/* Modal */}
+                <div className="modal fade" id="modalNewCustomer" tabIndex={-1} role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog modal-lg modal-dialog-centered " role="document">
+                    <div className="modal-content">
+                    <div className="modal-header">
+                        <h5 className="modal-title" id="exampleModalLabel">Crear Nuevo Cliente  <strong>Código: C-105</strong></h5>
+                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+
+                    <div className="modal-body">
+                        <div className="row">
+                            {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
+                            <div className="col-sm-12 col-md-6">
+                                <div className="input-group">
+                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-ui-edit"></i></span>
+                                    <input type="text" className="form-control" placeholder="Ingrese Nombres" />
+                                </div>
+                            </div>
+
+                            <div className="col-sm-12 col-md-6">
+                                <div className="input-group">
+                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-ui-edit"></i></span>
+                                    <input type="text" className="form-control" placeholder="Ingrese Apellidos"/>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                        <div className="row">
+                            {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
+                            <div className="col-sm-12 col-md-6">
+                                <div className="input-group">
+                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-ui-edit"></i></span>
+                                    <input type="text" className="form-control" placeholder="Identidad: 0801199916151" />
+                                </div>
+                            </div>
+
+                            <div className="col-sm-12 col-md-6">
+                                <div className="input-group">
+                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-ui-edit"></i></span>
+                                    <input type="text" className="form-control" placeholder="RTN. 08011999161512" />
+                                </div>
+                            </div>
+                            
+                        </div>
+
+
+                        <div className="row">
+                            {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
+                            <div className="col-sm-12 col-md-6">
+                                <div className="input-group">
+                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-iphone"></i></span>
+                                    <input type="text" className="form-control" placeholder="Teléfono-1"/>
+                                </div>
+                            </div>
+
+                            <div className="col-sm-12 col-md-6">
+                                <div className="input-group">
+                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-iphone"></i></span>
+                                    <input type="text" className="form-control" placeholder="Teléfono-2"/>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+
+                        <div className="row">
+                            {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
+                            <div className="col-sm-12 col-md-6">
+                                <div className="input-group">
+                                    <span className="input-group-addon" id="basic-addon1">@</span>
+                                    <input type="text" className="form-control" placeholder="Email-1"/>
+                                </div>
+                            </div>
+
+                            <div className="col-sm-12 col-md-6">
+                                <div className="input-group">
+                                    <span className="input-group-addon" id="basic-addon1">@</span>
+                                    <input type="text" className="form-control" placeholder="Email-2" />
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                        <hr />
+
+                        <div className="row">
+                            {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
+                            <div className="col-sm-12 col-md-6">
+                                <div className="input-group">
+                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-location-pin"></i></span>
+                                    <select name="select" class="form-control col-md-12"> 
+                                        <option value="opt1">Selecione Ciudad</option>
+                                        <option value="opt2">CIUDAD 2</option>
+                                        <option value="opt3">CIUDAD 3</option>
+                                        <option value="opt4">CIUDAD 4</option>
+                                        <option value="opt5">CIUDAD 5</option>
+                                        <option value="opt6">CIUDAD 6</option>
+                                        <option value="opt7">CIUDAD 7</option>
+                                        <option value="opt8">CIUDAD 8</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div className="col-sm-12 col-md-6">
+                                <div className="input-group">
+                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-ui-calendar mr-1"></i> Nacimiento</span>
+                                    <input class="form-control" type="date"/>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+
+
+                        <div className="row">
+                            {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
+                            <div className="col-sm-12 col-md-6">
+                                <div className="input-group">
+                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-location-arrow"></i></span>
+                                    <textarea class="form-control" id="exampleTextarea" rows="5" placeholder="Dirección completa"></textarea>  
+                                </div>
+                            </div>
+
+                            <div className="col-sm-12 col-md-6">
+                                <div className="input-group">
+                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-fix-tools "></i></span>
+                                    <input type="text" className="form-control" placeholder="Profesión" />
+                                </div>
+                                <div className="input-group">
+                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-group-students"></i></span>
+                                    <select name="select" class="form-control col-md-12"> 
+                                        <option value="opt1">Selecione Género</option>
+                                        <option value="opt2">Femenino</option>
+                                        <option value="opt3">Masculino</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                
+                        </div>
+
+
+                        <div className="row">
+                            {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
+                            <div className="col-sm-12 col-md-12">
+                                <div className="input-group">
+                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-paper-clip mr-1"></i>Fotografia </span>
+                                    <input type="file" class="form-control"></input>
+                                </div>
+                            </div>
+
+                
+                        </div>
+
+                    </div>
+
+                    <div className="modal-footer">
+                        <button type="button" className="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="button" className="btn btn-primary">Guardar</button>
+                    </div>
+                    </div>
+                </div>
+                </div>
+
         
         </div> 
            
