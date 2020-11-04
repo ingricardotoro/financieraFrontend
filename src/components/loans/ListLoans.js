@@ -7,7 +7,7 @@ import NotInterestedIcon from '@material-ui/icons/NotInterested';
 
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 
-function ListCustomers() {
+function ListLoans() {
 
     const classes = useStyles();
 
@@ -17,24 +17,23 @@ function ListCustomers() {
         <div class="pcoded-inner-content">
 
         
-
             {/* Main-body start */}
             <div className="main-body">
                 <div className="page-wrapper">
                 {/* Page-header start */}
                 <div className="page-header mt-5">
                     <div className="page-header-title">
-                    <h4>Gestión de Clientes del Sistema</h4>
-                    <span>Módulo para gestionar los clientes registrados</span>
+                    <h4>Gestión de Prestamos del Sistema</h4>
+                    <span>Módulo para gestionar los préstamos registrados</span>
                     </div>
                     <div className="page-header-breadcrumb">
                     <ul className="breadcrumb-title">
                         <li className="breadcrumb-item">
                         <a href="index.html">
-                            <i className="icofont icofont-user" />
+                            <i className="icofont icofont-money" />
                         </a>
                         </li>
-                        <li className="breadcrumb-item">Módulo de Clientes
+                        <li className="breadcrumb-item">Módulo de Préstamos
                         </li>
                         
                     </ul>
@@ -270,4 +269,4 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
 
-export default ListCustomers
+export default ListLoans

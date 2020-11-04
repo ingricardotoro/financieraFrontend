@@ -17,6 +17,13 @@ function Sidebar() {
                             <li className="">
                                 <a href="index.html">
                                     <span className="pcoded-micon"><i className="ti-angle-right"></i></span>
+                                    <span className="pcoded-mtext" data-i18n="nav.dash.default"></span>
+                                    <span className="pcoded-mcaret"></span>
+                                </a>
+                            </li>
+                            <li className="">
+                                <a href="index.html">
+                                    <span className="pcoded-micon"><i className="ti-angle-right"></i></span>
                                     <span className="pcoded-mtext" data-i18n="nav.dash.default">Dashboard</span>
                                     <span className="pcoded-mcaret"></span>
                                 </a>
@@ -66,11 +73,11 @@ function Sidebar() {
 
                                 <ul className="pcoded-submenu">
                                     <li className="">
-                                        <a href="index.html">
+                                        <Link to="/solicitudes" >
                                             <span className="pcoded-micon"><i className="ti-angle-right"></i></span>
                                             <span className="pcoded-mtext" data-i18n="nav.dash.default">Ver Solicitudes</span>
                                             <span className="pcoded-mcaret"></span>
-                                        </a>
+                                        </Link>
                                     </li>
                                     <li className=" ">
                                         <a href="dashboard-ecommerce.html">
@@ -84,11 +91,11 @@ function Sidebar() {
                             </li>
 
                             <li className="pcoded-hasmenu">
-                                <a href="#">
+                                <Link to="/prestamos" >
                                     <span className="pcoded-micon"><i className="ti-money"></i></span>
                                     <span className="pcoded-mtext" data-i18n="nav.dash.main">Prestamos</span>
                                     <span className="pcoded-mcaret"></span>
-                                </a>
+                                </Link>
 
                                 <ul className="pcoded-submenu">
                                     <li className="">
