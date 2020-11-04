@@ -38,13 +38,13 @@ function Sidebar() {
                             </li>
 
                             <li className="pcoded-hasmenu">
-                                <a href="#">
+                                <Link  to="clientes">
                                     <span className="pcoded-micon"><i className="ti-user"></i></span>
                                     <span className="pcoded-mtext" data-i18n="nav.dash.main">Clientes</span>
                                     <span className="pcoded-mcaret"></span>
-                                </a>
+                                </Link>
 
-                                <ul className="pcoded-submenu">
+                               {/*  <ul className="pcoded-submenu">
                                     <li className="">
                                         <Link  to="clientes">
                                             <span className="pcoded-micon"><i className="ti-angle-right"></i></span>
@@ -52,26 +52,19 @@ function Sidebar() {
                                             <span className="pcoded-mcaret"></span>
                                         </Link>
                                     </li>
-                                    <li className=" ">
-                                        <a href="dashboard-ecommerce.html">
-                                            <span className="pcoded-micon"><i className="ti-angle-right"></i></span>
-                                            <span className="pcoded-mtext" data-i18n="nav.dash.ecommerce">Nuevo Cliente</span>
-                                            <span className="pcoded-mcaret"></span>
-                                        </a>
-                                    </li>
-                                </ul>
+                                </ul> */}
 
                             </li>
 
 
                             <li className="pcoded-hasmenu">
-                                <a href="#">
+                                <Link to="/solicitudes" >
                                     <span className="pcoded-micon"><i className="ti-pencil-alt"></i></span>
                                     <span className="pcoded-mtext" data-i18n="nav.dash.main">Solicitudes</span>
                                     <span className="pcoded-mcaret"></span>
-                                </a>
+                                </Link>
 
-                                <ul className="pcoded-submenu">
+                                {/* <ul className="pcoded-submenu">
                                     <li className="">
                                         <Link to="/solicitudes" >
                                             <span className="pcoded-micon"><i className="ti-angle-right"></i></span>
@@ -79,14 +72,7 @@ function Sidebar() {
                                             <span className="pcoded-mcaret"></span>
                                         </Link>
                                     </li>
-                                    <li className=" ">
-                                        <a href="dashboard-ecommerce.html">
-                                            <span className="pcoded-micon"><i className="ti-angle-right"></i></span>
-                                            <span className="pcoded-mtext" data-i18n="nav.dash.ecommerce">Nueva Solicitud</span>
-                                            <span className="pcoded-mcaret"></span>
-                                        </a>
-                                    </li>
-                                </ul>
+                                </ul> */}
 
                             </li>
 

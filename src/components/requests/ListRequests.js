@@ -3,11 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import SearchIcon from '@material-ui/icons/Search';
 import InfoIcon from '@material-ui/icons/Info';
-import NotInterestedIcon from '@material-ui/icons/NotInterested';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
-import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
-
 import BlockIcon from '@material-ui/icons/Block';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 
@@ -118,7 +115,7 @@ function ListRequests() {
                         {/* Linked in card end */}
                         {/* Google-plus card start */}
                         <div className=" col-sm-12 col-md-3 col-xl-2">
-                            <button className="col-sm-12 mt-3 btn btn-success btn-round f-right d-inline-flex">
+                            <button className="col-sm-12 mt-3 btn btn-success btn-round f-right d-inline-flex"  data-toggle="modal" data-target="#modalNewRequest">
                                 {<AddCircleIcon />}     
                                 Nueva Solicitud
                             </button>
@@ -243,6 +240,200 @@ function ListRequests() {
                 </div>
             </div>
             {/* Main-body end */}
+
+            {/* Modal */}
+            <div className="modal fade" id="modalNewRequest" tabIndex={-1} role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div className="modal-dialog modal-lg modal-dialog-centered " role="document">
+                        <div className="modal-content">
+                    <div className="modal-header">
+                        <h5 className="modal-title" id="exampleModalLabel">Crear Nueva Solicitud  <strong>Código: S-105</strong></h5>
+                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+
+                    <div className="modal-body">
+                        <div className="row">
+                            {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
+                            <div className="col-sm-12 col-md-6">
+                                <div className="input-group">
+                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-user"></i></span>
+                                    <input type="text" className="form-control" placeholder="Ingrese Nombre de Cliente" />
+                                </div>
+                            </div>
+
+                            <div className="col-sm-12 col-md-6">
+                                <div className="input-group">
+                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-ui-edit"></i></span>
+                                    <input disabled={true} type="text" className="form-control" placeholder="Código de Cliente"/>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                        <div className="row">
+                            {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
+                            <div className="col-sm-12 col-md-6">
+                            <label htmlFor="monto">Tipo de Préstamo</label>
+                                <div className="input-group">
+                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-money"></i></span>
+                                    <select name="select" class="form-control col-md-12"> 
+                                        <option value="opt1">Tipo de Préstamos</option>
+                                        <option value="opt2">Amortizacion</option>
+                                        <option value="opt2">Interes Simple</option>
+                                        <option value="opt3">Interes Acumulado</option>
+                                        <option value="opt4">Préstamos Tipo B</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div className="col-sm-12 col-md-6">
+                                <label htmlFor="monto">Monto Solicitado</label>
+                                <div className="input-group">
+                                    <span className="input-group-addon" id="basic-addon1">LPS.</span>
+                                    <input id="monto" name="monto" type="text" className="form-control" placeholder="Ingresar el Monto" />
+                                </div>
+                            </div>
+                            
+                        </div>
+
+
+                        <div className="row">
+                            {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
+                            <div className="col-sm-12 col-md-6">
+                                <div className="input-group">
+                                    <span className="input-group-addon" id="basic-addon1">%</span>
+                                    <input type="text" className="form-control" placeholder="Tasa de Interes en %"/>
+                                </div>         
+                            </div>
+
+                            <div className="col-sm-12 col-md-6">
+                                <div className="input-group">
+                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-hour-glass"></i></span>
+                                    <select name="select" class="form-control col-md-12"> 
+                                        <option value="opt1">Frecuencia de Pago</option>
+                                        <option value="opt2">Semanal</option>
+                                        <option value="opt2">Quincenal</option>
+                                        <option value="opt3">Mensual</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+
+                        <div className="row">
+                            {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
+                            <div className="col-sm-12 col-md-6">
+                            <label htmlFor="dateInicio">Número de Cuotas</label> 
+                                <div className="input-group">
+                                    <span className="input-group-addon"  id="basic-addon1"><i class="icofont icofont-listing-number"></i></span>
+                                    <input type="text" className="form-control" placeholder="Cantidad de Cuotas"/>
+                                </div>
+                            </div>
+
+                            <div className="col-sm-12 col-md-6">
+                            <label htmlFor="dateInicio">Valor de cada cuota</label>
+                                <div className="input-group">
+                                    <span className="input-group-addon" id="basic-addon1">LPS.</span>
+                                    <input type="text" className="form-control" placeholder="Valor de cada cuota" />
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                        <hr />
+
+                        <div className="row">
+                            
+                            <div className="col-sm-12 col-md-6">
+                                <label htmlFor="dateInicio">Fecha de Inicio</label> 
+                                <div className="input-group">
+                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-ui-calendar mr-1"></i></span>
+                                    <input class="form-control" type="date"/>
+                                </div>
+                            </div>
+
+                            <div className="col-sm-12 col-md-6">
+                                <label htmlFor="dateInicio">Total de Interes</label>
+                                <div className="input-group">
+                                    <span className="input-group-addon" id="basic-addon1">LPS.</span>
+                                    <input id="totalInteres" name="totalInteres"  type="text" className="form-control" placeholder="Total de Interes" />
+                                     
+                                </div>
+                            </div>
+                            
+                        </div>
+
+
+
+                        <div className="row">
+                            {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
+                            <div className="col-sm-12 col-md-6">
+                                <div className="input-group">
+                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-ui-edit"></i></span>
+                                    <textarea class="form-control" id="exampleTextarea" rows="6" placeholder="Observaciones"></textarea>  
+                                </div>
+                            </div>
+
+                            <div className="col-sm-12 col-md-6">
+                                <label htmlFor="totalInteres">Costo de Cierre y Sucursal</label>
+                                <div className="input-group">
+                                    <span className="input-group-addon" id="basic-addon1">LPS.</span>
+                                    <input id="costoCierre" className="form-control" name="costoCierre" type="text" placeholder="Costo de Cierre 4%" />
+                                </div>
+                                <div className="input-group">
+                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-bank-alt"></i> </span> 
+                                    <select name="select" class="form-control col-md-12"> 
+                                        <option value="opt1">Seleccione Sucursal</option>
+                                        <option value="opt2">Central</option>  
+                                        <option value="opt2">Valle Alto</option>
+                                    </select>   
+                                </div>
+                            </div>
+                
+                        </div>
+
+                        <div className="row">
+
+                            <div className="col-sm-12 col-md-6">
+                                <label htmlFor="totalInteres">Nombre y Teléfono de Referencia</label>
+                                <div className="input-group">
+                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-user"></i></span>
+                                    <input id="referecia1" className="form-control" name="referencia1" type="text" placeholder="Nombre de Referencia" />
+                                </div>
+                                <div className="input-group">
+                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-iphone"></i> </span> 
+                                    <input id="telefonoRef1" className="form-control" name="telefonoRef1" type="text" placeholder="Teléfono de Referencia" />
+                                </div>
+                            </div>
+
+                            <div className="col-sm-12 col-md-6">
+                                <label htmlFor="totalInteres">Nombre y Teléfono de Referencia</label>
+                                <div className="input-group">
+                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-user"></i></span>
+                                    <input id="referencia2" className="form-control" name="referencia2" type="text" placeholder="Nombre de Referencia" />
+                                </div>
+                                <div className="input-group">
+                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-iphone"></i></span> 
+                                    <input id="telefonoRef1" className="form-control" name="telefonoRef1" type="text" placeholder="Teléfono de Referencia" />
+                                </div>
+                            </div>
+                
+                        </div>
+
+
+
+                    </div>
+
+                    <div className="modal-footer">
+                        <button type="button" className="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="button" className="btn btn-primary">Guardar</button>
+                    </div>
+                    </div>
+                    </div>
+                </div>
+                 {/* END Modal */}
 
             
             <div id="styleSelector">
