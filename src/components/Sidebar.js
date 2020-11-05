@@ -7,7 +7,7 @@ function Sidebar() {
         <div className="pcoded-wrapper">
 
         <nav className="pcoded-navbar" >
-                    <div className="sidebar_toggle"><a href="#"><i className="icon-close icons"></i></a></div>
+                    <div className="sidebar_toggle"><a  href="index.js"><i className="icon-close icons"></i></a></div>
                     <div className="pcoded-inner-navbar main-menu" >
 
                         <div className="pcoded-navigatio-lavel" data-i18n="nav.category.navigation" >Menu</div>
@@ -104,7 +104,7 @@ function Sidebar() {
 
                             
                             <li className="pcoded-hasmenu">
-                                <a href="#">
+                                <a  href="/clientes">
                                     <span className="pcoded-micon"><i className="ti-exchange-vertical"></i></span>
                                     <span className="pcoded-mtext" data-i18n="nav.dash.main">Movimientos</span>
                                     <span className="pcoded-mcaret"></span>
@@ -131,7 +131,7 @@ function Sidebar() {
                             </li> 
 
                             <li className="pcoded-hasmenu">
-                                <a href="#">
+                                <a  href="/users">
                                     <span className="pcoded-micon"><i className="ti-panel"></i></span>
                                     <span className="pcoded-mtext" data-i18n="nav.dash.main">Usuarios</span>
                                     <span className="pcoded-mcaret"></span>
