@@ -24,7 +24,7 @@ function App() {
               <Sidebar />
               {/**********FIN MODULO SIDEBAR */}
 
-        <Route exact path="/inicio" component={Inicio} />
+        <Route exact path="/" component={Inicio} />
         <Route exact path="/clientes" component={ListCustomers} />
         <Route exact path="/solicitudes" component={ListRequests} />
         <Route exact path="/prestamos" component={ListLoans} />

@@ -15,17 +15,17 @@ function Navbar() {
        
         <nav className="navbar header-navbar pcoded-header">
            <div className="navbar-wrapper">
-          <div className="navbar-logo">
-            <a className="mobile-menu" id="mobile-collapse" href="/clientes">
+          <div className="navbar-logo" style={{backgroundColor:"white"}}>
+            <a className="mobile-menu" id="mobile-collapse" href="/">
               <i className="ti-menu" />
             </a>
-            <a className="mobile-search morphsearch-search"  href="/clientes">
+            <a className="mobile-search morphsearch-search"  href="/">
               <i className="ti-search" />
             </a>
-            <a href="index.html">
-              <img className="img-fluid" src="assets/images/logo.png" alt="Theme-Logo" />
+            <a href="/">
+              <img className="img-fluid" style={{height:"50px"}} src="assets/images/logo.png" alt="Theme-Logo" />
             </a>
-            <a className="mobile-options"  href="/clientes">
+            <a className="mobile-options"  href="/">
               <i className="ti-more" />
             </a>
           </div>
@@ -33,16 +33,16 @@ function Navbar() {
             <div>
               <ul className="nav-left">
                 <li>
-                  <div className="sidebar_toggle"><a  href="/clientes"><i className="ti-menu" /></a></div>
+                  <div className="sidebar_toggle"><a  href="/"><i className="ti-menu" /></a></div>
                 </li>
                 <li>
-                  <a className="main-search morphsearch-search"  href="/clientes">
+                  <a className="main-search morphsearch-search"  href="/">
                     {/* themify icon */}
                     <i className="ti-search" />
                   </a>
                 </li>
                 <li>
-                  <a  onClick={toggleFullScreen}  href="/clientes"> 
+                  <a  onClick={toggleFullScreen}  href="/"> 
                     <i className="ti-fullscreen" />
                   </a>
                 </li>
@@ -64,7 +64,7 @@ function Navbar() {
                     </li>
                    
                     <li>
-                      <a href="#!">
+                      <a href="/">
                         <i className="ti-layout-sidebar-left" /> Salir
                       </a>
                     </li>

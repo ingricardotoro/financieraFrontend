@@ -16,14 +16,14 @@ function Sidebar() {
 
                             <li className="">
                                 <a href="index.html">
-                                    <span className="pcoded-micon"><i className="ti-angle-right"></i></span>
+                                    
                                     <span className="pcoded-mtext" data-i18n="nav.dash.default"></span>
                                     <span className="pcoded-mcaret"></span>
                                 </a>
                             </li>
                             <li className="">
                                 <a href="index.html">
-                                    <span className="pcoded-micon"><i className="ti-angle-right"></i></span>
+                                    <span className="pcoded-micon"><i className="ti-panel"></i></span>
                                     <span className="pcoded-mtext" data-i18n="nav.dash.default">Dashboard</span>
                                     <span className="pcoded-mcaret"></span>
                                 </a>
