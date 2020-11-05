@@ -1,5 +1,6 @@
 import React from 'react'
-import { makeStyles } from '@material-ui/core/styles';
+import axios from 'axios'
+//import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import SearchIcon from '@material-ui/icons/Search';
 import InfoIcon from '@material-ui/icons/Info';
@@ -7,6 +8,7 @@ import NotInterestedIcon from '@material-ui/icons/NotInterested';
 
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import { useForm } from '../../hooks/useForm';
+import { URL_API } from '../../config/config';
 
 function ListCustomers() {
 
@@ -30,9 +32,29 @@ function ListCustomers() {
 
     const { codeCustomer,name,lastname,identidad,gender,rtn,fec_nac,phone1,phone2,email1,email2,profesion,city,location,photo } = formValues
 
-    const handleSubmit = ()=>{
-        e.preventDefault()
+    const handleSubmit = async(e)=>{
         
+        e.preventDefault()
+
+        await axios.post(URL_API+'/customers',{
+            codeCustomer,
+            name,
+            lastname,
+            identidad,
+            gender,
+            rtn,
+            fec_nac,
+            phone1,
+            phone2,
+            email1,
+            email2,
+            profesion,
+            city,
+            location,
+            photo
+        })
+
+        window.location.href ='/clientes'
     }
     return (
         <div class="pcoded-content">
@@ -271,6 +293,7 @@ function ListCustomers() {
                     </div>
 
                     <div className="modal-body">
+                        <form onSubmit={handleSubmit}>
                         <div className="row">
                             <input value={"C-110"} onChange={handleInputChange} name="codeCustomer" id="codeCustomer" type="hidden" />
                             {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
@@ -382,7 +405,7 @@ function ListCustomers() {
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">
                                     <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-location-arrow"></i></span>
-                                    <textarea onChange={handleInputChange}  name="location" id="location" class="form-control" id="exampleTextarea" rows="5" placeholder="Dirección completa"></textarea>  
+                                    <textarea onChange={handleInputChange}  name="location" id="location" class="form-control" rows="5" placeholder="Dirección completa"></textarea>  
                                 </div>
                             </div>
 
@@ -416,12 +439,12 @@ function ListCustomers() {
 
                 
                         </div>
-
+                        </form>
                     </div>
 
                     <div className="modal-footer">
                         <button type="button" className="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="button" className="btn btn-primary">Guardar</button>
+                        <button type="submit" onClick={handleSubmit} className="btn btn-primary">Guardar</button>
                     </div>
                     </div>
                     </div>
@@ -436,12 +459,12 @@ function ListCustomers() {
     )
 }
 
-const useStyles = makeStyles((theme) => ({
+/*const useStyles = makeStyles((theme) => ({
     button: {
       margin: theme.spacing(1),
       color: "#fff",
       marginRight: "5px"
     },
-  }));
+  }));*/
 
 export default ListCustomers

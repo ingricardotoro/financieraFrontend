@@ -1,5 +1,5 @@
 import React from 'react'
-import { makeStyles } from '@material-ui/core/styles';
+//import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import SearchIcon from '@material-ui/icons/Search';
 import InfoIcon from '@material-ui/icons/Info';
@@ -10,14 +10,10 @@ import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 
 function ListRequests() {
 
-    const classes = useStyles();
-
     return (
         <div class="pcoded-content">
 
         <div class="pcoded-inner-content">
-
-        
 
             {/* Main-body start */}
             <div className="main-body">
@@ -446,12 +442,12 @@ function ListRequests() {
     )
 }
 
-const useStyles = makeStyles((theme) => ({
+/*const useStyles = makeStyles((theme) => ({
     button: {
       margin: theme.spacing(1),
       color: "#fff",
       marginRight: "5px"
     },
-  }));
+  }));*/
 
 export default ListRequests
