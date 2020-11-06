@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import axios from 'axios';
 //import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import SearchIcon from '@material-ui/icons/Search';
@@ -7,8 +8,57 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import BlockIcon from '@material-ui/icons/Block';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
+import { useForm } from '../../hooks/useForm';
+import { URL_API } from '../../config/config';
 
 function ListRequests() {
+
+    const [formValues, handleInputChange] = useForm({
+
+        customerId:'5fa34c1c62e2ea3e3c29e3b5',
+        codeRequest:'S-111',
+        typeLoan:'',
+        amount:'',
+        rate:'',
+        frequency:'',
+        quota:'',
+        quotaValue:'',
+        totalInterest:'',
+        closingCost:'',
+        startDate:'',
+        sucursal:'',
+        details:'',
+        stateRequest:'Pendiente',
+       
+    })
+
+    const {customerId, codeRequest,typeLoan,amount,rate,frequency,quota,quotaValue,totalInterest,closingCost,startDate,sucursal,details,stateRequest, } = formValues
+
+    const handleSubmit = async(e)=>{
+        
+        e.preventDefault()
+
+        await axios.post(URL_API+'/requests',{
+            
+            customerId,
+            codeRequest,
+            typeLoan,
+            amount,
+            rate,
+            frequency,
+            quota,
+            quotaValue,
+            totalInterest,
+            closingCost,
+            startDate,
+            sucursal,
+            details,
+            stateRequest,
+        })
+
+        window.location.href ='/solicitudes'
+    }
+
 
     return (
         <div class="pcoded-content">
@@ -273,12 +323,12 @@ function ListRequests() {
                             <label htmlFor="monto">Tipo de Préstamo</label>
                                 <div className="input-group">
                                     <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-money"></i></span>
-                                    <select name="select" class="form-control col-md-12"> 
+                                    <select onChange={handleInputChange} name="typeLoan" id="typeLoan" class="form-control col-md-12"> 
                                         <option value="opt1">Tipo de Préstamos</option>
-                                        <option value="opt2">Amortizacion</option>
-                                        <option value="opt2">Interes Simple</option>
-                                        <option value="opt3">Interes Acumulado</option>
-                                        <option value="opt4">Préstamos Tipo B</option>
+                                        <option value="Amortizacion">Amortizacion</option>
+                                        <option value="Interes Simple">Interes Simple</option>
+                                        <option value="Interes Acumulado">Interes Acumulado</option>
+                                        <option value="Préstamos Tipo B">Préstamos Tipo B</option>
                                     </select>
                                 </div>
                             </div>
@@ -287,7 +337,7 @@ function ListRequests() {
                                 <label htmlFor="monto">Monto Solicitado</label>
                                 <div className="input-group">
                                     <span className="input-group-addon" id="basic-addon1">LPS.</span>
-                                    <input id="monto" name="monto" type="text" className="form-control" placeholder="Ingresar el Monto" />
+                                    <input onChange={handleInputChange} id="amount" name="amount" type="text" className="form-control" placeholder="Ingresar el Monto" />
                                 </div>
                             </div>
                             
@@ -299,18 +349,18 @@ function ListRequests() {
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">
                                     <span className="input-group-addon" id="basic-addon1">%</span>
-                                    <input type="text" className="form-control" placeholder="Tasa de Interes en %"/>
+                                    <input onChange={handleInputChange} name="rate" id="rate" type="text" className="form-control" placeholder="Tasa de Interes en %"/>
                                 </div>         
                             </div>
 
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">
                                     <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-hour-glass"></i></span>
-                                    <select name="select" class="form-control col-md-12"> 
+                                    <select onChange={handleInputChange} name="frequency" id="frequency"  class="form-control col-md-12"> 
                                         <option value="opt1">Frecuencia de Pago</option>
-                                        <option value="opt2">Semanal</option>
-                                        <option value="opt2">Quincenal</option>
-                                        <option value="opt3">Mensual</option>
+                                        <option value="Semanal">Semanal</option>
+                                        <option value="Quincenal">Quincenal</option>
+                                        <option value="Mensual">Mensual</option>
                                     </select>
                                 </div>
                             </div>
@@ -324,7 +374,7 @@ function ListRequests() {
                             <label htmlFor="dateInicio">Número de Cuotas</label> 
                                 <div className="input-group">
                                     <span className="input-group-addon"  id="basic-addon1"><i class="icofont icofont-listing-number"></i></span>
-                                    <input type="text" className="form-control" placeholder="Cantidad de Cuotas"/>
+                                    <input onChange={handleInputChange} name="quota" id="quota" type="text" className="form-control" placeholder="Cantidad de Cuotas"/>
                                 </div>
                             </div>
 
@@ -332,7 +382,7 @@ function ListRequests() {
                             <label htmlFor="dateInicio">Valor de cada cuota</label>
                                 <div className="input-group">
                                     <span className="input-group-addon" id="basic-addon1">LPS.</span>
-                                    <input type="text" className="form-control" placeholder="Valor de cada cuota" />
+                                    <input onChange={handleInputChange} name="quotaValue" id="quotaValue" type="text" className="form-control" placeholder="Valor de cada cuota" />
                                 </div>
                             </div>
                             
@@ -346,7 +396,7 @@ function ListRequests() {
                                 <label htmlFor="dateInicio">Fecha de Inicio</label> 
                                 <div className="input-group">
                                     <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-ui-calendar mr-1"></i></span>
-                                    <input class="form-control" type="date"/>
+                                    <input onChange={handleInputChange} name="startDate" id="startDate" class="form-control" type="date"/>
                                 </div>
                             </div>
 
@@ -354,8 +404,7 @@ function ListRequests() {
                                 <label htmlFor="dateInicio">Total de Interes</label>
                                 <div className="input-group">
                                     <span className="input-group-addon" id="basic-addon1">LPS.</span>
-                                    <input id="totalInteres" name="totalInteres"  type="text" className="form-control" placeholder="Total de Interes" />
-                                     
+                                    <input onChange={handleInputChange} name="totalInterest" id="totalInterest" type="text" className="form-control" placeholder="Total de Interes" />
                                 </div>
                             </div>
                             
@@ -368,7 +417,7 @@ function ListRequests() {
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">
                                     <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-ui-edit"></i></span>
-                                    <textarea class="form-control" id="exampleTextarea" rows="6" placeholder="Observaciones"></textarea>  
+                                    <textarea onChange={handleInputChange} name="details" id="details" class="form-control" rows="6" placeholder="Observaciones"></textarea>  
                                 </div>
                             </div>
 
@@ -376,14 +425,14 @@ function ListRequests() {
                                 <label htmlFor="totalInteres">Costo de Cierre y Sucursal</label>
                                 <div className="input-group">
                                     <span className="input-group-addon" id="basic-addon1">LPS.</span>
-                                    <input id="costoCierre" className="form-control" name="costoCierre" type="text" placeholder="Costo de Cierre 4%" />
+                                    <input className="form-control" onChange={handleInputChange} name="closingCost" id="closingCost" type="text" placeholder="Costo de Cierre 4%" />
                                 </div>
                                 <div className="input-group">
                                     <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-bank-alt"></i> </span> 
-                                    <select name="select" class="form-control col-md-12"> 
+                                    <select onChange={handleInputChange} name="sucursal" id="sucursal" class="form-control col-md-12"> 
                                         <option value="opt1">Seleccione Sucursal</option>
-                                        <option value="opt2">Central</option>  
-                                        <option value="opt2">Valle Alto</option>
+                                        <option value="Central">Central</option>  
+                                        <option value="Valle Alto">Valle Alto</option>
                                     </select>   
                                 </div>
                             </div>
@@ -418,13 +467,11 @@ function ListRequests() {
                 
                         </div>
 
-
-
                     </div>
 
                     <div className="modal-footer">
                         <button type="button" className="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="button" className="btn btn-primary">Guardar</button>
+                        <button onClick={handleSubmit} type="button" className="btn btn-primary">Guardar</button>
                     </div>
                     </div>
                     </div>

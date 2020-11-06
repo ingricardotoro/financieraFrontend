@@ -423,7 +423,6 @@ function ListCustomers() {
                                     </select>
                                 </div>
                             </div>
-
                     
                         </div>
 
