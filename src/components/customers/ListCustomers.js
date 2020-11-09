@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 //import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
@@ -13,7 +13,7 @@ import { URL_API } from '../../config/config';
 function ListCustomers() {
 
     const [formValues, handleInputChange] = useForm({
-        codeCustomer:'c-110',
+        codeCustomer:'c-112',
         name:'',
         lastname:'',
         identidad:'',
@@ -29,33 +29,33 @@ function ListCustomers() {
         location:'',
         photo:'',
     })
+    const [customers, setCustomers] = useState([])
+    //const { codeCustomer,name,lastname,identidad,gender,rtn,fec_nac,phone1,phone2,email1,email2,profesion,city,location,photo } = formValues
 
-    const { codeCustomer,name,lastname,identidad,gender,rtn,fec_nac,phone1,phone2,email1,email2,profesion,city,location,photo } = formValues
+    useEffect(() => {
+       
+        obtenerClientes()
+
+    }, [])
+
+    const obtenerClientes = async()=>{
+
+      
+        const resp_customers = await axios.get(URL_API+'/customers')
+        setCustomers(resp_customers.data.customers)
+        //console.log(resp_customers.data.customers)
+     
+    }
 
     const handleSubmit = async(e)=>{
         
         e.preventDefault()
 
-        await axios.post(URL_API+'/customers',{
-            codeCustomer,
-            name,
-            lastname,
-            identidad,
-            gender,
-            rtn,
-            fec_nac,
-            phone1,
-            phone2,
-            email1,
-            email2,
-            profesion,
-            city,
-            location,
-            photo
-        })
+        await axios.post(URL_API+'/customers', formValues)
 
         window.location.href ='/clientes'
     }
+
     return (
         <div class="pcoded-content">
 
@@ -185,83 +185,23 @@ function ListCustomers() {
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td> <Avatar alt="Remy Sharp" src="http://0.gravatar.com/avatar/81b58502541f9445253f30497e53c280?s=50&d=identicon&r=G" /></td>
-                                <td>C-101</td>
-                                <td>Ricardo</td>
-                                <td>Toro</td>
-                                <td>0801198816145</td>
-                                <td>89878485</td>
-                                <td><button className="btn btn-sm btn-success "> {<InfoIcon />}</button></td>
-                                <td><button className="btn btn-sm btn-danger"> {<NotInterestedIcon />}</button> </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td><Avatar alt="Travis Howard" src="http://1.gravatar.com/avatar/9bc7250110c667cd35c0826059b81b75?s=50&d=identicon&r=G" /></td>
-                                <td>C-102</td>
-                                <td>Davig</td>
-                                <td>Gomez</td>
-                                <td>0806198814221</td>
-                                <td>96401245</td>
-                                <td><button className="btn btn-sm btn-success "> {<InfoIcon />}</button></td>
-                                <td><button className="btn btn-sm btn-danger"> {<NotInterestedIcon />}</button> </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3</th>
-                                <td><Avatar alt="Cindy Baker" src="assets/images/avatar-1.png" /></td>
-                                <td>c-103</td>
-                                <td>Jorge</td>
-                                <td>Osorio</td>
-                                <td>0201199912354</td>
-                                <td>86878584</td>
-                                <td><button className="btn btn-sm btn-success "> {<InfoIcon />}</button></td>
-                                <td><button className="btn btn-sm btn-danger"> {<NotInterestedIcon />}</button> </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">4</th>
-                                <td><Avatar alt="Cindy Baker" src="assets/images/avatar-2.png" /></td>
-                                <td>C-104</td>
-                                <td>Nora Yolanda</td>
-                                <td>Cruz</td>
-                                <td>0801197565451</td>
-                                <td>33353632</td>
-                                <td><button className="btn btn-sm btn-success "> {<InfoIcon />}</button></td>
-                                <td><button className="btn btn-sm btn-danger"> {<NotInterestedIcon />}</button> </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">5</th>
-                                <td><Avatar alt="Cindy Baker" src="assets/images/avatar-3.png" /></td>
-                                <td>c-105</td>
-                                <td>Daniel</td>
-                                <td>Amaya</td>
-                                <td>0201199623231</td>
-                                <td>98979596</td>
-                                <td><button className="btn btn-sm btn-success "> {<InfoIcon />}</button></td>
-                                <td><button className="btn btn-sm btn-danger"> {<NotInterestedIcon />}</button> </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">6</th>
-                                <td><Avatar alt="Cindy Baker" src="assets/images/avatar-4.png" /></td>
-                                <td>C-106</td>
-                                <td>Luis</td>
-                                <td>Manzanares</td>
-                                <td>0801198816124</td>
-                                <td>89784587</td>
-                                <td><button className="btn btn-sm btn-success "> {<InfoIcon />}</button></td>
-                                <td><button className="btn btn-sm btn-danger"> {<NotInterestedIcon />}</button> </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">7</th>
-                                <td><Avatar alt="Cindy Baker" src="assets/images/avatar-5.png" /></td>
-                                <td>C-107</td>
-                                <td>Douglas Danilo</td>
-                                <td>Portillo</td>
-                                <td>0803200025145</td>
-                                <td>99987878</td>
-                                <td><button className="btn btn-sm btn-success "> {<InfoIcon />}</button></td>
-                                <td><button className="btn btn-sm btn-danger"> {<NotInterestedIcon />}</button> </td>
-                            </tr>
+
+                                {
+                                       customers.map(customer => ( 
+                                        <tr>
+                                            <th scope="row">1</th>
+                                            <td> <Avatar alt="Remy Sharp" src="assets/images/avatar-4.png" /></td>
+                                            <td>{customer.codeCustomer}</td>
+                                            <td>{customer.name}</td>
+                                            <td>{customer.lastname}</td>    
+                                            <td>{customer.identidad}</td>
+                                            <td>{customer.phone1}</td>
+                                            <td><button className="btn btn-sm btn-success "> {<InfoIcon />}</button></td>
+                                            <td><button className="btn btn-sm btn-danger"> {<NotInterestedIcon />}</button> </td>
+                                        </tr>
+                                        )) 
+                                     } 
+                            
                             </tbody>
                         </table>
                        
@@ -377,14 +317,14 @@ function ListCustomers() {
                                 <div className="input-group">
                                     <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-location-pin"></i></span>
                                     <select onChange={handleInputChange}  name="city" id="city" class="form-control col-md-12"> 
-                                        <option value="opt1">Selecione Ciudad</option>
-                                        <option value="opt2">CIUDAD 2</option>
-                                        <option value="opt3">CIUDAD 3</option>
-                                        <option value="opt4">CIUDAD 4</option>
-                                        <option value="opt5">CIUDAD 5</option>
-                                        <option value="opt6">CIUDAD 6</option>
-                                        <option value="opt7">CIUDAD 7</option>
-                                        <option value="opt8">CIUDAD 8</option>
+                                        <option value="opt1">Selecione Zona</option>
+                                        <option value="Olanchito">Olanchito</option>
+                                        <option value="Ceiba">La Ceiba</option>
+                                        <option value="Tocoa">Tocoa</option>
+                                        <option value="Saba">Sabá</option>
+                                        <option value="Arenal">Arenal</option>
+                                        <option value="jocon">Jocón</option>
+                                        <option value="otra">Otra</option>
                                     </select>
                                 </div>
                             </div>

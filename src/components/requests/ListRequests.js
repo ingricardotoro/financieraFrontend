@@ -16,7 +16,7 @@ function ListRequests() {
     const [formValues, handleInputChange] = useForm({
 
         customerId:'5fa34c1c62e2ea3e3c29e3b5',
-        codeRequest:'S-111',
+        codeRequest:'S-112',
         typeLoan:'',
         amount:'',
         rate:'',
@@ -32,29 +32,13 @@ function ListRequests() {
        
     })
 
-    const {customerId, codeRequest,typeLoan,amount,rate,frequency,quota,quotaValue,totalInterest,closingCost,startDate,sucursal,details,stateRequest, } = formValues
+    //const {customerId, codeRequest,typeLoan,amount,rate,frequency,quota,quotaValue,totalInterest,closingCost,startDate,sucursal,details,stateRequest, } = formValues
 
     const handleSubmit = async(e)=>{
         
         e.preventDefault()
 
-        await axios.post(URL_API+'/requests',{
-            
-            customerId,
-            codeRequest,
-            typeLoan,
-            amount,
-            rate,
-            frequency,
-            quota,
-            quotaValue,
-            totalInterest,
-            closingCost,
-            startDate,
-            sucursal,
-            details,
-            stateRequest,
-        })
+        await axios.post(URL_API+'/requests', formValues)
 
         window.location.href ='/solicitudes'
     }
