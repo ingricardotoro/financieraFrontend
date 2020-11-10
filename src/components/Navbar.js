@@ -1,4 +1,7 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
+import logocredisa from '../../src/logocredisa.png'
+import userLogo from '../../src/user.png'
 
 function Navbar() {
 
@@ -15,17 +18,17 @@ function Navbar() {
        
         <nav className="navbar header-navbar pcoded-header">
            <div className="navbar-wrapper">
-          <div className="navbar-logo" style={{backgroundColor:"white"}}>
-            <a className="mobile-menu" id="mobile-collapse" href="/">
+          <div className="navbar-logo" >
+            <a className="mobile-menu" id="mobile-collapse" href="#!">
               <i className="ti-menu" />
             </a>
             <a className="mobile-search morphsearch-search"  href="/">
               <i className="ti-search" />
             </a>
             <a href="/">
-              <img className="img-fluid" style={{height:"50px"}} src="assets/images/logo.png" alt="Theme-Logo" />
+              <img className="img-fluid" style={{height:"40px"}} src={logocredisa} alt="Logo-credisa" />
             </a>
-            <a className="mobile-options"  href="/">
+            <a className="mobile-options">
               <i className="ti-more" />
             </a>
           </div>
@@ -33,16 +36,12 @@ function Navbar() {
             <div>
               <ul className="nav-left">
                 <li>
-                  <div className="sidebar_toggle"><a  href="/"><i className="ti-menu" /></a></div>
+                  <div className="sidebar_toggle"><a  href="javascript:void(0)"><i className="ti-menu" /></a></div>
                 </li>
+               
+               
                 <li>
-                  <a className="main-search morphsearch-search"  href="/">
-                    {/* themify icon */}
-                    <i className="ti-search" />
-                  </a>
-                </li>
-                <li>
-                  <a  onClick={toggleFullScreen}  href="/"> 
+                  <a  onClick={toggleFullScreen}  href="javascript:toggleFullScreen()"> 
                     <i className="ti-fullscreen" />
                   </a>
                 </li>
@@ -51,7 +50,7 @@ function Navbar() {
               <ul className="nav-right">
                <li className="user-profile header-notification">
                   <a  href="/clientes">
-                    <img src="assets/images/user.png" alt="User-Profile" />
+                    <img src={userLogo} alt="User-Profile" />
                     <span>John Doe</span>
                     <i className="ti-angle-down" />
                   </a>

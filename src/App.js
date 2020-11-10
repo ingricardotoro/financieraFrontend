@@ -6,8 +6,9 @@ import './App.css';
 
 import ListCustomers from './components/customers/ListCustomers'
 import ListLoans from './components/loans/ListLoans'
-import ListRequests from './components/requests/ListRequests'
+import ListRequestPage from './page/Requests/ListRequestPage'
 import Inicio from "./components/Inicio";
+import NewRequestPage from "./page/Requests/NewRequestPage";
 
 function App() {
   return (
@@ -26,7 +27,10 @@ function App() {
 
         <Route exact path="/" component={Inicio} />
         <Route exact path="/clientes" component={ListCustomers} />
-        <Route exact path="/solicitudes" component={ListRequests} />
+
+        <Route exact path="/solicitudes/crear" component={NewRequestPage} />
+        <Route exact path="/solicitudes" component={ListRequestPage} />
+
         <Route exact path="/prestamos" component={ListLoans} />
 
 
