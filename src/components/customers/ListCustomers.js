@@ -29,6 +29,8 @@ function ListCustomers() {
         location:'',
         photo:'',
     })
+   
+   
     const [customers, setCustomers] = useState([])
     //const { codeCustomer,name,lastname,identidad,gender,rtn,fec_nac,phone1,phone2,email1,email2,profesion,city,location,photo } = formValues
 
@@ -317,7 +319,7 @@ function ListCustomers() {
                                 <div className="input-group">
                                     <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-location-pin"></i></span>
                                     <select onChange={handleInputChange}  name="city" id="city" class="form-control col-md-12"> 
-                                        <option value="opt1">Selecione Zona</option>
+                                        <option value="opt1">Selecione Localidad</option>
                                         <option value="Olanchito">Olanchito</option>
                                         <option value="Ceiba">La Ceiba</option>
                                         <option value="Tocoa">Tocoa</option>

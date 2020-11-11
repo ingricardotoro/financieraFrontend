@@ -1,6 +1,29 @@
 /*var width = $(window).width(), height = $(window).height();
 alert('width : ' +width + 'height : ' + height);*/
 "use strict";
+// Loading Array Data
+var data = [{
+    id: 0,
+    text: 'enhancement'
+}, {
+    id: 1,
+    text: 'bug'
+}, {
+    id: 2,
+    text: 'duplicate'
+}, {
+    id: 3,
+    text: 'invalid'
+}, {
+    id: 4,
+    text: 'wontfix'
+}];
+
+$("#js-example-data-array").select({
+    data: data
+});
+
+
 $(document).ready(function() {
     var $window = $(window);
     //add id to main menu for mobile menu start
@@ -118,41 +141,41 @@ $(document).ready(function() {
 
     //Language chage dropdown start
     i18next.use(window.i18nextXHRBackend).init({
-        debug: !1,
-        fallbackLng: !1,
-        backend: {
-            loadPath: "assets/locales/{{lng}}/{{ns}}.json"
-        },
-        returnObjects: !0
-    },
-    function(err, t) {
-        jqueryI18next.init(i18next, $)
-    }),
-    $(".lng-dropdown a").on("click", function() {
+                debug: !1,
+                fallbackLng: !1,
+                backend: {
+                    loadPath: "assets/locales/{{lng}}/{{ns}}.json"
+                },
+                returnObjects: !0
+            },
+            function(err, t) {
+                jqueryI18next.init(i18next, $)
+            }),
+        $(".lng-dropdown a").on("click", function() {
 
-        var $this = $(this),
-        selected_lng = $this.data("lng");
-        i18next.changeLanguage(selected_lng, function(err, t) {
-            $(".main-menu").localize()
-        }),
-        $this.parent("li").siblings("li").children("a").removeClass("active"), $this.addClass("active"), $(".lng-dropdown a").removeClass("active");
-        var drop_lng = $('.lng-dropdown a[data-lng="' + selected_lng + '"]').addClass("active");
-        $(".lng-dropdown #dropdown-active-item").html(drop_lng.html())
-    })
+            var $this = $(this),
+                selected_lng = $this.data("lng");
+            i18next.changeLanguage(selected_lng, function(err, t) {
+                    $(".main-menu").localize()
+                }),
+                $this.parent("li").siblings("li").children("a").removeClass("active"), $this.addClass("active"), $(".lng-dropdown a").removeClass("active");
+            var drop_lng = $('.lng-dropdown a[data-lng="' + selected_lng + '"]').addClass("active");
+            $(".lng-dropdown #dropdown-active-item").html(drop_lng.html())
+        })
         //Language chage dropdown end
         //loader start
-        $('.theme-loader').fadeOut(300);
-        //loader end
+    $('.theme-loader').fadeOut(300);
+    //loader end
 });
 
 /* Search header start */
 (function() {
     var isAnimating;
     var morphSearch = document.getElementById('morphsearch'),
-    input = morphSearch.querySelector('input.morphsearch-input'),
-    ctrlClose = morphSearch.querySelector('span.morphsearch-close'),
-    isOpen = isAnimating = false,
-    isHideAnimate = morphsearch.querySelector('.morphsearch-form'),
+        input = morphSearch.querySelector('input.morphsearch-input'),
+        ctrlClose = morphSearch.querySelector('span.morphsearch-close'),
+        isOpen = isAnimating = false,
+        isHideAnimate = morphsearch.querySelector('.morphsearch-form'),
         // show/hide search area
         toggleSearch = function(evt) {
             // return if open and the input gets focused
@@ -165,14 +188,14 @@ $(document).ready(function() {
                 // trick to hide input text once the search overlay closes
                 // todo: hardcoded times, should be done after transition ends
                 //if( input.value !== '' ) {
+                setTimeout(function() {
+                    classie.add(morphSearch, 'hideInput');
                     setTimeout(function() {
-                        classie.add(morphSearch, 'hideInput');
-                        setTimeout(function() {
-                            classie.add(isHideAnimate, 'p-absolute');
-                            classie.remove(morphSearch, 'hideInput');
-                            input.value = '';
-                        }, 300);
-                    }, 500);
+                        classie.add(isHideAnimate, 'p-absolute');
+                        classie.remove(morphSearch, 'hideInput');
+                        input.value = '';
+                    }, 300);
+                }, 500);
                 //}
 
                 input.blur();
@@ -237,8 +260,8 @@ $(document).on('click', '[data-toggle="lightbox"]', function(event) {
 /* --------------------------------------------------------
         Color picker - demo only
         --------------------------------------------------------   */
-        (function() {
-        $('<div class="selector-toggle"><a href="javascript:void(0)"></a></div><div class="style-cont"><ul><li><p class="selector-title main-title">Mash Able CUSTOMIZER</p></li></ul><ul class="nav nav-tabs  tabs" role="tablist"><li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#sel-pos" role="tab">Position</a></li><li class="nav-item"><a class="nav-link" data-toggle="tab" href="#sel-lay" role="tab">Layout</a></li><li class="nav-item"><a class="nav-link" data-toggle="tab" href="#sel-sid" role="tab">Sidebar</a></li></ul><div class="tab-content tabs"><div class="tab-pane active" id="sel-pos" role="tabpanel"><ul><li class="theme-option"><div class="checkbox-fade fade-in-success"><label><input type="checkbox" value="false" id="sidebar-position" name="sidebar-position"><span class="cr"><i class="cr-icon icofont icofont-ui-check txt-success"></i></span><span>Fixed Sidebar Position</span></label></div></li><li class="theme-option"><div class="checkbox-fade fade-in-success"><label><input type="checkbox" value="false" id="header-position" name="header-position"><span class="cr"><i class="cr-icon icofont icofont-ui-check txt-success"></i></span><span>Fixed Header Position</span></label></div></li><li class="theme-option"><div class="checkbox-fade fade-in-success"><label><input type="checkbox" value="false" id="vertical-item-border" name="vertical-item-border"><span class="cr"><i class="cr-icon icofont icofont-ui-check txt-success"></i></span><span>Hide Item Border</span></label></div></li><li class="theme-option"><div class="checkbox-fade fade-in-success"><label><input type="checkbox" value="false" id="vertical-subitem-border" name="vertical-item-border"><span class="cr"><i class="cr-icon icofont icofont-ui-check txt-success"></i></span><span>Hide SubItem Border</span></label></div></li></ul></div><div class="tab-pane" id="sel-lay" role="tabpanel"><ul><li class="theme-option"><p class="sub-title">Page Layout</p><select id="theme-layout" class="form-control minimal input-sm"><option name="vertical-layout" value="wide">Wide layout</option><option name="vertical-layout" value="box">Boxed layout</option></select></li><li class="theme-option"><p class="sub-title">Navbar Placement</p><select id="vertical-navbar-placement" class="form-control minimal input-sm"><option name="navigation-side" value="left">Left</option><option name="navigation-side" value="right">Right</option></select></li></ul></div><div class="tab-pane" id="sel-sid" role="tabpanel"><ul><li class="theme-option"><p class="sub-title drp-title">SideBar Effect</p><select id="vertical-menu-effect" class="form-control minimal"><option name="vertical-menu-effect" value="shrink">shrink</option><option name="vertical-menu-effect" value="overlay">overlay</option><option name="vertical-menu-effect" value="push">Push</option></select></li><li class="theme-option"><p class="sub-title drp-title">Border Style</p><select id="vertical-border-style" class="form-control minimal"><option name="vertical-border-style" value="solid">Style 1</option><option name="vertical-border-style" value="dotted">Style 2</option><option name="vertical-border-style" value="dashed">Style 3</option><option name="vertical-border-style" value="none">No Border</option></select></li><li class="theme-option"><p class="sub-title drp-title">DropDown Icon</p><select id="vertical-dropdown-icon" class="form-control minimal"><option name="vertical-dropdown-icon" value="style1">Style 1</option><option name="vertical-dropdown-icon" value="style2">style 2</option><option name="vertical-dropdown-icon" value="style3">style 3</option></select></li><li class="theme-option"><p class="sub-title drp-title">Submenu Item Icon</p><select id="vertical-subitem-icon" class="form-control minimal"><option name="vertical-subitem-icon" value="style1">Style 1</option><option name="vertical-subitem-icon" value="style2">style 2</option><option name="vertical-subitem-icon" value="style3">style 3</option><option name="vertical-subitem-icon" value="style4">style 4</option><option name="vertical-subitem-icon" value="style5">style 5</option><option name="vertical-subitem-icon" value="style6">style 6</option></select></li></ul></div><ul><li><p class="selector-title">Navigator Option</p></li><li class="theme-option"><span class="selector-title">Menu Caption Color</span><div class="theme-color"><a href="#" class="leftheader-theme" lheader-theme="theme1">&nbsp;</a><a href="#" class="leftheader-theme" lheader-theme="theme2">&nbsp;</a><a href="#" class="leftheader-theme" lheader-theme="theme3">&nbsp;</a><a href="#" class="leftheader-theme" lheader-theme="theme4">&nbsp;</a><a href="#" class="leftheader-theme" lheader-theme="theme5">&nbsp;</a><a href="#" class="leftheader-theme" lheader-theme="theme6">&nbsp;</a></div><div class="theme-color"><a href="#" class="leftheader-theme" lheader-theme="theme7">&nbsp;</a><a href="#" class="leftheader-theme" lheader-theme="theme8">&nbsp;</a><a href="#" class="leftheader-theme" lheader-theme="theme9">&nbsp;</a><a href="#" class="leftheader-theme" lheader-theme="theme10">&nbsp;</a><a href="#" class="leftheader-theme" lheader-theme="theme11">&nbsp;</a><a href="#" class="leftheader-theme" lheader-theme="theme12">&nbsp;</a></div></li><li class="theme-option"><span class="selector-title">Active item Theme</span><div class="theme-color"><a href="#" class="active-item-theme" active-item-theme="theme1">&nbsp;</a><a href="#" class="active-item-theme" active-item-theme="theme2">&nbsp;</a><a href="#" class="active-item-theme" active-item-theme="theme3">&nbsp;</a><a href="#" class="active-item-theme" active-item-theme="theme4">&nbsp;</a><a href="#" class="active-item-theme" active-item-theme="theme5">&nbsp;</a><a href="#" class="active-item-theme" active-item-theme="theme6">&nbsp;</a></div><div class="theme-color"><a href="#" class="active-item-theme" active-item-theme="theme7">&nbsp;</a><a href="#" class="active-item-theme" active-item-theme="theme8">&nbsp;</a><a href="#" class="active-item-theme" active-item-theme="theme9">&nbsp;</a><a href="#" class="active-item-theme" active-item-theme="theme10">&nbsp;</a><a href="#" class="active-item-theme" active-item-theme="theme11">&nbsp;</a><a href="#" class="active-item-theme" active-item-theme="theme12">&nbsp;</a></div></li><li class="theme-option"><span class="selector-title">Background Patterns</span><div class="theme-color"><a href="#" class="themebg-pattern" themebg-pattern="pattern1">&nbsp;</a><a href="#" class="themebg-pattern" themebg-pattern="pattern2">&nbsp;</a><a href="#" class="themebg-pattern" themebg-pattern="pattern3">&nbsp;</a><a href="#" class="themebg-pattern" themebg-pattern="pattern4">&nbsp;</a><a href="#" class="themebg-pattern" themebg-pattern="pattern5">&nbsp;</a><a href="#" class="themebg-pattern" themebg-pattern="pattern6">&nbsp;</a></div></li><li><p class="selector-title">Light Sidebar</p></li><li class="theme-option"><div class="theme-color"><a href="#" class="data-navbar-theme" data-navbar-theme="themelight1"><span class="head"></span><span class="cont"></span></a></div></li><li><p class="selector-title">Dark Sidebar</p></li><li class="theme-option"><div class="theme-color"><a href="#" class="data-navbar-theme" data-navbar-theme="theme1"><span class="head"></span><span class="cont"></span></a></div></li></ul></div></div>').appendTo($('#styleSelector'));
+(function() {
+    $('<div class="selector-toggle"><a href="javascript:void(0)"></a></div><div class="style-cont"><ul><li><p class="selector-title main-title">Mash Able CUSTOMIZER</p></li></ul><ul class="nav nav-tabs  tabs" role="tablist"><li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#sel-pos" role="tab">Position</a></li><li class="nav-item"><a class="nav-link" data-toggle="tab" href="#sel-lay" role="tab">Layout</a></li><li class="nav-item"><a class="nav-link" data-toggle="tab" href="#sel-sid" role="tab">Sidebar</a></li></ul><div class="tab-content tabs"><div class="tab-pane active" id="sel-pos" role="tabpanel"><ul><li class="theme-option"><div class="checkbox-fade fade-in-success"><label><input type="checkbox" value="false" id="sidebar-position" name="sidebar-position"><span class="cr"><i class="cr-icon icofont icofont-ui-check txt-success"></i></span><span>Fixed Sidebar Position</span></label></div></li><li class="theme-option"><div class="checkbox-fade fade-in-success"><label><input type="checkbox" value="false" id="header-position" name="header-position"><span class="cr"><i class="cr-icon icofont icofont-ui-check txt-success"></i></span><span>Fixed Header Position</span></label></div></li><li class="theme-option"><div class="checkbox-fade fade-in-success"><label><input type="checkbox" value="false" id="vertical-item-border" name="vertical-item-border"><span class="cr"><i class="cr-icon icofont icofont-ui-check txt-success"></i></span><span>Hide Item Border</span></label></div></li><li class="theme-option"><div class="checkbox-fade fade-in-success"><label><input type="checkbox" value="false" id="vertical-subitem-border" name="vertical-item-border"><span class="cr"><i class="cr-icon icofont icofont-ui-check txt-success"></i></span><span>Hide SubItem Border</span></label></div></li></ul></div><div class="tab-pane" id="sel-lay" role="tabpanel"><ul><li class="theme-option"><p class="sub-title">Page Layout</p><select id="theme-layout" class="form-control minimal input-sm"><option name="vertical-layout" value="wide">Wide layout</option><option name="vertical-layout" value="box">Boxed layout</option></select></li><li class="theme-option"><p class="sub-title">Navbar Placement</p><select id="vertical-navbar-placement" class="form-control minimal input-sm"><option name="navigation-side" value="left">Left</option><option name="navigation-side" value="right">Right</option></select></li></ul></div><div class="tab-pane" id="sel-sid" role="tabpanel"><ul><li class="theme-option"><p class="sub-title drp-title">SideBar Effect</p><select id="vertical-menu-effect" class="form-control minimal"><option name="vertical-menu-effect" value="shrink">shrink</option><option name="vertical-menu-effect" value="overlay">overlay</option><option name="vertical-menu-effect" value="push">Push</option></select></li><li class="theme-option"><p class="sub-title drp-title">Border Style</p><select id="vertical-border-style" class="form-control minimal"><option name="vertical-border-style" value="solid">Style 1</option><option name="vertical-border-style" value="dotted">Style 2</option><option name="vertical-border-style" value="dashed">Style 3</option><option name="vertical-border-style" value="none">No Border</option></select></li><li class="theme-option"><p class="sub-title drp-title">DropDown Icon</p><select id="vertical-dropdown-icon" class="form-control minimal"><option name="vertical-dropdown-icon" value="style1">Style 1</option><option name="vertical-dropdown-icon" value="style2">style 2</option><option name="vertical-dropdown-icon" value="style3">style 3</option></select></li><li class="theme-option"><p class="sub-title drp-title">Submenu Item Icon</p><select id="vertical-subitem-icon" class="form-control minimal"><option name="vertical-subitem-icon" value="style1">Style 1</option><option name="vertical-subitem-icon" value="style2">style 2</option><option name="vertical-subitem-icon" value="style3">style 3</option><option name="vertical-subitem-icon" value="style4">style 4</option><option name="vertical-subitem-icon" value="style5">style 5</option><option name="vertical-subitem-icon" value="style6">style 6</option></select></li></ul></div><ul><li><p class="selector-title">Navigator Option</p></li><li class="theme-option"><span class="selector-title">Menu Caption Color</span><div class="theme-color"><a href="#" class="leftheader-theme" lheader-theme="theme1">&nbsp;</a><a href="#" class="leftheader-theme" lheader-theme="theme2">&nbsp;</a><a href="#" class="leftheader-theme" lheader-theme="theme3">&nbsp;</a><a href="#" class="leftheader-theme" lheader-theme="theme4">&nbsp;</a><a href="#" class="leftheader-theme" lheader-theme="theme5">&nbsp;</a><a href="#" class="leftheader-theme" lheader-theme="theme6">&nbsp;</a></div><div class="theme-color"><a href="#" class="leftheader-theme" lheader-theme="theme7">&nbsp;</a><a href="#" class="leftheader-theme" lheader-theme="theme8">&nbsp;</a><a href="#" class="leftheader-theme" lheader-theme="theme9">&nbsp;</a><a href="#" class="leftheader-theme" lheader-theme="theme10">&nbsp;</a><a href="#" class="leftheader-theme" lheader-theme="theme11">&nbsp;</a><a href="#" class="leftheader-theme" lheader-theme="theme12">&nbsp;</a></div></li><li class="theme-option"><span class="selector-title">Active item Theme</span><div class="theme-color"><a href="#" class="active-item-theme" active-item-theme="theme1">&nbsp;</a><a href="#" class="active-item-theme" active-item-theme="theme2">&nbsp;</a><a href="#" class="active-item-theme" active-item-theme="theme3">&nbsp;</a><a href="#" class="active-item-theme" active-item-theme="theme4">&nbsp;</a><a href="#" class="active-item-theme" active-item-theme="theme5">&nbsp;</a><a href="#" class="active-item-theme" active-item-theme="theme6">&nbsp;</a></div><div class="theme-color"><a href="#" class="active-item-theme" active-item-theme="theme7">&nbsp;</a><a href="#" class="active-item-theme" active-item-theme="theme8">&nbsp;</a><a href="#" class="active-item-theme" active-item-theme="theme9">&nbsp;</a><a href="#" class="active-item-theme" active-item-theme="theme10">&nbsp;</a><a href="#" class="active-item-theme" active-item-theme="theme11">&nbsp;</a><a href="#" class="active-item-theme" active-item-theme="theme12">&nbsp;</a></div></li><li class="theme-option"><span class="selector-title">Background Patterns</span><div class="theme-color"><a href="#" class="themebg-pattern" themebg-pattern="pattern1">&nbsp;</a><a href="#" class="themebg-pattern" themebg-pattern="pattern2">&nbsp;</a><a href="#" class="themebg-pattern" themebg-pattern="pattern3">&nbsp;</a><a href="#" class="themebg-pattern" themebg-pattern="pattern4">&nbsp;</a><a href="#" class="themebg-pattern" themebg-pattern="pattern5">&nbsp;</a><a href="#" class="themebg-pattern" themebg-pattern="pattern6">&nbsp;</a></div></li><li><p class="selector-title">Light Sidebar</p></li><li class="theme-option"><div class="theme-color"><a href="#" class="data-navbar-theme" data-navbar-theme="themelight1"><span class="head"></span><span class="cont"></span></a></div></li><li><p class="selector-title">Dark Sidebar</p></li><li class="theme-option"><div class="theme-color"><a href="#" class="data-navbar-theme" data-navbar-theme="theme1"><span class="head"></span><span class="cont"></span></a></div></li></ul></div></div>').appendTo($('#styleSelector'));
 })();
 
 /*Gradient Color*/
@@ -290,7 +313,11 @@ $('.color-picker a.handle').click(function(e) {
 });
 
 /* Crazyegg */
-setTimeout(function(){var a=document.createElement("script");
-var b=document.getElementsByTagName("script")[0];
-a.src=document.location.protocol+"//script.crazyegg.com/pages/scripts/0067/0651.js?"+Math.floor(new Date().getTime()/3600000);
-a.async=true;a.type="text/javascript";b.parentNode.insertBefore(a,b)}, 1);
+setTimeout(function() {
+    var a = document.createElement("script");
+    var b = document.getElementsByTagName("script")[0];
+    a.src = document.location.protocol + "//script.crazyegg.com/pages/scripts/0067/0651.js?" + Math.floor(new Date().getTime() / 3600000);
+    a.async = true;
+    a.type = "text/javascript";
+    b.parentNode.insertBefore(a, b)
+}, 1);

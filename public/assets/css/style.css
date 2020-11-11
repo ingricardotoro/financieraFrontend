@@ -3696,9 +3696,10 @@ Wizard css start
     width: 100%;
 }
 
-.wizard>.content {
-    min-height: 695px;
-}
+
+/*.wizard>.content {
+    HE CAMBIADO min-height: 695px;
+}*/
 
 .payment-card {
     border: 1px solid #ccc;
