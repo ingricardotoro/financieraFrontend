@@ -48,6 +48,12 @@ ul {
     margin-bottom: 0;
 }
 
+@media screen and (min-width: 400px) {
+    .stepperCustomer {
+        display: block;
+    }
+}
+
 * a {
     font-size: 14px;
 }

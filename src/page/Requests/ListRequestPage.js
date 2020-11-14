@@ -153,10 +153,10 @@ function ListRequestPage() {
                             </button>
                         </div>
                         <div classname=" col-sm-12 col-md-2 col-xl-2">
-                            <a href="/solicitudes/crear" classname="col-sm-12 mt-3 btn btn-success btn-round f-right d-inline-flex">
+                            <Link to="/solicitudes/crear" classname="col-sm-12 mt-3 btn btn-success btn-round f-right d-inline-flex">
                                 {<addcircleicon />}     
                                 Crear Solicitud
-                            </a>
+                            </Link>
                             </div>
 
 
