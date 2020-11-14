@@ -134,33 +134,24 @@ function FormCustomerNewRequest() {
     const classes = useStyles();
 
     const [customers, setCustomers] = useState([])
-    const [clientes, setClientes] = useState([])
-    const customersComplete = []
+    const [value, setValue] = useState([])
+    const [inputValue, setInputValue] = useState('')
  
   useEffect (() => {
      
       obtenerClientes()
-      //agrupar()
-    //console.log(top100Films)
-    //console.log(customersComplete)
-
-      //console.log("COMPLETE="+JSON.stringify(customersComplete))
-      //console.log("customers="+JSON.stringify(customers))
-
   }, [])
 
   const obtenerClientes = async()=>{
 
       const resp_customers = await Axios.get(URL_API +'/customers')
+      setCustomers(resp_customers.data.customers)
+  }
 
-      resp_customers.data.customers.map((customer) =>(
-        setCustomers(
-            {
-                name:customer.name , id:customer._id
-            } 
-      )))
-
-      console.log(customers)
+  const getOptionLabel =(e)=>{
+    console.log(e)
+    console.log(value)
+    console.log(inputValue)
   }
 
     return (
@@ -173,23 +164,27 @@ function FormCustomerNewRequest() {
                 <label htmlfor="free-solo-2-demo" className="block">Nombre de Cliente</label>
                 <div >
 
-                   
-                    
                         <Autocomplete
-                        
+                        value={value}
+                        onChange={(event, newValue) => {
+                            setValue(newValue);
+                        }}
+                        inputValue={inputValue}
+                        onInputChange={(event, newInputValue) => {
+                            setInputValue(newInputValue);
+                        }}
+                        //onChange={handleSelect}
                         freeSolo
-                        name="free-solo-2-demo"
-                        id="free-solo-2-demo"
-                        disableClearable
-                        options={customers.map((option) => (option.name))}
+                        id="customer"
+                        getOptionLabel={getOptionLabel}
+                        options={customers?.map((customer) => (customer.name + ' ' + customer.lastname))}
                         renderInput={(params) => (
                             <TextField
                             style={{marginTop:"0px"}}
                             {...params}
                             label="Buscar Cliente"
                             margin="normal"
-                            variant="outlined"
-                            InputProps={{ ...params.InputProps, type: 'search' }}
+                            variant="outlined"                            
                             />
                             )}
                             /> 
