@@ -132,13 +132,25 @@ const top100Films = [
 
 function FormCustomerNewRequest() {
     const classes = useStyles();
-
+    
     const [customers, setCustomers] = useState([])
     const [value, setValue] = useState([])
     const [inputValue, setInputValue] = useState('')
+    const [customValue, setCustomValue] = useState('')
+
+    const [codeCustomer, setCodeCustomer] = useState('')
+    const [identidad, setIdentidad] = useState('')
+    const [rtn, setRtn] = useState('')
+    const [fec_nac, setFec_nac] = useState('')
+    const [phone1, setPhone1] = useState('')
+    const [phone2, setPhone2] = useState('')
+    const [email1, setEmail1] = useState('')
+    const [email2, setEmail2] = useState('')
+    const [profesion, setProfesion] = useState('')
+    const [city, setCity] = useState('')
+    const [location, setLocation] = useState('')
  
-  useEffect (() => {
-     
+  useEffect (() => {  
       obtenerClientes()
   }, [])
 
@@ -148,10 +160,24 @@ function FormCustomerNewRequest() {
       setCustomers(resp_customers.data.customers)
   }
 
-  const getOptionLabel =(e)=>{
-    console.log(e)
-    console.log(value)
-    console.log(inputValue)
+  const handleCustomSelect = (event,newValue)=>{
+   
+        setValue(newValue);
+        setCustomValue(newValue._id);
+        setCodeCustomer(newValue.codeCustomer)
+        setIdentidad(newValue.identidad)
+        setRtn(newValue.rtn)
+        setFec_nac(newValue.fec_nac)
+        setPhone1(newValue.phone1)
+        setPhone2(newValue.phone2)
+        setEmail1(newValue.email1)
+        setEmail2(newValue.email2)
+        setProfesion(newValue.profesion)
+        setCity(newValue.city)
+        setLocation(newValue.location)
+   
+    console.log(newValue)
+
   }
 
     return (
@@ -161,33 +187,39 @@ function FormCustomerNewRequest() {
             <div className="row">
 
                 <div className="col-sm-4 col-md-6">
-                <label htmlfor="free-solo-2-demo" className="block">Nombre de Cliente</label>
+                    <label htmlfor="free-solo-2-demo" className="block">Nombre de Cliente</label>
                 <div >
 
-                        <Autocomplete
-                        value={value}
-                        onChange={(event, newValue) => {
-                            setValue(newValue);
-                        }}
-                        inputValue={inputValue}
-                        onInputChange={(event, newInputValue) => {
-                            setInputValue(newInputValue);
-                        }}
-                        //onChange={handleSelect}
-                        freeSolo
-                        id="customer"
-                        getOptionLabel={getOptionLabel}
-                        options={customers?.map((customer) => (customer.name + ' ' + customer.lastname))}
-                        renderInput={(params) => (
-                            <TextField
-                            style={{marginTop:"0px"}}
-                            {...params}
-                            label="Buscar Cliente"
-                            margin="normal"
-                            variant="outlined"                            
-                            />
-                            )}
-                            /> 
+                <Autocomplete
+                    options={customers}
+                    value={value}
+                    getOptionLabel={(option) => option.name + option.lastname}
+                    renderOption={(option) => (
+                    <>
+                        {option.name} {option.lastname}
+                    </>
+                    )}
+                    onChange={(event, newValue) => {
+                        if(newValue!==null){
+                            handleCustomSelect(event,newValue)
+                            }}
+                        }
+                        
+                    inputValue={inputValue}
+                    onInputChange={(event, newInputValue) => {
+                    setInputValue(newInputValue);
+                    
+                    }}
+                    renderInput={(params) => (
+                        <TextField
+                        style={{marginTop:"0px"}}
+                        {...params}
+                        label="Buscar Cliente"
+                        margin="normal"
+                        variant="outlined"
+                        />                            
+                    )}
+                />
                   
                 </div>
             </div>
@@ -195,7 +227,7 @@ function FormCustomerNewRequest() {
                 <div className="col-sm-4 col-md-6">
                     <label htmlfor="codeCustomer" className="block">Código de Cliente</label>
                 <div >
-                    <input disabled name="codeCustomer" type="text" id="codeCustomer" className="required form-control" />
+                    <input value={codeCustomer} disabled name="codeCustomer" type="text" id="codeCustomer" className="required form-control" />
                 </div>
             </div>
 
@@ -212,7 +244,7 @@ function FormCustomerNewRequest() {
                 <div className="col-sm-12 col-md-6">
                     <div className="input-group">
                     <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-location-arrow"></i></span>
-                    <textarea disabled  name="location" id="location" class="form-control" rows="5" placeholder="Dirección del cliente"></textarea>  
+                    <textarea value={location} disabled  name="location" id="location" class="form-control" rows="5" placeholder="Dirección del cliente"></textarea>  
                     </div>
                 </div>
 
@@ -223,14 +255,14 @@ function FormCustomerNewRequest() {
                 <div className="col-sm-12 col-md-6">
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1">Id</span>
-                        <input disabled  name="name" id="name" type="text" className="form-control" placeholder="Número de Identidad" />
+                        <input value={identidad} disabled  name="identidad" id="identidad" type="text" className="form-control" placeholder="Número de Identidad" />
                     </div>
                 </div>
 
                 <div className="col-sm-12 col-md-6">
                         <div className="input-group">
                             <span className="input-group-addon" id="basic-addon1">RTN</span>
-                            <input disabled  name="lastname" id="lastname" type="text" className="form-control" placeholder="Número de RTN"/>
+                            <input value={rtn} disabled  name="rtn" id="rtn" type="text" className="form-control" placeholder="Número de RTN"/>
                         </div>
                 </div>
             
@@ -241,14 +273,14 @@ function FormCustomerNewRequest() {
                 <div className="col-sm-12 col-md-6">
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-iphone"></i></span>
-                        <input disabled  name="phone1" id="phone1" type="text" className="form-control" placeholder="Número de Teléfono 1" />
+                        <input value={phone1} disabled  name="phone1" id="phone1" type="text" className="form-control" placeholder="Número de Teléfono 1" />
                     </div>
                 </div>
 
                 <div className="col-sm-12 col-md-6">
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-iphone"></i></span>
-                        <input disabled  name="phone2" id="phone2" type="text" className="form-control" placeholder="Número de Teléfono 2"/>
+                        <input value={phone2} disabled  name="phone2" id="phone2" type="text" className="form-control" placeholder="Número de Teléfono 2"/>
                     </div>
                 </div>
                 
@@ -259,14 +291,14 @@ function FormCustomerNewRequest() {
                 <div className="col-sm-12 col-md-6">
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1">@</span>
-                        <input disabled  name="email1" id="email1" type="email" className="form-control" placeholder="Correo eletrónico 1" />
+                        <input value={email1} disabled  name="email1" id="email1" type="email" className="form-control" placeholder="Correo eletrónico 1" />
                     </div>
                 </div>
 
                 <div className="col-sm-12 col-md-6">
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1">@</span>
-                        <input disabled  name="email2" id="email2" type="email" className="form-control" placeholder="Correo electrónico 2"/>
+                        <input value={email2} disabled  name="email2" id="email2" type="email" className="form-control" placeholder="Correo electrónico 2"/>
                     </div>
                 </div>
                 
@@ -277,14 +309,14 @@ function FormCustomerNewRequest() {
                 <div className="col-sm-12 col-md-6">
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-location-pin"></i></span>
-                        <input disabled  name="city" id="city" type="text" className="form-control" placeholder="Localidad del Cliente" />
+                        <input value={city} disabled  name="city" id="city" type="text" className="form-control" placeholder="Localidad del Cliente" />
                     </div>
                 </div>
 
                 <div className="col-sm-12 col-md-6">
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-ui-calendar mr-1"></i> Nacimiento</span>
-                        <input disabled  name="fec_nac" id="fec_nac" type="text" className="form-control" placeholder="Fecha de Nacimiento"/>
+                        <input value={fec_nac} disabled  name="fec_nac" id="fec_nac" type="text" className="form-control" placeholder="Fecha de Nacimiento"/>
                     </div>
                 </div>
                 

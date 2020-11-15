@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 
 import { Link } from 'react-router-dom';
 import FormCustomerNewRequest from '../../components/requests/FormCustomerNewRequest';
+import FormLoanNewRequest from '../../components/requests/FormLoanNewRequest';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,14 +39,9 @@ function getSteps() {
 function getStepContent(step) {
   switch (step) {
     case 0:
-      return ( 
-
-        <FormCustomerNewRequest />
-
-        )
-      ;
+      return <FormCustomerNewRequest />;
     case 1:
-      return 'Zona de Prestamos';
+      return <FormLoanNewRequest />
     case 2:
       return 'Zona de Referencias';
     case 3:
