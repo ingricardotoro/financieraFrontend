@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom';
 import FormCustomerNewRequest from '../../components/requests/FormCustomerNewRequest';
 import FormLoanNewRequest from '../../components/requests/FormLoanNewRequest';
 import FormReferencesNewRequest from '../../components/requests/FormReferencesNewRequest';
+import FormWarrantyNewRequest from '../../components/requests/FormWarrantyNewRequest';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,6 +39,7 @@ function getSteps() {
 }
 
 function getStepContent(step) {
+  
   switch (step) {
     case 0:
       return <FormCustomerNewRequest />;
@@ -46,7 +48,7 @@ function getStepContent(step) {
     case 2:
       return <FormReferencesNewRequest />
     case 3:
-        return 'Zona de Garantias';
+        return <FormWarrantyNewRequest />
     default:
       return 'Etapa Desconocida';
   }
@@ -68,8 +70,10 @@ export default function NewRequestPage() {
   };
 
   const handleNext = () => {
+
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
+    alert("1")
       newSkipped = new Set(newSkipped.values());
       newSkipped.delete(activeStep);
     }
@@ -186,7 +190,7 @@ export default function NewRequestPage() {
                                 onClick={handleNext}
                                 className={classes.button}
                             >
-                                {activeStep === steps.length - 1 ? 'Fin' : 'Siguiente'}
+                                {activeStep === steps.length - 1 ? 'Crear Solicitud' : 'Siguiente'}
                             </Button>
                             </div>
                         </div>
