@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
 import FormCustomerNewRequest from '../../components/requests/FormCustomerNewRequest';
 import FormLoanNewRequest from '../../components/requests/FormLoanNewRequest';
+import FormReferencesNewRequest from '../../components/requests/FormReferencesNewRequest';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,7 +44,7 @@ function getStepContent(step) {
     case 1:
       return <FormLoanNewRequest />
     case 2:
-      return 'Zona de Referencias';
+      return <FormReferencesNewRequest />
     case 3:
         return 'Zona de Garantias';
     default:

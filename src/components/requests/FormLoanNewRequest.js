@@ -33,11 +33,12 @@ function FormLoanNewRequest() {
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-money"></i></span>
                         <select onChange={handleInputChange} name="typeLoan" id="typeLoan" class="form-control col-md-12"> 
-                            <option value="">Tipo de Préstamos</option>
-                            <option value="Amortizacion">Amortizacion</option>
-                            <option value="Interes Simple">Interes Simple</option>
-                            <option value="Interes Acumulado">Interes Acumulado</option>
-                            <option value="Préstamos Tipo B">Préstamos Tipo B</option>
+                            <option value="-1">Tipo de Préstamos</option>
+                            <option value="Fiduciario">Fiduciario</option>
+                            <option value="Prendario">Prendario</option>
+                            <option value="Solidario">Solidario</option>
+                            <option value="Hipotecario">Hipotecario</option>
+                            <option value="Mixto">Mixto</option>
                         </select>
                     </div>
                 </div>
@@ -52,7 +53,102 @@ function FormLoanNewRequest() {
 
             </div>
 
-        </div>
+            <div className="row">
+                {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
+                <div className="col-sm-12 col-md-6">
+                    <label htmlFor="rate">Tasa de Interes</label>
+                    <div className="input-group">
+                        <span className="input-group-addon" id="basic-addon1">%</span>
+                        <input onChange={handleInputChange} name="rate" id="rate" type="text" className="form-control" placeholder="Tasa de Interes en %"/>
+                    </div>         
+                </div>
+
+                <div className="col-sm-12 col-md-6">
+                    <label htmlFor="frecuency">Frecuencia de Pago</label>
+                    <div className="input-group">
+                        <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-hour-glass"></i></span>
+                        <select onChange={handleInputChange} name="frequency" id="frequency"  class="form-control col-md-12"> 
+                            <option value="opt1">Frecuencia de Pago</option>
+                            <option value="Semanal">Semanal</option>
+                            <option value="Quincenal">Quincenal</option>
+                            <option value="Mensual">Mensual</option>
+                        </select>
+                    </div>
+                </div>
+                
+            </div>
+
+
+            <div className="row">
+                {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
+                <div className="col-sm-12 col-md-6">
+                <label htmlFor="dateInicio">Número de Cuotas</label> 
+                    <div className="input-group">
+                        <span className="input-group-addon"  id="basic-addon1"><i class="icofont icofont-listing-number"></i></span>
+                        <input onChange={handleInputChange} name="quota" id="quota" type="text" className="form-control" placeholder="Cantidad de Cuotas"/>
+                    </div>
+                </div>
+
+                <div className="col-sm-12 col-md-6">
+                <label htmlFor="dateInicio">Valor de cada cuota</label>
+                    <div className="input-group">
+                        <span className="input-group-addon" id="basic-addon1">LPS.</span>
+                        <input onChange={handleInputChange} name="quotaValue" id="quotaValue" type="text" className="form-control" placeholder="Valor de cada cuota" />
+                    </div>
+                </div>
+                
+            </div>
+
+            <hr />
+
+            <div className="row">
+                
+                <div className="col-sm-12 col-md-6">
+                    <label htmlFor="dateInicio">Fecha de Inicio</label> 
+                    <div className="input-group">
+                        <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-ui-calendar mr-1"></i></span>
+                        <input onChange={handleInputChange} name="startDate" id="startDate" class="form-control" type="date"/>
+                    </div>
+                </div>
+
+                <div className="col-sm-12 col-md-6">
+                    <label htmlFor="dateInicio">Total de Interes</label>
+                    <div className="input-group">
+                        <span className="input-group-addon" id="basic-addon1">LPS.</span>
+                        <input disabled onChange={handleInputChange} name="totalInterest" id="totalInterest" type="text" className="form-control" placeholder="Total de Interes" />
+                    </div>
+                </div>
+                
+            </div>
+
+            <div className="row">
+                {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
+                <div className="col-sm-12 col-md-6">
+                    <div className="input-group">
+                        <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-ui-edit"></i></span>
+                        <textarea onChange={handleInputChange} name="details" id="details" class="form-control" rows="6" placeholder="Observaciones"></textarea>  
+                    </div>
+                </div>
+
+                <div className="col-sm-12 col-md-6">
+                    <label htmlFor="totalInteres">Costo de Cierre y Sucursal</label>
+                    <div className="input-group">
+                        <span className="input-group-addon" id="basic-addon1">LPS.</span>
+                        <input className="form-control" onChange={handleInputChange} name="closingCost" id="closingCost" type="text" placeholder="Costo de Cierre 4%" />
+                    </div>
+                    <div className="input-group">
+                        <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-bank-alt"></i> </span> 
+                        <select onChange={handleInputChange} name="sucursal" id="sucursal" class="form-control col-md-12"> 
+                            <option value="opt1">Seleccione Sucursal</option>
+                            <option value="Central">Central</option>  
+                            <option value="Valle Alto">Valle Alto</option>
+                        </select>   
+                    </div>
+                </div>
+    
+            </div>
+
+        </div> 
 
     )
 }
