@@ -58,9 +58,10 @@ function FormCustomerNewRequest() {
   }
 
   const handleCustomSelect = (event,newValue)=>{
-   
+
         setValue(newValue);
         setCustomValue(newValue._id);
+
         setCodeCustomer(newValue.codeCustomer)
         setIdentidad(newValue.identidad)
         setRtn(newValue.rtn)
@@ -72,8 +73,6 @@ function FormCustomerNewRequest() {
         setProfesion(newValue.profesion)
         setCity(newValue.city)
         setLocation(newValue.location)
-   
-    console.log(newValue)
 
   }
 

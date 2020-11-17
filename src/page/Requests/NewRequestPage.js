@@ -39,7 +39,7 @@ function getSteps() {
 }
 
 function getStepContent(step) {
-  
+
   switch (step) {
     case 0:
       return <FormCustomerNewRequest />;
@@ -73,7 +73,6 @@ export default function NewRequestPage() {
 
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
-    alert("1")
       newSkipped = new Set(newSkipped.values());
       newSkipped.delete(activeStep);
     }
@@ -104,6 +103,10 @@ export default function NewRequestPage() {
   const handleReset = () => {
     setActiveStep(0);
   };
+
+  const handleFinal = () =>{
+
+  }
 
   return (
 <div className="pcoded-content">
@@ -158,13 +161,22 @@ export default function NewRequestPage() {
                     </Stepper>
                     <div>
                         {activeStep === steps.length ? (
-                        <div>
-                            <Typography className={classes.instructions}>
-                            Has finalizado.
-                            </Typography>
-                            <Button onClick={handleReset} className={classes.button}>
-                            Volver
-                            </Button>
+                        <div className="row" style={{paddingTop:"10px"}}>
+
+                            <div className="col-md-4 col-sm-12">
+                              <button onClick={handleBack} className="btn btn-primary form-control">
+                                  VOLVER
+                              </button>
+                            </div>
+                            <div className="col-md-4 col-sm-12" style={{textAlign:"center"}}> 
+                              <label htmlFor="">Ha terminado de llenar los datos de la solicitud, puedes volver a revisar los datos  o terminar de registrar la solicitud</label>
+                            </div>
+                            <div className="col-md-4 col-sm-12" style={{textAlign:"center"}}> 
+                            <button onClick={handleFinal} className="btn btn-success form-control">
+                                  Registrar Solicitud
+                              </button>
+                            </div>
+
                         </div>
                         ) : (
                         <div>
@@ -190,7 +202,7 @@ export default function NewRequestPage() {
                                 onClick={handleNext}
                                 className={classes.button}
                             >
-                                {activeStep === steps.length - 1 ? 'Crear Solicitud' : 'Siguiente'}
+                                {activeStep === steps.length - 1 ? 'Finalizar' : 'Siguiente'}
                             </Button>
                             </div>
                         </div>

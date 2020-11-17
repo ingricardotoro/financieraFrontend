@@ -13,7 +13,7 @@ import { URL_API } from '../../config/config';
 function ListCustomers() {
 
     const [formValues, handleInputChange] = useForm({
-        codeCustomer:'c-112',
+        codeCustomer:'',
         name:'',
         lastname:'',
         identidad:'',
@@ -32,21 +32,41 @@ function ListCustomers() {
    
    
     const [customers, setCustomers] = useState([])
+    const [nextCode, setNextCode] = useState(0)
     //const { codeCustomer,name,lastname,identidad,gender,rtn,fec_nac,phone1,phone2,email1,email2,profesion,city,location,photo } = formValues
 
     useEffect(() => {
        
         obtenerClientes()
+        obtenerMaximoCodecustomer()
 
     }, [])
 
     const obtenerClientes = async()=>{
 
-      
         const resp_customers = await axios.get(URL_API+'/customers')
         setCustomers(resp_customers.data.customers)
         //console.log(resp_customers.data.customers)
      
+    }
+
+    const obtenerMaximoCodecustomer =()=>{
+
+        if (customers.length > 0){
+            let codigos =[]
+            customers.map(customer => (
+        
+            codigos.push(customer.codeCustomer)
+         ))
+
+         codigos.sort()
+
+         setNextCode((codigos.length-1).codeCustomer)
+        }else{
+            setNextCode(1)
+        }
+
+        
     }
 
     const handleSubmit = async(e)=>{
@@ -69,20 +89,20 @@ function ListCustomers() {
                 {/* Page-header start */}
                 <div className="page-header mt-5">
                     <div className="page-header-title">
-                    <h4>Gestión de Clientes del Sistema</h4>
-                    <span>Módulo para gestionar los clientes registrados</span>
+                        <h4>Gestión de Clientes del Sistema</h4>
+                        <span>Módulo para gestionar los clientes registrados</span>
                     </div>
                     <div className="page-header-breadcrumb">
-                    <ul className="breadcrumb-title">
-                        <li className="breadcrumb-item">
-                        <a href="index.html">
-                            <i className="icofont icofont-user" />
-                        </a>
-                        </li>
-                        <li className="breadcrumb-item">Módulo de Clientes
-                        </li>
-                        
-                    </ul>
+                        <ul className="breadcrumb-title">
+                            <li className="breadcrumb-item">
+                            <a href="index.html">
+                                <i className="icofont icofont-user" />
+                            </a>
+                            </li>
+                            <li className="breadcrumb-item">Módulo de Clientes
+                            </li>
+                            
+                        </ul>
                     </div>
                 </div>
                 {/* Page-header end */}
@@ -228,7 +248,7 @@ function ListCustomers() {
                     <div className="modal-dialog modal-lg modal-dialog-centered " role="document">
                         <div className="modal-content">
                     <div className="modal-header">
-                        <h5 className="modal-title" id="exampleModalLabel">Crear Nuevo Cliente  <strong>Código: C-105</strong></h5>
+                        <h5 className="modal-title" id="exampleModalLabel">Crear Nuevo Cliente  <strong>Código: {nextCode} </strong></h5>
                         <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                         </button>
@@ -237,7 +257,7 @@ function ListCustomers() {
                     <div className="modal-body">
                         <form onSubmit={handleSubmit}>
                         <div className="row">
-                            <input value={"C-110"} onChange={handleInputChange} name="codeCustomer" id="codeCustomer" type="hidden" />
+                            <input value={nextCode} onChange={handleInputChange} name="codeCustomer" id="codeCustomer" type="hidden" />
                             {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">
