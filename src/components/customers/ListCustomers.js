@@ -9,11 +9,12 @@ import NotInterestedIcon from '@material-ui/icons/NotInterested';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import { useForm } from '../../hooks/useForm';
 import { URL_API } from '../../config/config';
+import { Link } from 'react-router-dom';
 
 function ListCustomers() {
 
     const [formValues, handleInputChange] = useForm({
-        codeCustomer:'',
+        //codeCustomer:'',
         name:'',
         lastname:'',
         identidad:'',
@@ -32,50 +33,44 @@ function ListCustomers() {
    
    
     const [customers, setCustomers] = useState([])
-    const [nextCode, setNextCode] = useState(0)
-    //const { codeCustomer,name,lastname,identidad,gender,rtn,fec_nac,phone1,phone2,email1,email2,profesion,city,location,photo } = formValues
+    const [codeCustomer, setCodeCustomer] = useState(0)
 
     useEffect(() => {
        
         obtenerClientes()
-        obtenerMaximoCodecustomer()
+        //obtenerMaximoCodecustomer()
 
     }, [])
 
     const obtenerClientes = async()=>{
 
         const resp_customers = await axios.get(URL_API+'/customers')
+        const resp_MaxCode = await axios.get(URL_API+'/customers/lastCode')
+      
         setCustomers(resp_customers.data.customers)
-        //console.log(resp_customers.data.customers)
-     
-    }
-
-    const obtenerMaximoCodecustomer =()=>{
-
-        if (customers.length > 0){
-            let codigos =[]
-            customers.map(customer => (
-        
-            codigos.push(customer.codeCustomer)
-         ))
-
-         codigos.sort()
-
-         setNextCode((codigos.length-1).codeCustomer)
+        console.log(resp_MaxCode.data.LastCode )
+        if(resp_MaxCode.data.LastCode[0]){
+            setCodeCustomer(resp_MaxCode.data.LastCode[0].codeCustomer+1)
         }else{
-            setNextCode(1)
-        }
+            setCodeCustomer(1)
 
-        
+        }
+      
     }
+
 
     const handleSubmit = async(e)=>{
         
         e.preventDefault()
 
+        formValues.codeCustomer = codeCustomer
+
         await axios.post(URL_API+'/customers', formValues)
 
-        window.location.href ='/clientes'
+        //window.location.href ='/clientes'
+        obtenerClientes()
+        //$('#closeModal').
+        document.getElementById("closeModal").click();
     }
 
     return (
@@ -209,16 +204,16 @@ function ListCustomers() {
                             <tbody>
 
                                 {
-                                       customers.map(customer => ( 
+                                       customers?.map(customer => ( 
                                         <tr>
                                             <th scope="row">1</th>
                                             <td> <Avatar alt="Remy Sharp" src="assets/images/avatar-4.png" /></td>
                                             <td>{customer.codeCustomer}</td>
-                                            <td>{customer.name}</td>
-                                            <td>{customer.lastname}</td>    
-                                            <td>{customer.identidad}</td>
-                                            <td>{customer.phone1}</td>
-                                            <td><button className="btn btn-sm btn-success "> {<InfoIcon />}</button></td>
+                                            <td>{customer.personId.name}</td>
+                                            <td>{customer.personId.lastname}</td>    
+                                            <td>{customer.personId.identidad}</td>
+                                            <td>{customer.personId.phone1}</td>
+                                            <td><Link to ={`expediente/${customer.personId._id}`} className="btn btn-sm btn-success "> {<InfoIcon />}</Link></td>
                                             <td><button className="btn btn-sm btn-danger"> {<NotInterestedIcon />}</button> </td>
                                         </tr>
                                         )) 
@@ -248,8 +243,8 @@ function ListCustomers() {
                     <div className="modal-dialog modal-lg modal-dialog-centered " role="document">
                         <div className="modal-content">
                     <div className="modal-header">
-                        <h5 className="modal-title" id="exampleModalLabel">Crear Nuevo Cliente  <strong>Código: {nextCode} </strong></h5>
-                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                        <h5 className="modal-title" id="exampleModalLabel">Crear Nuevo Cliente  <strong>Código: {codeCustomer} </strong></h5>
+                            <button id="closeModal" type="button" className="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                         </button>
                     </div>
@@ -257,7 +252,7 @@ function ListCustomers() {
                     <div className="modal-body">
                         <form onSubmit={handleSubmit}>
                         <div className="row">
-                            <input value={nextCode} onChange={handleInputChange} name="codeCustomer" id="codeCustomer" type="hidden" />
+                            <input value={codeCustomer} onChange={handleInputChange} name="codeCustomer" id="codeCustomer" type="hidden" />
                             {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">

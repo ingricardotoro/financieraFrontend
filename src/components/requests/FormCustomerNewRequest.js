@@ -46,15 +46,32 @@ function FormCustomerNewRequest() {
     const [profesion, setProfesion] = useState('')
     const [city, setCity] = useState('')
     const [location, setLocation] = useState('')
+
+    const [clientes, setClientes] = useState([])
+
  
   useEffect (() => {  
       obtenerClientes()
+
   }, [])
 
   const obtenerClientes = async()=>{
 
       const resp_customers = await Axios.get(URL_API +'/customers')
       setCustomers(resp_customers.data.customers)
+    
+      customers.map(customer=>(
+          setClientes (
+              ...clientes,
+              {
+              id:customer._id,
+              name:customer.personId.name,
+              lastname:customer.personId.lastname
+          })
+      ))
+
+      console.log(JSON.stringify(clientes))
+
   }
 
   const handleCustomSelect = (event,newValue)=>{
@@ -87,7 +104,7 @@ function FormCustomerNewRequest() {
                 <div >
 
                 <Autocomplete
-                    options={customers}
+                    options={clientes}
                     value={value}
                     getOptionLabel={(option) => option.name + option.lastname}
                     renderOption={(option) => (
