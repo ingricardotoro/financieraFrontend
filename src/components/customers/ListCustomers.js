@@ -5,6 +5,7 @@ import Avatar from '@material-ui/core/Avatar';
 import SearchIcon from '@material-ui/icons/Search';
 import InfoIcon from '@material-ui/icons/Info';
 import NotInterestedIcon from '@material-ui/icons/NotInterested';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import { useForm } from '../../hooks/useForm';
@@ -35,10 +36,14 @@ function ListCustomers() {
     const [customers, setCustomers] = useState([])
     const [codeCustomer, setCodeCustomer] = useState(0)
 
+    const [totalCustomersRegister, setTotalCustomersRegister] = useState(0)
+    const [totalCustomersWithLoanActive, setTotalCustomersWithLoanActive] = useState(0)
+    const [totalCustomersSolved, setTotalCustomersSolved] = useState(0)
+    const [totalCustomersDefaulter, setTotalCustomersDefaulter] = useState(0)
+
     useEffect(() => {
        
         obtenerClientes()
-        //obtenerMaximoCodecustomer()
 
     }, [])
 
@@ -48,14 +53,46 @@ function ListCustomers() {
         const resp_MaxCode = await axios.get(URL_API+'/customers/lastCode')
       
         setCustomers(resp_customers.data.customers)
-        console.log(resp_MaxCode.data.LastCode )
+        setTotalCustomersRegister(resp_customers.data.customers.length)
+
+        //Obtenemos la cantidad total de clientes con prestamos activo
+        customers.map(customer =>(
+
+            customer.LoanActive ===  true 
+            ? setTotalCustomersWithLoanActive(setTotalCustomersWithLoanActive+1)
+            : null
+        ))    
+        
+        //Obtenemos la cantidad total de clients morosos y solventes
+        customers.map(customer =>(
+
+            customer.defaulter === true 
+            ? setTotalCustomersDefaulter(setTotalCustomersDefaulter+1)
+            : setTotalCustomersSolved(setTotalCustomersSolved+1)
+        ))
+
+
         if(resp_MaxCode.data.LastCode[0]){
             setCodeCustomer(resp_MaxCode.data.LastCode[0].codeCustomer+1)
         }else{
             setCodeCustomer(1)
-
         }
       
+    }
+
+    const DesactivarCliente = async(idCustomer)=>{
+
+        const resp_desactivar = await axios.put(URL_API+'/customers/updateActive/'+idCustomer, {active:false})
+        if (resp_desactivar.data.ok ===true){
+            obtenerClientes()   
+        }
+    }
+
+    const ActivarCliente = async(idCustomer)=>{
+        const resp_activar = await axios.put(URL_API+'/customers/updateActive/'+idCustomer, {active:true})
+        if (resp_activar.data.ok ===true){
+            obtenerClientes()   
+        }
     }
 
 
@@ -71,7 +108,7 @@ function ListCustomers() {
         obtenerClientes()
         //$('#closeModal').
         document.getElementById("closeModal").click();
-    }
+    } 
 
     return (
         <div class="pcoded-content">
@@ -113,7 +150,7 @@ function ListCustomers() {
                         <div className="col-md-6 col-xl-3">
                             <div className="card social-widget-card">
                             <div className="card-block-big bg-facebook">
-                                <h3>750</h3>
+                                <h3>{totalCustomersRegister}</h3>
                                 <span className="m-t-10" style={{color:"white", fontSize:16}}>Clientes Registrados</span>
                                 <i className="icofont icofont-edit" style={{opacity:1}}  />
                             </div>
@@ -124,8 +161,8 @@ function ListCustomers() {
                         <div className="col-md-6 col-xl-3">
                             <div className="card social-widget-card">
                             <div className="card-block-big bg-twitter">
-                                <h3>550</h3>
-                                <span className="m-t-10 size-16" style={{color:"white", fontSize:16}}>Clientes Activos</span>
+                                <h3>{totalCustomersWithLoanActive} </h3>
+                                <span className="m-t-10 size-16" style={{color:"white", fontSize:16}}>Con Préstamo Activos</span>
                                 <i className="icofont icofont-money" style={{opacity:1}} />
                             </div>
                             </div>
@@ -135,7 +172,7 @@ function ListCustomers() {
                         <div className="col-md-6 col-xl-3">
                             <div className="card social-widget-card">
                             <div className="card-block-big" style={{backgroundColor:"#40b572"}}>
-                                <h3>300</h3>
+                                <h3>{totalCustomersSolved} </h3>
                                 <span className="m-t-10 size-16" style={{color:"white", fontSize:16}}>Clientes Al Dia</span>
                                 <i className="icofont icofont-check-circled" style={{opacity:1}} />
                             </div>
@@ -146,7 +183,7 @@ function ListCustomers() {
                         <div className="col-md-6 col-xl-3">
                             <div className="card social-widget-card">
                             <div className="card-block-big bg-google-plus">
-                                <h3>250</h3>
+                                <h3>{totalCustomersDefaulter} </h3>
                                 <span className="m-t-10 size-16"style={{color:"white", fontSize:16}}>Clientes en Mora</span>
                                 <i className="icofont icofont-close-circled" style={{opacity:1}} />
                             </div>
@@ -203,9 +240,10 @@ function ListCustomers() {
                             </thead>
                             <tbody>
 
-                                {
+                                {       
                                        customers?.map(customer => ( 
-                                        <tr>
+
+                                        <tr className={customer.active ? null : "desactivado"}  key={customer._id}>
                                             <th scope="row">1</th>
                                             <td> <Avatar alt="Remy Sharp" src="assets/images/avatar-4.png" /></td>
                                             <td>{customer.codeCustomer}</td>
@@ -213,8 +251,13 @@ function ListCustomers() {
                                             <td>{customer.personId.lastname}</td>    
                                             <td>{customer.personId.identidad}</td>
                                             <td>{customer.personId.phone1}</td>
-                                            <td><Link to ={`expediente/${customer.personId._id}`} className="btn btn-sm btn-success "> {<InfoIcon />}</Link></td>
-                                            <td><button className="btn btn-sm btn-danger"> {<NotInterestedIcon />}</button> </td>
+                                            <td><Link to ={`clientes/expediente/${customer.personId._id}`} className="btn btn-sm btn-success "> {<InfoIcon />}</Link></td>
+                                            <td>
+                                                {customer.active === true 
+                                                    ? <button onClick={() => DesactivarCliente(customer._id)} className="btn btn-sm btn-danger"> {<NotInterestedIcon />}</button> 
+                                                    : <button onClick={() =>ActivarCliente(customer._id)} className="btn btn-sm btn-success"> {<CheckCircleOutlineIcon />}</button>
+                                                }
+                                            </td>
                                         </tr>
                                         )) 
                                      } 
@@ -356,7 +399,6 @@ function ListCustomers() {
                         </div>
 
 
-
                         <div className="row">
                             {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
                             <div className="col-sm-12 col-md-6">
@@ -395,6 +437,7 @@ function ListCustomers() {
 
                 
                         </div>
+                        
                         </form>
                     </div>
 
@@ -406,7 +449,6 @@ function ListCustomers() {
                     </div>
                 </div>
                  {/* END Modal */}
-
         
         </div> 
            
