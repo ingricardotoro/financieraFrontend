@@ -42,6 +42,10 @@ body {
     font-family: "Mada", sans-serif;
 }
 
+.desactivado {
+    background-color: lightcoral;
+}
+
 ul {
     padding-left: 0;
     list-style-type: none;

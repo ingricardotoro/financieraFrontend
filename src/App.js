@@ -6,9 +6,13 @@ import './App.css';
 
 import ListCustomers from './components/customers/ListCustomers'
 import ListLoans from './components/loans/ListLoans'
+
+
 import ListRequestPage from './page/Requests/ListRequestPage'
+import RecordsPage from './page/Customers/Records'
 import Inicio from "./components/Inicio";
 import NewRequestPage from "./page/Requests/NewRequestPage";
+import ListLoansPage from "./page/Loans/ListLoans";
 
 function App() {
   return (
@@ -26,12 +30,13 @@ function App() {
               {/**********FIN MODULO SIDEBAR */}
 
         <Route exact path="/" component={Inicio} />
+        <Route exact path="/clientes/expediente/:idcustomer" component={RecordsPage} />
         <Route exact path="/clientes" component={ListCustomers} />
 
         <Route exact path="/solicitudes/crear" component={NewRequestPage} />
         <Route exact path="/solicitudes" component={ListRequestPage} />
 
-        <Route exact path="/prestamos" component={ListLoans} />
+        <Route exact path="/prestamos" component={ListLoansPage} />
 
 
       </Router>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import {Link, Redirect} from 'react-router-dom'
 
@@ -34,7 +34,10 @@ function ListRequestPage() {
        
     })
 
-    //const {customerId, codeRequest,typeLoan,amount,rate,frequency,quota,quotaValue,totalInterest,closingCost,startDate,sucursal,details,stateRequest, } = formValues
+    const [totalRequestsRegistradas, setToTalRequestsRegistradas] = useState(0)
+    const [totalRequestsPendientes, setTotalRequestsPendientes] = useState(0)
+    const [totalRequestsAprobadas, setTotalRequestsAprobadas] = useState(0)
+    const [totalRequestsDenegadas, setTotalRequestsDenegadas] = useState(0)
 
     const handleSubmit = async(e)=>{
         
@@ -45,7 +48,7 @@ function ListRequestPage() {
         window.location.href ='/solicitudes'
     }
 
-
+    
     return (
         <div class="pcoded-content">
 
@@ -86,7 +89,7 @@ function ListRequestPage() {
                         <div className="col-md-6 col-xl-3">
                             <div className="card social-widget-card">
                             <div className="card-block-big bg-facebook">
-                                <h3>750</h3>
+                                <h3>{totalRequestsRegistradas} </h3>
                                 <span className="m-t-10" style={{color:"white", fontSize:16}}>Solicitudes Registradas</span>
                                 <i className="icofont icofont-edit" style={{opacity:1}}  />
                             </div>
@@ -97,7 +100,7 @@ function ListRequestPage() {
                         <div className="col-md-6 col-xl-3">
                             <div className="card social-widget-card">
                             <div className="card-block-big" style={{backgroundColor:"#f1c40f"}}>
-                                <h3>550</h3>
+                                <h3>{totalRequestsPendientes}</h3>
                                 <span className="m-t-10 size-16" style={{color:"white", fontSize:16}}>Solicitudes Pendientes</span>
                                 <i className="icofont icofont-hour-glass" style={{opacity:1}} />
                             </div>
@@ -108,7 +111,7 @@ function ListRequestPage() {
                         <div className="col-md-6 col-xl-3">
                             <div className="card social-widget-card">
                             <div className="card-block-big" style={{backgroundColor:"#40b572"}}>
-                                <h3>300</h3>
+                                <h3>{totalRequestsAprobadas}</h3>
                                 <span className="m-t-10 size-16" style={{color:"white", fontSize:16}}>Solicitudes Aprobadas</span>
                                 <i className="icofont icofont-check-circled" style={{opacity:1}} />
                             </div>
@@ -119,7 +122,7 @@ function ListRequestPage() {
                         <div className="col-md-6 col-xl-3">
                             <div className="card social-widget-card">
                             <div className="card-block-big bg-google-plus">
-                                <h3>250</h3>
+                                <h3>{totalRequestsDenegadas}</h3>
                                 <span className="m-t-10 size-16"style={{color:"white", fontSize:16}}>Solicitudes Denegadas</span>
                                 <i className="icofont icofont-close-circled" style={{opacity:1}} />
                             </div>
@@ -146,18 +149,15 @@ function ListRequestPage() {
                         </div>
                         {/* Linked in card end */}
                         {/* Google-plus card start */}
-                        <div className=" col-sm-12 col-md-2 col-xl-2">
-                            <button className="col-sm-12 mt-3 btn btn-success btn-round f-right d-inline-flex"  data-toggle="modal" data-target="#modalNewRequest">
+                         <div className=" col-sm-12 col-md-2 col-xl-2">
+                            <button className="col-sm-12 mt-3 btn btn-success btn-round f-right d-inline-flex" >
                                 {<AddCircleIcon />}     
-                                Nueva Solicitud
+                                <Link style={{color:"white"}} to="/solicitudes/crear">
+                                    {<addcircleicon />}     
+                                    Crear Solicitud
+                                </Link> 
                             </button>
-                        </div>
-                        <div classname=" col-sm-12 col-md-2 col-xl-2">
-                            <Link to="/solicitudes/crear" classname="col-sm-12 mt-3 btn btn-success btn-round f-right d-inline-flex">
-                                {<addcircleicon />}     
-                                Crear Solicitud
-                            </Link>
-                            </div>
+                        </div> 
 
 
                     </div>
