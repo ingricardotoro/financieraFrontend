@@ -111,7 +111,7 @@ function Sidebar() {
 
                             
                             <li className="pcoded-hasmenu">
-                                <a  href="/clientes">
+                                <a  href="#">
                                     <span className="pcoded-micon"><i className="ti-exchange-vertical"></i></span>
                                     <span className="pcoded-mtext" data-i18n="nav.dash.main">Movimientos</span>
                                     <span className="pcoded-mcaret"></span>

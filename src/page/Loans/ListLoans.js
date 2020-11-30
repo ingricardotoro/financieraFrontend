@@ -35,6 +35,54 @@ function ListLoans() {
             {/* Page-body start */}
             <div className="page-body">
 
+                
+            <div className="row">
+                        {/* Facebook card start */}
+                        <div className="col-md-6 col-xl-3">
+                            <div className="card social-widget-card">
+                            <div className="card-block-big bg-facebook">
+                                <h3>0</h3>
+                                <span className="m-t-10" style={{color:"white", fontSize:16}}>Préstamos Registrados</span>
+                                <i className="icofont icofont-edit" style={{opacity:1}}  />
+                            </div>
+                            </div>
+                        </div>
+                        {/* Facebook card end */}
+                        {/* Twitter card start */}
+                        <div className="col-md-6 col-xl-3">
+                            <div className="card social-widget-card">
+                            <div className="card-block-big bg-twitter">
+                                <h3>0</h3>
+                                <span className="m-t-10 size-16" style={{color:"white", fontSize:16}}>Préstamos Activos</span>
+                                <i className="icofont icofont-money" style={{opacity:1}} />
+                            </div>
+                            </div>
+                        </div>
+                        {/* Twitter card end */}
+                        {/* Linked in card start */}
+                        <div className="col-md-6 col-xl-3">
+                            <div className="card social-widget-card">
+                            <div className="card-block-big" style={{backgroundColor:"#40b572"}}>
+                                <h3>0</h3>
+                                <span className="m-t-10 size-16" style={{color:"white", fontSize:16}}>Prestamos Al Dia</span>
+                                <i className="icofont icofont-check-circled" style={{opacity:1}} />
+                            </div>
+                            </div>
+                        </div>
+                        {/* Linked in card end */}
+                        {/* Google-plus card start */}
+                        <div className="col-md-6 col-xl-3">
+                            <div className="card social-widget-card">
+                            <div className="card-block-big bg-google-plus">
+                                <h3>0</h3>
+                                <span className="m-t-10 size-16"style={{color:"white", fontSize:16}}>Préstamos en Mora</span>
+                                <i className="icofont icofont-close-circled" style={{opacity:1}} />
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+
+
                 <div className="card">
                     <div className="card-header">
 
@@ -44,10 +92,11 @@ function ListLoans() {
                             <thead>
                             <tr>
                                 <th>#</th>
+                                <th>Código</th>
                                 <th>Cliente</th>
-                                <th>Finalización</th>
                                 <th>Tipo Préstamos</th>
                                 <th>Capital</th>
+                                <th>Tasa</th>
                                 <th>Interes</th>
                                 <th>Frecuencia</th>
                                 <th>Cuota</th>
@@ -61,9 +110,10 @@ function ListLoans() {
                             <tr style={{backgroundColor:"lightgreen"}}>
                                 <td>#</td>
                                 <td>112</td>
-                                <td>10/02/2021</td>
+                                <td>Marvin Toro</td>
                                 <td>Fiduciario</td>
                                 <td>8000.00</td>
+                                <td>12%</td>
                                 <td>920.00</td>
                                 <td>Mensual</td>
                                 <td>770.00</td>
@@ -75,9 +125,10 @@ function ListLoans() {
                             <tr style={{backgroundColor:"lightcoral"}}>
                                 <td>#</td>
                                 <td>110</td>
-                                <td>30/06/2020</td>
+                                <td>Douglas Portillo</td>
                                 <td>Fiduciario</td>
                                 <td>6000.00</td>
+                                <td>12%</td> 
                                 <td>720.00</td>
                                 <td>Mensual</td>
                                 <td>580.00</td>

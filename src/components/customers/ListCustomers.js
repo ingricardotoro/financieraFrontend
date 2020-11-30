@@ -35,6 +35,8 @@ function ListCustomers() {
    
     const [customers, setCustomers] = useState([])
     const [codeCustomer, setCodeCustomer] = useState(0)
+    const [customersFilters, setCustomersFilters] = useState([])
+    const [finding, setFinding] = useState(false)
 
     const [totalCustomersRegister, setTotalCustomersRegister] = useState(0)
     const [totalCustomersWithLoanActive, setTotalCustomersWithLoanActive] = useState(0)
@@ -51,8 +53,12 @@ function ListCustomers() {
 
         const resp_customers = await axios.get(URL_API+'/customers')
         const resp_MaxCode = await axios.get(URL_API+'/customers/lastCode')
-      
+        
+        //arreglo principal de clientes
         setCustomers(resp_customers.data.customers)
+        //Arreglo para realizar las busquedas
+        setCustomersFilters(resp_customers.data.customers)
+
         setTotalCustomersRegister(resp_customers.data.customers.length)
 
         //Obtenemos la cantidad total de clientes con prestamos activo
@@ -62,6 +68,9 @@ function ListCustomers() {
             ? setTotalCustomersWithLoanActive(setTotalCustomersWithLoanActive+1)
             : null
         ))    
+
+        //no es una busqueda por filtro de busqueda
+        setFinding(false)
         
         //Obtenemos la cantidad total de clients morosos y solventes
         customers.map(customer =>(
@@ -71,7 +80,7 @@ function ListCustomers() {
             : setTotalCustomersSolved(setTotalCustomersSolved+1)
         ))
 
-
+        //obtenemos el siguente codigo de cliente a ingresar
         if(resp_MaxCode.data.LastCode[0]){
             setCodeCustomer(resp_MaxCode.data.LastCode[0].codeCustomer+1)
         }else{
@@ -95,7 +104,42 @@ function ListCustomers() {
         }
     }
 
+    //funcion para filtrar y realizar busquedas por nombre y apellido
+    const filterItems = (query)=> {
+        return customers.filter(function(el) {
+            return (el.personId.name.toLowerCase().indexOf(query.toLowerCase()) > -1 ||
+                    el.personId.lastname.toLowerCase().indexOf(query.toLowerCase()) > -1
+                    )
+        })
+      }
 
+    //funcion para mostrar los valores que han sido filtrados y buscados
+    const handleFindCustomer =(e)=>{
+        
+        if(e.target.value!=0){
+            let filters = filterItems(e.target.value)
+            setCustomersFilters(filters)
+            setFinding(true)
+        }else{
+            obtenerClientes()
+        }
+
+    }
+
+    //realizar busquedas mediante el boton de buscar
+    const handleButtonFindCustomer = ()=>{
+       
+        let query = document.getElementById("textFindCustomer").value
+        if(query!=0){
+            let filters = filterItems(query)
+            setCustomersFilters(filters)
+            setFinding(true)
+        }else{
+            obtenerClientes()
+        }
+    }
+
+    //funcion para crear nuevos clientes
     const handleSubmit = async(e)=>{
         
         e.preventDefault()
@@ -104,9 +148,8 @@ function ListCustomers() {
 
         await axios.post(URL_API+'/customers', formValues)
 
-        //window.location.href ='/clientes'
         obtenerClientes()
-        //$('#closeModal').
+     
         document.getElementById("closeModal").click();
     } 
 
@@ -196,14 +239,14 @@ function ListCustomers() {
 
                         {/* Facebook card start */}
                         <div className="col-md-6 col-xl-8">
-                            <input type="text" className="mt-3 form-control form-control-round" style={{borderRadius: "50px"}} placeholder="Buscar Cliente ..."  />
+                            <input onChange={handleFindCustomer} type="text" id="textFindCustomer" className="mt-3 form-control form-control-round" style={{borderRadius: "50px"}} placeholder="Buscar Cliente ..."  />
                         </div>
                         {/* Facebook card end */}
                        
                        
                         {/* Linked in card start */}
                         <div className="col-sm-12 col-md-3 col-xl-2">
-                            <button className="col-sm-12 mt-3 btn btn-primary  btn-round f-right d-inline-flex">
+                            <button onClick={() => handleButtonFindCustomer()} className="col-sm-12 mt-3 btn btn-primary  btn-round f-right d-inline-flex">
                                 {<SearchIcon />} 
                                 Buscar Cliente  
                             </button>
@@ -240,7 +283,8 @@ function ListCustomers() {
                             </thead>
                             <tbody>
 
-                                {       
+                                {     finding === false ? 
+
                                        customers?.map(customer => ( 
 
                                         <tr className={customer.active ? null : "desactivado"}  key={customer._id}>
@@ -260,6 +304,30 @@ function ListCustomers() {
                                             </td>
                                         </tr>
                                         )) 
+
+                                        :
+
+                                        customersFilters?.map(customer => ( 
+
+                                            <tr className={customer.active ? null : "desactivado"}  key={customer._id}>
+                                                <th scope="row">1</th>
+                                                <td> <Avatar alt="Remy Sharp" src="assets/images/avatar-4.png" /></td>
+                                                <td>{customer.codeCustomer}</td>
+                                                <td>{customer.personId.name}</td>
+                                                <td>{customer.personId.lastname}</td>    
+                                                <td>{customer.personId.identidad}</td>
+                                                <td>{customer.personId.phone1}</td>
+                                                <td><Link to ={`clientes/expediente/${customer.personId._id}`} className="btn btn-sm btn-success "> {<InfoIcon />}</Link></td>
+                                                <td>
+                                                    {customer.active === true 
+                                                        ? <button onClick={() => DesactivarCliente(customer._id)} className="btn btn-sm btn-danger"> {<NotInterestedIcon />}</button> 
+                                                        : <button onClick={() =>ActivarCliente(customer._id)} className="btn btn-sm btn-success"> {<CheckCircleOutlineIcon />}</button>
+                                                    }
+                                                </td>
+                                            </tr>
+                                            )) 
+
+
                                      } 
                             
                             </tbody>

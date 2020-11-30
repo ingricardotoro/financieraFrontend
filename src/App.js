@@ -13,12 +13,14 @@ import RecordsPage from './page/Customers/Records'
 import Inicio from "./components/Inicio";
 import NewRequestPage from "./page/Requests/NewRequestPage";
 import ListLoansPage from "./page/Loans/ListLoans";
+import Login from "./page/Login";
 
 function App() {
   return (
     <div className="App">
 
       <Router>
+      <Route exact path="/login" component={Login} />
 
               {/**************MODULO NAVBAR */}
               <Navbar />
@@ -29,7 +31,6 @@ function App() {
               <Sidebar />
               {/**********FIN MODULO SIDEBAR */}
 
-        <Route exact path="/" component={Inicio} />
         <Route exact path="/clientes/expediente/:idcustomer" component={RecordsPage} />
         <Route exact path="/clientes" component={ListCustomers} />
 
