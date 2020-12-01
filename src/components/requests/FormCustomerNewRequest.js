@@ -52,26 +52,25 @@ function FormCustomerNewRequest() {
  
   useEffect (() => {  
       obtenerClientes()
-
+      //SetClientesArray()
   }, [])
 
   const obtenerClientes = async()=>{
-
-      const resp_customers = await Axios.get(URL_API +'/customers')
+       
+      const resp_customers = await Axios.get(URL_API +'/customers')   
       setCustomers(resp_customers.data.customers)
-    
-      customers.map(customer=>(
-          setClientes (
-              ...clientes,
-              {
-              id:customer._id,
-              name:customer.personId.name,
-              lastname:customer.personId.lastname
-          })
-      ))
-
-      console.log(JSON.stringify(clientes))
-
+      console.log("OK=",JSON.stringify(customers))
+       
+        /*resp_customers.data.customers.map(customer=>(
+        setClientes ( 
+            {
+            id:customer._id,
+            name:customer.personId.name,
+            lastname:customer.personId.lastname
+            })
+        ))*/
+        //console.log("OK=",JSON.stringify(clientes))
+      
   }
 
   const handleCustomSelect = (event,newValue)=>{
@@ -100,16 +99,16 @@ function FormCustomerNewRequest() {
             <div className="row">
 
                 <div className="col-sm-4 col-md-6">
-                    <label htmlfor="free-solo-2-demo" className="block">Nombre de Cliente</label>
+                    <label htmlFor="free-solo-2-demo" className="block">Nombre de Cliente</label>
                 <div >
 
                 <Autocomplete
-                    options={clientes}
+                    options={customers}
                     value={value}
-                    getOptionLabel={(option) => option.name + option.lastname}
+                    getOptionLabel={(option) => option?.personId?.name + option?.personId?.lastname}
                     renderOption={(option) => (
                     <>
-                        {option.name} {option.lastname}
+                        {option?.personId?.name} {option?.personId?.lastname}
                     </>
                     )}
                     onChange={(event, newValue) => {
@@ -138,7 +137,7 @@ function FormCustomerNewRequest() {
             </div>
 
                 <div className="col-sm-4 col-md-6">
-                    <label htmlfor="codeCustomer" className="block">Código de Cliente</label>
+                    <label htmlFor="codeCustomer" className="block">Código de Cliente</label>
                 <div >
                     <input value={codeCustomer} disabled name="codeCustomer" type="text" id="codeCustomer" className="required form-control" />
                 </div>
@@ -156,8 +155,8 @@ function FormCustomerNewRequest() {
 
                 <div className="col-sm-12 col-md-6">
                     <div className="input-group">
-                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-location-arrow"></i></span>
-                    <textarea value={location} disabled  name="location" id="location" class="form-control" rows="5" placeholder="Dirección del cliente"></textarea>  
+                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-location-arrow"></i></span>
+                    <textarea value={location} disabled  name="location" id="location" className="form-control" rows="5" placeholder="Dirección del cliente"></textarea>  
                     </div>
                 </div>
 
@@ -185,14 +184,14 @@ function FormCustomerNewRequest() {
 
                 <div className="col-sm-12 col-md-6">
                     <div className="input-group">
-                        <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-iphone"></i></span>
+                        <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-iphone"></i></span>
                         <input value={phone1} disabled  name="phone1" id="phone1" type="text" className="form-control" placeholder="Número de Teléfono 1" />
                     </div>
                 </div>
 
                 <div className="col-sm-12 col-md-6">
                     <div className="input-group">
-                        <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-iphone"></i></span>
+                        <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-iphone"></i></span>
                         <input value={phone2} disabled  name="phone2" id="phone2" type="text" className="form-control" placeholder="Número de Teléfono 2"/>
                     </div>
                 </div>
@@ -221,14 +220,14 @@ function FormCustomerNewRequest() {
 
                 <div className="col-sm-12 col-md-6">
                     <div className="input-group">
-                        <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-location-pin"></i></span>
+                        <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-location-pin"></i></span>
                         <input value={city} disabled  name="city" id="city" type="text" className="form-control" placeholder="Localidad del Cliente" />
                     </div>
                 </div>
 
                 <div className="col-sm-12 col-md-6">
                     <div className="input-group">
-                        <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-ui-calendar mr-1"></i> Nacimiento</span>
+                        <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-calendar mr-1"></i> Nacimiento</span>
                         <input value={fec_nac} disabled  name="fec_nac" id="fec_nac" type="text" className="form-control" placeholder="Fecha de Nacimiento"/>
                     </div>
                 </div>

@@ -13,6 +13,7 @@ import FilesListcustomer from '../../components/customers/FilesListcustomer';
 import LoanCustomer from '../../components/customers/LoanCustomer';
 
 function TabPanel(props) {
+
   const { children, value, index, ...other } = props;
 
   return (
@@ -52,7 +53,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SimpleTabs() {
+export default function SimpleTabs(props) {
+
+  let idCustomer = props.match.params.idcustomer
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
@@ -62,9 +65,9 @@ export default function SimpleTabs() {
 
   return (
             
-    <div class="pcoded-content">
+    <div className="pcoded-content">
 
-    <div class="pcoded-inner-content">
+    <div className="pcoded-inner-content">
 
         {/* Main-body start */}
         <div className="main-body">
@@ -102,7 +105,7 @@ export default function SimpleTabs() {
                         </Tabs>
                     </AppBar>
                     <TabPanel value={value} index={0}>
-                        <DataCustomer />
+                        <DataCustomer idCustomer={idCustomer} />
                     </TabPanel>
                     <TabPanel value={value} index={1}>
                         <FilesListcustomer />

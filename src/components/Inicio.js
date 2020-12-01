@@ -4,40 +4,40 @@ import logocredisa from '../logocredisa.png'
 function Inicio() {
     return (
         
-        <div class="pcoded-content">
-        <div class="pcoded-inner-content">
+        <div className="pcoded-content">
+        <div className="pcoded-inner-content">
 
-            <div class="main-body">
-                <div class="page-wrapper">
-                    <div class="page-header mt-5">
-                        <div class="page-header-title">
+            <div className="main-body">
+                <div className="page-wrapper">
+                    <div className="page-header mt-5">
+                        <div className="page-header-title">
                             <h4>SISTEMA FINANCIERO CREDISAS</h4>
                             <span>Sistema para la gestión de prestamos financieros</span>
                         </div>
-                        <div class="page-header-breadcrumb">
-                            <ul class="breadcrumb-title">
-                                <li class="breadcrumb-item">
+                        <div className="page-header-breadcrumb">
+                            <ul className="breadcrumb-title">
+                                <li className="breadcrumb-item">
                                     <a href="index.html">
-                                        <i class="icofont icofont-home"></i>
+                                        <i className="icofont icofont-home"></i>
                                     </a>
                                 </li>
-                                <li class="breadcrumb-item"><a href="#!">Inicio</a>
+                                <li className="breadcrumb-item"><a href="#!">Inicio</a>
                                 </li>
-                                <li class="breadcrumb-item"><a href="#!">Bienvendo</a>
+                                <li className="breadcrumb-item"><a href="#!">Bienvendo</a>
                                 </li>
                             </ul>
                         </div>
                     </div>
-                    <div class="page-body">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="card">
-                                    <div class="card-header ">
+                    <div className="page-body">
+                        <div className="row">
+                            <div className="col-sm-12">
+                                <div className="card">
+                                    <div className="card-header ">
                                         <h5>Bienvenidos al Sistema Credisas</h5>
                                         <span>Pagina Inicial del Sistema</span>
                                         
                                     </div>
-                                    <div class="card-block">
+                                    <div className="card-block">
                                         <p>
                                             Sistema Actualmente en Desarrollo por: Ing. Marvin Ricardo Toro
                                         </p>

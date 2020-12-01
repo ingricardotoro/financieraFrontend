@@ -4,9 +4,9 @@ import RemoveRedEyeIcon from '@material-ui/icons/RemoveRedEye';
 function ListLoans() {
     return (
 
-    <div class="pcoded-content">
+    <div className="pcoded-content">
 
-        <div class="pcoded-inner-content">
+        <div className="pcoded-inner-content">
 
             {/* Main-body start */}
             <div className="main-body">

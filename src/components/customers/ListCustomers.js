@@ -154,9 +154,9 @@ function ListCustomers() {
     } 
 
     return (
-        <div class="pcoded-content">
+        <div className="pcoded-content">
 
-        <div class="pcoded-inner-content">
+        <div className="pcoded-inner-content">
  
             {/* Main-body start */}
             <div className="main-body">
@@ -295,7 +295,7 @@ function ListCustomers() {
                                             <td>{customer.personId.lastname}</td>    
                                             <td>{customer.personId.identidad}</td>
                                             <td>{customer.personId.phone1}</td>
-                                            <td><Link to ={`clientes/expediente/${customer.personId._id}`} className="btn btn-sm btn-success "> {<InfoIcon />}</Link></td>
+                                            <td><Link to ={`clientes/expediente/${customer._id}`} className="btn btn-sm btn-success "> {<InfoIcon />}</Link></td>
                                             <td>
                                                 {customer.active === true 
                                                     ? <button onClick={() => DesactivarCliente(customer._id)} className="btn btn-sm btn-danger"> {<NotInterestedIcon />}</button> 
@@ -367,14 +367,14 @@ function ListCustomers() {
                             {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-ui-edit"></i></span>
+                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-edit"></i></span>
                                     <input onChange={handleInputChange} name="name" id="name" type="text" className="form-control" placeholder="Ingrese Nombres" />
                                 </div>
                             </div>
 
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-ui-edit"></i></span>
+                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-edit"></i></span>
                                     <input onChange={handleInputChange} name="lastname" id="lastname" type="text" className="form-control" placeholder="Ingrese Apellidos"/>
                                 </div>
                             </div>
@@ -385,14 +385,14 @@ function ListCustomers() {
                             {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-ui-edit"></i></span>
+                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-edit"></i></span>
                                     <input onChange={handleInputChange} name="identidad" id="identidad" type="text" className="form-control" placeholder="Identidad: 0801199916151" />
                                 </div>
                             </div>
 
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-ui-edit"></i></span>
+                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-edit"></i></span>
                                     <input onChange={handleInputChange} name="rtn" id="rtn" type="text" className="form-control" placeholder="RTN. 08011999161512" />
                                 </div>
                             </div>
@@ -404,14 +404,14 @@ function ListCustomers() {
                             {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-iphone"></i></span>
+                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-iphone"></i></span>
                                     <input onChange={handleInputChange}  name="phone1" id="phone1" type="text" className="form-control" placeholder="Teléfono-1"/>
                                 </div>
                             </div>
 
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-iphone"></i></span>
+                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-iphone"></i></span>
                                     <input onChange={handleInputChange}  name="phone2" id="phone2" type="text" className="form-control" placeholder="Teléfono-2"/>
                                 </div>
                             </div>
@@ -443,8 +443,8 @@ function ListCustomers() {
                             {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-location-pin"></i></span>
-                                    <select onChange={handleInputChange}  name="city" id="city" class="form-control col-md-12"> 
+                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-location-pin"></i></span>
+                                    <select onChange={handleInputChange}  name="city" id="city" className="form-control col-md-12"> 
                                         <option value="opt1">Selecione Localidad</option>
                                         <option value="Olanchito">Olanchito</option>
                                         <option value="Ceiba">La Ceiba</option>
@@ -459,8 +459,8 @@ function ListCustomers() {
 
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-ui-calendar mr-1"></i> Nacimiento</span>
-                                    <input onChange={handleInputChange}  name="fec_nac" id="fec_nac" class="form-control" type="date"/>
+                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-calendar mr-1"></i> Nacimiento</span>
+                                    <input onChange={handleInputChange}  name="fec_nac" id="fec_nac" className="form-control" type="date"/>
                                 </div>
                             </div>
                             
@@ -471,19 +471,19 @@ function ListCustomers() {
                             {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-location-arrow"></i></span>
-                                    <textarea onChange={handleInputChange}  name="location" id="location" class="form-control" rows="5" placeholder="Dirección completa"></textarea>  
+                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-location-arrow"></i></span>
+                                    <textarea onChange={handleInputChange}  name="location" id="location" className="form-control" rows="5" placeholder="Dirección completa"></textarea>  
                                 </div>
                             </div>
 
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-fix-tools "></i></span>
+                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-fix-tools "></i></span>
                                     <input onChange={handleInputChange}  name="profesion" id="profesion" type="text" className="form-control" placeholder="Profesión" />
                                 </div>
                                 <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-group-students"></i></span>
-                                    <select onChange={handleInputChange}  name="gender" id="gender"  class="form-control col-md-12"> 
+                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-group-students"></i></span>
+                                    <select onChange={handleInputChange}  name="gender" id="gender"  className="form-control col-md-12"> 
                                         <option value="opt1">Selecione Género</option>
                                         <option value="Femenino">Femenino</option>
                                         <option value="Masculino">Masculino</option>
@@ -498,8 +498,8 @@ function ListCustomers() {
                             {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
                             <div className="col-sm-12 col-md-12">
                                 <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-paper-clip mr-1"></i>Fotografia </span>
-                                    <input onChange={handleInputChange}  name="photo" id="photo" type="file" class="form-control"></input>
+                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-paper-clip mr-1"></i>Fotografia </span>
+                                    <input onChange={handleInputChange}  name="photo" id="photo" type="file" className="form-control"></input>
                                 </div>
                             </div>
 

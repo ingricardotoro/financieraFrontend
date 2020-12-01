@@ -45,9 +45,9 @@ function ListRequests() {
 
 
     return (
-        <div class="pcoded-content">
+        <div className="pcoded-content">
 
-        <div class="pcoded-inner-content">
+        <div className="pcoded-inner-content">
 
             {/* Main-body start */}
             <div className="main-body">
@@ -287,14 +287,14 @@ function ListRequests() {
                             {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-user"></i></span>
+                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-user"></i></span>
                                     <input type="text" className="form-control" placeholder="Ingrese Nombre de Cliente" />
                                 </div>
                             </div>
 
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-ui-edit"></i></span>
+                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-edit"></i></span>
                                     <input disabled={true} type="text" className="form-control" placeholder="Código de Cliente"/>
                                 </div>
                             </div>
@@ -306,8 +306,8 @@ function ListRequests() {
                             <div className="col-sm-12 col-md-6">
                             <label htmlFor="monto">Tipo de Préstamo</label>
                                 <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-money"></i></span>
-                                    <select onChange={handleInputChange} name="typeLoan" id="typeLoan" class="form-control col-md-12"> 
+                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-money"></i></span>
+                                    <select onChange={handleInputChange} name="typeLoan" id="typeLoan" className="form-control col-md-12"> 
                                         <option value="opt1">Tipo de Préstamos</option>
                                         <option value="Amortizacion">Amortizacion</option>
                                         <option value="Interes Simple">Interes Simple</option>
@@ -339,8 +339,8 @@ function ListRequests() {
 
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-hour-glass"></i></span>
-                                    <select onChange={handleInputChange} name="frequency" id="frequency"  class="form-control col-md-12"> 
+                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-hour-glass"></i></span>
+                                    <select onChange={handleInputChange} name="frequency" id="frequency"  className="form-control col-md-12"> 
                                         <option value="opt1">Frecuencia de Pago</option>
                                         <option value="Semanal">Semanal</option>
                                         <option value="Quincenal">Quincenal</option>
@@ -357,7 +357,7 @@ function ListRequests() {
                             <div className="col-sm-12 col-md-6">
                             <label htmlFor="dateInicio">Número de Cuotas</label> 
                                 <div className="input-group">
-                                    <span className="input-group-addon"  id="basic-addon1"><i class="icofont icofont-listing-number"></i></span>
+                                    <span className="input-group-addon"  id="basic-addon1"><i className="icofont icofont-listing-number"></i></span>
                                     <input onChange={handleInputChange} name="quota" id="quota" type="text" className="form-control" placeholder="Cantidad de Cuotas"/>
                                 </div>
                             </div>
@@ -379,8 +379,8 @@ function ListRequests() {
                             <div className="col-sm-12 col-md-6">
                                 <label htmlFor="dateInicio">Fecha de Inicio</label> 
                                 <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-ui-calendar mr-1"></i></span>
-                                    <input onChange={handleInputChange} name="startDate" id="startDate" class="form-control" type="date"/>
+                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-calendar mr-1"></i></span>
+                                    <input onChange={handleInputChange} name="startDate" id="startDate" className="form-control" type="date"/>
                                 </div>
                             </div>
 
@@ -400,8 +400,8 @@ function ListRequests() {
                             {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-ui-edit"></i></span>
-                                    <textarea onChange={handleInputChange} name="details" id="details" class="form-control" rows="6" placeholder="Observaciones"></textarea>  
+                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-edit"></i></span>
+                                    <textarea onChange={handleInputChange} name="details" id="details" className="form-control" rows="6" placeholder="Observaciones"></textarea>  
                                 </div>
                             </div>
 
@@ -412,8 +412,8 @@ function ListRequests() {
                                     <input className="form-control" onChange={handleInputChange} name="closingCost" id="closingCost" type="text" placeholder="Costo de Cierre 4%" />
                                 </div>
                                 <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-bank-alt"></i> </span> 
-                                    <select onChange={handleInputChange} name="sucursal" id="sucursal" class="form-control col-md-12"> 
+                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-bank-alt"></i> </span> 
+                                    <select onChange={handleInputChange} name="sucursal" id="sucursal" className="form-control col-md-12"> 
                                         <option value="opt1">Seleccione Sucursal</option>
                                         <option value="Central">Central</option>  
                                         <option value="Valle Alto">Valle Alto</option>
@@ -428,11 +428,11 @@ function ListRequests() {
                             <div className="col-sm-12 col-md-6">
                                 <label htmlFor="totalInteres">Nombre y Teléfono de Referencia</label>
                                 <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-user"></i></span>
+                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-user"></i></span>
                                     <input id="referecia1" className="form-control" name="referencia1" type="text" placeholder="Nombre de Referencia" />
                                 </div>
                                 <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-iphone"></i> </span> 
+                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-iphone"></i> </span> 
                                     <input id="telefonoRef1" className="form-control" name="telefonoRef1" type="text" placeholder="Teléfono de Referencia" />
                                 </div>
                             </div>
@@ -440,11 +440,11 @@ function ListRequests() {
                             <div className="col-sm-12 col-md-6">
                                 <label htmlFor="totalInteres">Nombre y Teléfono de Referencia</label>
                                 <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-user"></i></span>
+                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-user"></i></span>
                                     <input id="referencia2" className="form-control" name="referencia2" type="text" placeholder="Nombre de Referencia" />
                                 </div>
                                 <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i class="icofont icofont-iphone"></i></span> 
+                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-iphone"></i></span> 
                                     <input id="telefonoRef1" className="form-control" name="telefonoRef1" type="text" placeholder="Teléfono de Referencia" />
                                 </div>
                             </div>
