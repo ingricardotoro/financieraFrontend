@@ -14,6 +14,7 @@ import Inicio from "./components/Inicio";
 import NewRequestPage from "./page/Requests/NewRequestPage";
 import ListLoansPage from "./page/Loans/ListLoans";
 import Login from "./page/Login";
+import CalculatorPage from "./page/Calculator"
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
 
         <Route exact path="/prestamos" component={ListLoansPage} />
 
+        <Route exact path="/calculadora" component={CalculatorPage} />
 
       </Router>
 

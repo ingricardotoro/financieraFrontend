@@ -22,7 +22,7 @@ function FormLoanNewRequest() {
        
     })
 
-    const {totalInterest,quota,quotaValue,amount,rate,closingCost} = formValues
+    const {totalInterest,quota,quotaValue,amount,rate} = formValues
 
     const calcularInteres=()=>{
        
@@ -49,7 +49,6 @@ function FormLoanNewRequest() {
         <div className="container">
 
             <div className="row">
-
                 <div className="col-sm-12 col-md-6">
                     <label htmlFor="monto">Tipo de Préstamo</label>
                     <div className="input-group">

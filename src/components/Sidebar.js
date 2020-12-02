@@ -30,11 +30,11 @@ function Sidebar() {
                             </li>
 
                             <li className="">
-                                <a href="index.html">
+                                <Link to="/calculadora">
                                     <span className="pcoded-micon"><i className="ti-mobile"></i></span>
                                     <span className="pcoded-mtext" data-i18n="nav.dash.default">Calculadora</span>
                                     <span className="pcoded-mcaret"></span>
-                                </a>
+                                </Link>
                             </li>
 
                             <li className="pcoded-hasmenu">
