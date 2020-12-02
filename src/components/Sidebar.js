@@ -92,18 +92,11 @@ function Sidebar() {
 
                                 <ul className="pcoded-submenu">
                                     <li className="">
-                                        <a href="index.html">
+                                        <Link to="/prestamos">
                                             <span className="pcoded-micon"><i className="ti-angle-right"></i></span>
                                             <span className="pcoded-mtext" data-i18n="nav.dash.default">Ver Prestamos</span>
                                             <span className="pcoded-mcaret"></span>
-                                        </a>
-                                    </li>
-                                    <li className=" ">
-                                        <a href="dashboard-ecommerce.html">
-                                            <span className="pcoded-micon"><i className="ti-angle-right"></i></span>
-                                            <span className="pcoded-mtext" data-i18n="nav.dash.ecommerce">Nuevo Prestamos</span>
-                                            <span className="pcoded-mcaret"></span>
-                                        </a>
+                                        </Link>
                                     </li>
                                 </ul>
 

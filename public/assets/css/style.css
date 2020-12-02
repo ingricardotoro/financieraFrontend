@@ -56,7 +56,12 @@ ul {
     .stepperCustomer {
         display: block;
     }
+    .vertical {
+        display: flex;
+    }
 }
+
+@media screen and (max-width: 400px) {}
 
 * a {
     font-size: 14px;

@@ -42,6 +42,10 @@ function FormLoanNewRequest() {
 
         //calcular valor de cuota
         document.getElementById('quotaValue').value=(parseFloat(amount) + parseFloat(InteresTotal)+parseFloat(closingCostVar))/quota
+    
+         //Calculo del Monto Total a Pagar
+         let totalAmount = parseFloat(amount) + parseFloat(InteresTotal)+parseFloat(closingCostVar)
+         document.getElementById('totalAmount').value = totalAmount
     }
 
     return (
@@ -49,7 +53,7 @@ function FormLoanNewRequest() {
         <div className="container">
 
             <div className="row">
-                <div className="col-sm-12 col-md-6">
+                <div className="col-sm-12 col-md-4">
                     <label htmlFor="monto">Tipo de Préstamo</label>
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-money"></i></span>
@@ -64,7 +68,7 @@ function FormLoanNewRequest() {
                     </div>
                 </div>
 
-                <div className="col-sm-12 col-md-6">
+                <div className="col-sm-12 col-md-4">
                     <label htmlFor="monto">Monto Solicitado</label>
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1">LPS.</span>
@@ -72,11 +76,7 @@ function FormLoanNewRequest() {
                     </div>
                 </div>
 
-            </div>
-
-            <div className="row">
-                {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
-                <div className="col-sm-12 col-md-6">
+                <div className="col-sm-12 col-md-4">
                     <label htmlFor="rate">Tasa de Interes Anual</label>
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1">%</span>
@@ -84,7 +84,11 @@ function FormLoanNewRequest() {
                     </div>         
                 </div>
 
-                <div className="col-sm-12 col-md-6">
+            </div>
+
+            <div className="row">
+                {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
+                <div className="col-sm-12 col-md-4">
                     <label htmlFor="frecuency">Frecuencia de Pago</label>
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-hour-glass"></i></span>
@@ -96,13 +100,8 @@ function FormLoanNewRequest() {
                         </select>
                     </div>
                 </div>
-                
-            </div>
 
-
-            <div className="row">
-                {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
-                <div className="col-sm-12 col-md-6">
+                <div className="col-sm-12 col-md-4">
                 <label htmlFor="dateInicio">Número de Cuotas</label> 
                     <div className="input-group">
                         <span className="input-group-addon"  id="basic-addon1"><i className="icofont icofont-listing-number"></i></span>
@@ -110,37 +109,55 @@ function FormLoanNewRequest() {
                     </div>
                 </div>
 
-                <div className="col-sm-12 col-md-6">
+                <div className="col-sm-12 col-md-4">
+                    <label htmlFor="dateInicio">Calcular Préstamo</label>
+                    <div className="input-group">
+                        <button onClick={()=> calcularInteres() } className="btn btn-success width-100">CALCULAR</button>
+                    </div>
+                </div>
+                
+            </div>
+
+
+            <div className="row">
+                {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
+               
+                <div className="col-sm-12 col-md-3">
                 <label htmlFor="dateInicio">Valor de cada cuota</label>
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1">LPS.</span>
                         <input disabled value={quotaValue} onChange={handleInputChange} name="quotaValue" id="quotaValue" type="text" className="form-control" placeholder="Valor de cada cuota" />
                     </div>
                 </div>
-                
-            </div>
 
-            <hr />
-
-            <div className="row">
-                
-                <div className="col-sm-12 col-md-6">
-                    <label htmlFor="dateInicio">Fecha de Inicio</label> 
-                    <div className="input-group">
-                        <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-calendar mr-1"></i></span>
-                        <input name="startDate" id="startDate" className="form-control" type="date"/>
-                    </div>
-                </div>
-
-                <div className="col-sm-12 col-md-6">
+                <div className="col-sm-12 col-md-3">
                     <label htmlFor="totalInterest">Total de Interes</label>
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1">LPS.</span>
                         <input value={totalInterest} disabled onChange={handleInputChange} name="totalInterest" id="totalInterest" type="text" className="form-control" placeholder="Total de Interes" />
                     </div>
                 </div>
-                
+                <div className="col-sm-12 col-md-3">
+                    <label htmlFor="totalInteres">Costo de Cierre y Sucursal</label>
+                    <div className="input-group">
+                        <span className="input-group-addon" id="basic-addon1">LPS.</span>
+                        <input disabled className="form-control" onChange={handleInputChange} name="closingCost" id="closingCost" type="text" placeholder="Costo de Cierre 4%" />
+                    </div>
+                </div>
+
+                <div className="col-sm-12 col-md-3">
+                    <label htmlFor="totalInteres">Monto total a Pagar</label>
+                    <div className="input-group">
+                        <p className="input-group-addon" id="basic-addon1">LPS.</p>
+                        <input disabled className="form-control" onChange={handleInputChange} name="totalAmount" id="totalAmount" type="text" placeholder="Monto Total a Pagar" />
+                    </div>
+                </div>
+
+
+
             </div>
+
+            <hr />
 
             <div className="row">
                 {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
@@ -152,12 +169,17 @@ function FormLoanNewRequest() {
                 </div>
 
                 <div className="col-sm-12 col-md-6">
-                    <label htmlFor="totalInteres">Costo de Cierre y Sucursal</label>
+
+                <div className="input-group">
+                    <label htmlFor="dateInicio">Fecha de Inicio</label> 
                     <div className="input-group">
-                        <span className="input-group-addon" id="basic-addon1">LPS.</span>
-                        <input disabled className="form-control" onChange={handleInputChange} name="closingCost" id="closingCost" type="text" placeholder="Costo de Cierre 4%" />
+                        <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-calendar mr-1"></i></span>
+                        <input name="startDate" id="startDate" className="form-control" type="date"/>
                     </div>
+                </div>
+                   
                     <div className="input-group">
+                    <label htmlFor="sucursal">Sucursal</label> 
                         <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-bank-alt"></i> </span> 
                         <select onChange={handleInputChange} name="sucursal" id="sucursal" className="form-control col-md-12"> 
                             <option value="opt1">Seleccione Sucursal</option>

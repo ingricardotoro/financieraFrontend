@@ -1,5 +1,6 @@
 import React from 'react'
 import RemoveRedEyeIcon from '@material-ui/icons/RemoveRedEye';
+import { Link } from 'react-router-dom';
 
 function ListLoans() {
     return (
@@ -118,7 +119,7 @@ function ListLoans() {
                                 <td>Mensual</td>
                                 <td>770.00</td>
                                 <td>320.00</td>
-                                <td><button className="btn btn-sm btn-success"> {<RemoveRedEyeIcon />}</button></td>
+                                <td><Link to="/pagos" className="btn btn-sm btn-success"> {<RemoveRedEyeIcon />}</Link></td>
                                 
                             </tr>
 
@@ -133,7 +134,7 @@ function ListLoans() {
                                 <td>Mensual</td>
                                 <td>580.00</td>
                                 <td>240.00</td>
-                                <td><button className="btn btn-sm btn-success"> {<RemoveRedEyeIcon />}</button></td>
+                                <td><Link to="/pagos" className="btn btn-sm btn-success"> {<RemoveRedEyeIcon />}</Link></td>
                                 
                             </tr>
                             
