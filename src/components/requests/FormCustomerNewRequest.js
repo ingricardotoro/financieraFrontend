@@ -43,52 +43,34 @@ function FormCustomerNewRequest() {
     const [phone2, setPhone2] = useState('')
     const [email1, setEmail1] = useState('')
     const [email2, setEmail2] = useState('')
-    const [profesion, setProfesion] = useState('')
     const [city, setCity] = useState('')
     const [location, setLocation] = useState('')
-
-    const [clientes, setClientes] = useState([])
-
  
   useEffect (() => {  
       obtenerClientes()
-      //SetClientesArray()
   }, [])
 
   const obtenerClientes = async()=>{
        
       const resp_customers = await Axios.get(URL_API +'/customers')   
       setCustomers(resp_customers.data.customers)
-      console.log("OK=",JSON.stringify(customers))
-       
-        /*resp_customers.data.customers.map(customer=>(
-        setClientes ( 
-            {
-            id:customer._id,
-            name:customer.personId.name,
-            lastname:customer.personId.lastname
-            })
-        ))*/
-        //console.log("OK=",JSON.stringify(clientes))
-      
   }
 
   const handleCustomSelect = (event,newValue)=>{
-
+        
         setValue(newValue);
         setCustomValue(newValue._id);
 
         setCodeCustomer(newValue.codeCustomer)
-        setIdentidad(newValue.identidad)
-        setRtn(newValue.rtn)
-        setFec_nac(newValue.fec_nac)
-        setPhone1(newValue.phone1)
-        setPhone2(newValue.phone2)
-        setEmail1(newValue.email1)
-        setEmail2(newValue.email2)
-        setProfesion(newValue.profesion)
-        setCity(newValue.city)
-        setLocation(newValue.location)
+        setIdentidad(newValue.personId.identidad)
+        setRtn(newValue.personId.rtn)
+        setFec_nac(newValue.personId.fec_nac)
+        setPhone1(newValue.personId.phone1)
+        setPhone2(newValue.personId.phone2)
+        setEmail1(newValue.personId.email1)
+        setEmail2(newValue.personId.email2)
+        setCity(newValue.personId.city)
+        setLocation(newValue.personId.location)
 
   }
 
@@ -105,10 +87,10 @@ function FormCustomerNewRequest() {
                 <Autocomplete
                     options={customers}
                     value={value}
-                    getOptionLabel={(option) => option?.personId?.name + option?.personId?.lastname}
+                    getOptionLabel={(option) => option?.personId?.name +" "+ option?.personId?.lastname}
                     renderOption={(option) => (
                     <>
-                        {option?.personId?.name} {option?.personId?.lastname}
+                        {option?.personId?.name}  {option?.personId?.lastname}
                     </>
                     )}
                     onChange={(event, newValue) => {

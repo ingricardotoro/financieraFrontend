@@ -151,11 +151,12 @@ function ListRequestPage() {
                         {/* Google-plus card start */}
                          <div className=" col-sm-12 col-md-2 col-xl-2">
                             <button className="col-sm-12 mt-3 btn btn-success btn-round f-right d-inline-flex" >
-                                {<AddCircleIcon />}     
+                                 
                                 <Link style={{color:"white"}} to="/solicitudes/crear">
                                     {<AddCircleIcon />}     
                                     Crear Solicitud
                                 </Link> 
+                                
                             </button>
                         </div> 
 
