@@ -1,13 +1,26 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useContext } from 'react'
+import { Link, useHistory } from 'react-router-dom'
 import logocredisa from '../../src/logocredisa.png'
 import userLogo from '../../src/user.png'
+import { AuthContext } from '../auth/AuthContext'
+import { types } from '../types/types'
 
 function Navbar() {
-
+   
     const toggleFullScreen = ()=>{
             return
     }
+
+    const {user,dispatch} = useContext(AuthContext)
+    const history = useHistory()
+    
+    const handleLogout =()=>{
+      dispatch({
+        type:types.logout
+      })
+      history.replace('/login')
+    }
+
 
     return (
 
@@ -51,7 +64,7 @@ function Navbar() {
                <li className="user-profile header-notification">
                   <a  href="/clientes">
                     <img src={userLogo} alt="User-Profile" />
-                    <span>John Doe</span>
+                    <span>{user.name}</span>
                     <i className="ti-angle-down" />
                   </a>
                   <ul className="show-notification profile-notification">
@@ -63,9 +76,9 @@ function Navbar() {
                     </li>
                    
                     <li>
-                      <a href="/">
+                      <Link onClick={()=>handleLogout()}>
                         <i className="ti-layout-sidebar-left" /> Salir
-                      </a>
+                      </Link>
                     </li>
                   </ul>
                 </li>

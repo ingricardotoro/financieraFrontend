@@ -1,57 +1,30 @@
-import React from "react";
-import {BrowserRouter as Router, Route} from "react-router-dom"
-import Navbar from './components/Navbar';
-import Sidebar from './components/Sidebar';
+import React, { useEffect, useReducer } from "react";
 import './App.css';
 
-import ListCustomers from './components/customers/ListCustomers'
-import ListLoans from './components/loans/ListLoans'
+import { AuthContext } from "./auth/AuthContext";
+import { authReducer } from "./auth/authReducer";
+import {AppRouter} from "./routes/AppRouter";
 
-
-import ListRequestPage from './page/Requests/ListRequestPage'
-import RecordsPage from './page/Customers/Records'
-import Inicio from "./components/Inicio";
-import NewRequestPage from "./page/Requests/NewRequestPage";
-import ListLoansPage from "./page/Loans/ListLoans";
-import Login from "./page/Login";
-import CalculatorPage from "./page/Calculator"
-import PaysPage from "./page/PaysPage"
+const init = ()=>{
+  return JSON.parse(localStorage.getItem('user')) || { logged:false}
+}
 
 function App() {
+
+  const [user, dispatch] = useReducer(authReducer, {}, init)
+
+  useEffect(() => {
+    localStorage.setItem('user',JSON.stringify('user'))
+    
+  }, [user])
+
   return (
-    <div className="App">
 
-      <Router>
-      <Route exact path="/login" component={Login} />
+    <AuthContext.Provider value={{user,dispatch}} >
 
-              {/**************MODULO NAVBAR */}
-              <Navbar />
-              {/**********FIN MODULO NAVBAR */}
-
-          
-              {/**************MODULO SIDEBAR */}
-              <Sidebar />
-              {/**********FIN MODULO SIDEBAR */}
-
-        <Route exact path="/clientes/expediente/:idcustomer" component={RecordsPage} />
-        <Route exact path="/clientes" component={ListCustomers} />
-
-        <Route exact path="/solicitudes/crear" component={NewRequestPage} />
-        <Route exact path="/solicitudes" component={ListRequestPage} />
-
-        <Route exact path="/prestamos" component={ListLoansPage} />
-
-        <Route exact path="/calculadora" component={CalculatorPage} />
-        <Route exact path="/pagos" component={PaysPage} />
-
-      </Router>
-
-
-        <div id="styleSelector">
-
-        </div>
-
-    </div>//Fin del MODULO APP 
+      <AppRouter />
+   
+    </AuthContext.Provider>
   );
 }
 

@@ -1,6 +1,23 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { AuthContext } from '../auth/AuthContext'
+import { types } from '../types/types'
 
-function Login() {
+const Login=({history}) => {
+
+    const {dispatch} = useContext(AuthContext)
+
+    const handleLogin = ()=>{
+
+        dispatch({
+            type:types.login,
+            payload:{
+                name:"Marvin Toro"
+            }
+        })
+
+        //history.replace('/clientes')
+        history.push('/clientes')
+    }
     return (
         
         <div>
@@ -34,7 +51,7 @@ function Login() {
                            
                             <div className="row m-t-30">
                             <div className="col-md-12">
-                                <button type="button" className="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">Ingresar</button>
+                                <button onClick={()=>handleLogin()} type="button" className="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">Ingresar</button>
                             </div>
                             </div>
                             <hr />
