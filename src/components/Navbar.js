@@ -28,7 +28,6 @@ function Navbar() {
       <div className="pcoded-overlay-box"></div>
         <div className="pcoded-container navbar-wrapper">
           
-       
         <nav className="navbar header-navbar pcoded-header">
            <div className="navbar-wrapper">
           <div className="navbar-logo" >
@@ -76,9 +75,9 @@ function Navbar() {
                     </li>
                    
                     <li>
-                      <Link onClick={()=>handleLogout()}>
+                      <button onClick={()=>handleLogout()}>
                         <i className="ti-layout-sidebar-left" /> Salir
-                      </Link>
+                      </button>
                     </li>
                   </ul>
                 </li>

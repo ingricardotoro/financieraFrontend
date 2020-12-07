@@ -9,23 +9,25 @@ const init = ()=>{
   return JSON.parse(localStorage.getItem('user')) || { logged:false}
 }
 
-function App() {
+export const App=()=> {
 
   const [user, dispatch] = useReducer(authReducer, {}, init)
 
   useEffect(() => {
-    localStorage.setItem('user',JSON.stringify('user'))
+
+    localStorage.setItem('user',JSON.stringify(user))
+    //localStorage.setItem('user',JSON.stringify(user))
     
   }, [user])
 
   return (
+    <div className="App">
+      <AuthContext.Provider value={{user,dispatch}} >
 
-    <AuthContext.Provider value={{user,dispatch}} >
-
-      <AppRouter />
-   
-    </AuthContext.Provider>
+        <AppRouter />
+    
+      </AuthContext.Provider>
+    </div>
   );
 }
 
-export default App;

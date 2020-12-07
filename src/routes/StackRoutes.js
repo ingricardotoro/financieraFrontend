@@ -1,9 +1,6 @@
 import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 
-import Navbar from '../components/Navbar';
-import Sidebar from '../components/Sidebar';
-
 import ListCustomers from '../components/customers/ListCustomers'
 //import ListLoans from '../components/loans/ListLoans'
 
@@ -16,12 +13,9 @@ import CalculatorPage from "../page/Calculator"
 import PaysPage from "../page/PaysPage"
 
 const StackRoutes = () => {
+   
     return (
         <>
-
-        <Navbar />
-    
-        <Sidebar />
       
          <Switch>
             

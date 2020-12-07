@@ -1,10 +1,11 @@
 
-import React from 'react'
-import { Redirect, Route } from 'react-router-dom'
-import PropTypes from 'prop-types'
+import React from 'react';
+import { Redirect, Route } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 
-const PrivateRoute = ({isAuthenticated, componente:Component,...rest}) => {
+const PrivateRoute = ({isAuthenticated, component:Component,...rest}) => {
+
     //el rest almacena todas las propiedades del Route , como el location, ver en console
     return (
         <Route {...rest} 
@@ -13,8 +14,7 @@ const PrivateRoute = ({isAuthenticated, componente:Component,...rest}) => {
                 ? (<Component {...props} />) //props es el mismo rest
                 :(<Redirect to="login" />)
             )}
-        >
-        </Route>
+        />
     )
 }
 

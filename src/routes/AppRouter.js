@@ -1,11 +1,13 @@
-import React, { useContext } from 'react'
+import React, { useContext } from 'react';
 
-import {BrowserRouter as Router, Switch} from "react-router-dom"
-import { AuthContext } from '../auth/AuthContext'
-import PrivateRoute from './PrivateRoute'
-import PublicRoute from './PublicRoute'
+import {BrowserRouter as Router, Switch} from "react-router-dom";
+import { AuthContext } from '../auth/AuthContext';
+import PrivateRoute from './PrivateRoute';
+import PublicRoute from './PublicRoute';
 import Login from "../page/Login";
-import StackRoutes from './StackRoutes'
+import Navbar from '../components/Navbar';
+import Sidebar from '../components/Sidebar';
+import StackRoutes from './StackRoutes';
 
 
 export const AppRouter = () => {
@@ -14,12 +16,22 @@ export const AppRouter = () => {
     
     return (
         <Router>
-            <div>
+            <>
+                {user.logged 
+                ?  (<Navbar />)
+                : null
+                }
+
+                {user.logged 
+                ?  (<Sidebar />)
+                : null
+                }                
+
                 <Switch>
                     <PublicRoute isAuthenticated={user.logged} exact path="/login" component={Login} />
-                    <PrivateRoute isAuthenticated={user.logged} exact path="/" component={StackRoutes} /> 
+                    <PrivateRoute isAuthenticated={user.logged} path="/" component={StackRoutes} /> 
                 </Switch>
-            </div>
+            </>
         </Router>
     )
 }

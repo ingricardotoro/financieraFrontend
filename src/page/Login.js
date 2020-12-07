@@ -1,6 +1,6 @@
-import React, { useContext } from 'react'
-import { AuthContext } from '../auth/AuthContext'
-import { types } from '../types/types'
+import React, { useContext } from 'react';
+import { AuthContext } from '../auth/AuthContext';
+import { types } from '../types/types';
 
 const Login=({history}) => {
 
@@ -8,15 +8,16 @@ const Login=({history}) => {
 
     const handleLogin = ()=>{
 
+        window.location.href = "/clientes"
         dispatch({
             type:types.login,
             payload:{
                 name:"Marvin Toro"
             }
         })
-
+        
         //history.replace('/clientes')
-        history.push('/clientes')
+        //history.push('/clientes')
     }
     return (
         
