@@ -16,7 +16,7 @@ const StackRoutes = () => {
    
     return (
         <>
-      
+           
          <Switch>
             
             <Route exact path="/clientes/expediente/:idcustomer" component={RecordsPage} />

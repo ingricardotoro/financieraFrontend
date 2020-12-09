@@ -5,8 +5,10 @@ import { AuthContext } from '../auth/AuthContext';
 import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
 import Login from "../page/Login";
+
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
+
 import StackRoutes from './StackRoutes';
 
 
@@ -16,16 +18,9 @@ export const AppRouter = () => {
     
     return (
         <Router>
-            <>
-                {user.logged 
-                ?  (<Navbar />)
-                : null
-                }
-
-                {user.logged 
-                ?  (<Sidebar />)
-                : null
-                }                
+            <>        
+                {user.logged ? <Navbar /> : null }
+                {user.logged ? <Sidebar /> : null }    
 
                 <Switch>
                     <PublicRoute isAuthenticated={user.logged} exact path="/login" component={Login} />

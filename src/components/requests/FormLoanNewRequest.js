@@ -24,28 +24,54 @@ function FormLoanNewRequest() {
 
     const {totalInterest,quota,quotaValue,amount,rate} = formValues
 
+    const formatter = new Intl.NumberFormat('es-HN', {
+        style: 'currency',
+        currency: 'LPS',
+        minimumFractionDigits: 2
+      })
+    
     const calcularInteres=()=>{
        
-        //calculo de interes total
-        let InteresTotal= (amount * rate * quota)/1200
-        document.getElementById('totalInterest').value=InteresTotal
-       
-        //valor de costo de 
+        //Tasa de interes anual y mensual
+        const TEA = (parseFloat(rate)/100)
+        //const TEM = Math.pow( (1+TEA), (7/48)) -1 //calculo SEMEANAL
+        //const TEM = Math.pow( (1+TEA), (15/24)) -1 //calculo QUINSENAL
+        //const TEM = Math.pow( (1+TEA), (30/360)) -1 //calculo mensual
+        const TEM = (TEA/12)
+        /*console.log("TEM=",TEM)
+        console.log("N=",quota)
+        console.log("Capital=",amount)*/
+
+        //valor de costo de Cierre
         let closingCostVar
-        if(amount>5000){
+        if(amount>=5000){
             closingCostVar=amount*0.04
         }else{
             closingCostVar =200            
         }
+        document.getElementById('closingCost').value = formatter.format(closingCostVar)
 
-        document.getElementById('closingCost').value = closingCostVar
+        //calcular valor de cada cuota
+        /*let MonthlyQuota=
+        (parseFloat(amount) + parseFloat(closingCostVar)) * Math.pow(
+                    (( 1-(Math.pow((1+TEM), - quota)))/ TEM)
+                    ,-1)*/
 
-        //calcular valor de cuota
-        document.getElementById('quotaValue').value=(parseFloat(amount) + parseFloat(InteresTotal)+parseFloat(closingCostVar))/quota
+        //calculo de interes total (Mensual)
+        //let InteresTotal= (( parseFloat(amount) + parseFloat(closingCostVar) ) *  parseFloat(rate) * parseInt(quota))/1200
+        let InteresTotal=  ( parseFloat(amount) + parseFloat(closingCostVar) ) *  parseFloat(TEM) * parseInt(quota)
+        document.getElementById('totalInterest').value=formatter.format(InteresTotal)
     
-         //Calculo del Monto Total a Pagar
-         let totalAmount = parseFloat(amount) + parseFloat(InteresTotal)+parseFloat(closingCostVar)
-         document.getElementById('totalAmount').value = totalAmount
+        //Calculo del Monto Total a Pagar
+        let totalAmount = parseFloat(amount) + parseFloat(InteresTotal)+parseFloat(closingCostVar)
+        document.getElementById('totalAmount').value = formatter.format(totalAmount)
+
+        //para el calculo de interes compuesto
+        //let MonthlyQuota= (parseFloat(amount) + parseFloat(closingCostVar)) * ( ( TEM * Math.pow((1+TEM),quota) ) / ((Math.pow((1+TEM), quota))-1) )
+        let MonthlyQuota=parseFloat(parseFloat(totalAmount) / quota)
+         //document.getElementById('quotaValue').value=(parseFloat(amount) + parseFloat(InteresTotal)+parseFloat(closingCostVar))/quota
+         document.getElementById('quotaValue').value=formatter.format(MonthlyQuota)
+
     }
 
     return (
@@ -72,7 +98,7 @@ function FormLoanNewRequest() {
                     <label htmlFor="monto">Monto Solicitado</label>
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1">LPS.</span>
-                        <input value={amount} onChange={handleInputChange} id="amount" name="amount" type="text" className="form-control" placeholder="Ingresar el Monto" />
+                        <input value={amount} onChange={handleInputChange} id="amount" name="amount" type="number" min="0" className="form-control" placeholder="Ingresar el Monto" />
                     </div>
                 </div>
 
@@ -80,7 +106,7 @@ function FormLoanNewRequest() {
                     <label htmlFor="rate">Tasa de Interes Anual</label>
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1">%</span>
-                        <input value={rate} onChange={handleInputChange} name="rate" id="rate" type="text" className="form-control" placeholder="Tasa de Interes en %"/>
+                        <input value={rate} onChange={handleInputChange} name="rate" type="number" min="0" max="100" id="rate" className="form-control" placeholder="Tasa de Interes en %"/>
                     </div>         
                 </div>
 
@@ -105,7 +131,7 @@ function FormLoanNewRequest() {
                 <label htmlFor="dateInicio">Número de Cuotas</label> 
                     <div className="input-group">
                         <span className="input-group-addon"  id="basic-addon1"><i className="icofont icofont-listing-number"></i></span>
-                        <input onBlur={()=>calcularInteres()} value={quota} onChange={handleInputChange} name="quota" id="quota" type="text" className="form-control" placeholder="Cantidad de Cuotas"/>
+                        <input onBlur={()=>calcularInteres()}  onChange={handleInputChange} name="quota" id="quota" type="number" min="0" className="form-control" placeholder="Cantidad de Cuotas"/>
                     </div>
                 </div>
 

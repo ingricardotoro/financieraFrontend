@@ -78,7 +78,7 @@ const Login=({history}) => {
                 {/* end of container-fluid */}
             </section>
             <div className="footer bg-inverse">
-                <p className="text-center">Copyright © 2020 CREDISAS , All rights reserved.</p>
+                <p className="text-center">Copyright © 2021 CREDISAS , All rights reserved.</p>
             </div>
         </div>
 
