@@ -14,13 +14,13 @@ import React, { useEffect, useState } from 'react'
         tipoInteres:'Compuesto',
         closingCostVar:0,
         TasaM:0,
-        Periodos:0
+        totalAmount:0
     })
 
     const [Error, setError] = useState(false)
     const [TipoCalculo, setTipoCalculo] = useState('NumeroDeCuotas') //o por ValordeCuotas
 
-    const {quota,quotaValue,rate,typeLoan,totalInterest,amount,frequency,tipotasa,tipoInteres,closingCostVar,TasaM,Periodos} = data
+    const {quota,quotaValue,rate,typeLoan,totalInterest,amount,frequency,tipotasa,tipoInteres,closingCostVar,totalAmount,TasaM} = data
 
     const formatter = new Intl.NumberFormat('es-HN', {
         style: 'currency',
@@ -31,8 +31,26 @@ import React, { useEffect, useState } from 'react'
 
     const calcular=()=>{
 
-        //********Validar Campos Requeridos************//
-        if(amount === 0 || amount==='') {
+        ValidarCampos() 
+        //CalcularTasaM()
+        //CalcularCostoDeCierre()
+
+       /****************************************************** */
+        if(tipoInteres==='Compuesto'){
+            CalcularCutoasInteresCompuesto()
+        }else if(tipoInteres==='Simple'){
+            //CalcularCutoasInteresSimple
+        }else if(tipoInteres==='Nivelado'){
+            //CalcularCutoasInteresNivelado
+        }
+        /****************************************************** */
+      
+    }
+
+    const ValidarCampos = ()=>{
+
+         //********Validar Campos Requeridos************//
+         if(amount === 0 || amount==='') {
             setError(true)
             return
         }else if( (quotaValue===0 || quotaValue==='') && (quota===0 || quota==='') ){
@@ -41,57 +59,43 @@ import React, { useEffect, useState } from 'react'
         }else{
             setError(false)
         }
-        //******************************************* */
+    }
 
+    /*const CalcularTasaM=()=>{
+
+        //establecer valor de tasa mensual
         if(tipotasa==='Mensual'){
-            TasaM=parseFloat(rate)
+            setData({
+                ...data,
+                TasaM:rate
+            })
+           
         }else if(tipotasa==='Anual'){
-            TasaM=parseFloat(rate)/12
+            setData({
+                ...data,
+                TasaM:rate/12
+            })
         }
 
-        if(tipoInteres==='Compuesto'){
-            CalcularCutoasInteresCompuesto()
-        }else if(tipoInteres==='Simple'){
-            //CalcularCutoasInteresSimple
-        }else if(tipoInteres==='Nivelado'){
-            //CalcularCutoasInteresNivelado
-        }
-        
-        //El objetivo esque los periodos esten en la cantidad de mese que durara el prestamo
-        if(frequency==='Mensual'){
-            setData({
-                ...data,
-                Periodos:quota
-            })
-        }else if(frequency==='Quincenal'){
-            setData({
-                ...data,
-                Periodos:quota/2
-            })
-        }else if(frequency==='Semanal'){
-            setData({
-                ...data,
-                Periodos:quota/4
-            })
-        }
- 
-        //*************************valor de costo de Cierre************************
-        if(parseFloat(amount)>=5000){
+    }*/
+
+    /*const CalcularCostoDeCierre = () =>{
+        console.log("CLO=",closingCostVar)
+         if(parseFloat(amount)>=5000){
             setData({
                 ...data,
                 closingCostVar:parseFloat(amount)*0.04
             })
-            //closingCostVar=amount*0.04
+
         }else{
             setData({
                 ...data,
                 closingCostVar:200
-            })
-            //closingCostVar = 200            
+            })  
         }
-       // document.getElementById('closingCost').value = formatter.format(closingCostVar)
-        //*************************valor de costo de Cierre************************
-    }
+        console.log("CLO=",closingCostVar)
+
+    }*/
 
     //Para saber si calculamos por numero de cuotas o por valor de cuotas
     const CambioTipodeCalculo =(tipo)=>{
@@ -99,8 +103,64 @@ import React, { useEffect, useState } from 'react'
     }
 
     const CalcularCutoasInteresCompuesto =()=>{
+       
+        let CapitalInicial = 0.0
+        let Interes =0.0
+        let CapitalFinal=0.0
+        let SumadeInteres=0.0
+        let periodos=0
+
+        let tasa =0
+        if(tipotasa==='Mensual'){
+          tasa=parseInt(rate)/100
+        }else if(tipotasa==='Anual'){
+            tasa=(parseInt(rate)/12)/100
+        }
 
 
+        if(frequency==='Mensual'){ 
+            periodos=parseInt(quota) 
+        }else if(frequency==='Quincenal'){
+            periodos=parseInt(quota) /2
+        }else if(frequency==='Semanal'){
+            periodos=parseInt(quota) /4
+        }   
+
+        if(parseFloat(amount)>=5000){
+            CapitalInicial = parseFloat(amount) + (parseFloat(amount)*0.04)
+        }else{
+            CapitalInicial = parseFloat(amount) + 200
+        }
+
+
+        for (let i = 0; i < periodos; i++) {
+            
+            Interes = CapitalInicial * tasa
+            CapitalFinal = CapitalInicial + Interes
+            SumadeInteres+=Interes
+            CapitalInicial = CapitalFinal
+
+        }
+
+        if(parseFloat(amount)>=5000){
+            setData({
+                ...data,
+                closingCostVar:(parseFloat(amount)*0.04).toFixed(2),
+                totalInterest:SumadeInteres.toFixed(2),
+                totalAmount:(parseFloat(amount)+parseFloat(SumadeInteres)+parseFloat(amount)*0.04).toFixed(2),
+                quotaValue:((parseFloat(amount)+parseFloat(SumadeInteres)+parseFloat(amount)*0.04)/quota).toFixed(2)
+            })
+
+        }else{
+            setData({
+                ...data,
+                closingCostVar:(200).toFixed(2),
+                totalInterest:SumadeInteres.toFixed(2),
+                totalAmount:(parseFloat(amount)+parseFloat(SumadeInteres)+200).toFixed(2),
+                quotaValue:((parseFloat(amount)+parseFloat(SumadeInteres)+200)/quota).toFixed(2)
+            })  
+        }
+         
         //calcular valor de cada cuota
         /*let MonthlyQuota=
         (parseFloat(amount) + parseFloat(closingCostVar)) * Math.pow(
@@ -109,14 +169,14 @@ import React, { useEffect, useState } from 'react'
 
         //******************calculo de interes total (Mensual)***************************//
         //let InteresTotal= (( parseFloat(amount) + parseFloat(closingCostVar) ) *  parseFloat(rate) * parseInt(quota))/1200
-        let InteresTotal=  ( parseFloat(amount) + parseFloat(closingCostVar) ) *  parseFloat(TasaM) * parseInt(quota)
-        document.getElementById('totalInterest').value=formatter.format(InteresTotal)
+        //let InteresTotal=  ( parseFloat(amount) + parseFloat(closingCostVar) ) *  parseFloat(TasaM) * parseInt(quota)
+        //document.getElementById('totalInterest').value=formatter.format(InteresTotal)
         //******************calculo de interes total (Mensual)***************************//
         
 
         //******************Calculo del Monto Total a Pagar*****************************//
-        let totalAmount = parseFloat(amount) + parseFloat(InteresTotal) + parseFloat(closingCostVar)
-        document.getElementById('totalAmount').value = formatter.format(totalAmount)
+        //let totalAmount = parseFloat(amount) + parseFloat(InteresTotal) + parseFloat(closingCostVar)
+        //document.getElementById('totalAmount').value = formatter.format(totalAmount)
         //******************Calculo del Monto Total a Pagar*****************************//
         
         //para el calculo de interes compuesto
@@ -317,7 +377,7 @@ import React, { useEffect, useState } from 'react'
                                         <label htmlFor="totalInteres">Monto total a Pagar</label>
                                         <div className="input-group">
                                             <p className="input-group-addon" id="basic-addon1"><i className="icofont icofont-money"></i></p>
-                                            <input disabled className="form-control" onChange={handleInputChange} name="totalAmount" id="totalAmount" type="text" placeholder="Monto Total a Pagar" />
+                                            <input disabled value={totalAmount} className="form-control" onChange={handleInputChange} name="totalAmount" id="totalAmount" type="text" placeholder="Monto Total a Pagar" />
                                         </div>
                                     </div>
                                     
