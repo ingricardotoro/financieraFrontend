@@ -1,3 +1,4 @@
+import { Close } from '@material-ui/icons'
 import React, { useEffect, useState } from 'react'
 
  export const Calculator = () => {
@@ -117,74 +118,138 @@ import React, { useEffect, useState } from 'react'
             tasa=(parseInt(rate)/12)/100
         }
 
+        //En caso de tener el numero de cuotas
+        if(TipoCalculo==='NumeroDeCuotas'){
 
-        if(frequency==='Mensual'){ 
-            periodos=parseInt(quota) 
-        }else if(frequency==='Quincenal'){
-            periodos=parseInt(quota) /2
-        }else if(frequency==='Semanal'){
-            periodos=parseInt(quota) /4
-        }   
+            if(frequency==='Mensual'){ 
+                periodos=parseInt(quota) 
+            }else if(frequency==='Quincenal'){
+                periodos=parseInt(quota) /2
+            }else if(frequency==='Semanal'){
+                periodos=parseInt(quota) /4
+            }   
 
-        if(parseFloat(amount)>=5000){
-            CapitalInicial = parseFloat(amount) + (parseFloat(amount)*0.04)
-        }else{
-            CapitalInicial = parseFloat(amount) + 200
-        }
-
-
-        for (let i = 0; i < periodos; i++) {
             
-            Interes = CapitalInicial * tasa
-            CapitalFinal = CapitalInicial + Interes
-            SumadeInteres+=Interes
-            CapitalInicial = CapitalFinal
+            if(parseFloat(amount)>=5000){
+                CapitalInicial = parseFloat(amount) + (parseFloat(amount)*0.04)
+            }else{
+                CapitalInicial = parseFloat(amount) + 200
+            }
 
-        }
+            for (let i = 0; i < periodos; i++) {
+                
+                Interes = CapitalInicial * tasa
+                CapitalFinal = CapitalInicial + Interes
+                SumadeInteres+=Interes
+                CapitalInicial = CapitalFinal
 
-        if(parseFloat(amount)>=5000){
+            }
+
+            if(parseFloat(amount)>=5000){
+                setData({
+                    ...data,
+                    closingCostVar:(parseFloat(amount)*0.04).toFixed(2),
+                    totalInterest:SumadeInteres.toFixed(2),
+                    totalAmount:(parseFloat(amount)+parseFloat(SumadeInteres)+parseFloat(amount)*0.04).toFixed(2),
+                    quotaValue:((parseFloat(amount)+parseFloat(SumadeInteres)+parseFloat(amount)*0.04)/quota).toFixed(2)
+                })
+
+            }else{
+                setData({
+                    ...data,
+                    closingCostVar:(200).toFixed(2),
+                    totalInterest:SumadeInteres.toFixed(2),
+                    totalAmount:(parseFloat(amount)+parseFloat(SumadeInteres)+200).toFixed(2),
+                    quotaValue:((parseFloat(amount)+parseFloat(SumadeInteres)+200)/quota).toFixed(2)
+                })  
+            }
+
+        }// Fin de Calculo Por Numero de Cuotas
+
+        //En el caso de tener el valor de la cuota en lugar del numero de cuotas
+        if(TipoCalculo==='ValorDeCuotas'){
+
+            let contador = 0
+           
+            if(frequency==='Semanal'){contador=4}
+            if(frequency==='Quincenal'){contador=2}
+            if(frequency==='Mensual'){contador=1}
+
+            let CapitalInicial = 0.0 
+            let Capitalfinal=0.0
+            let InteresSemanal = 0.0
+            let AbonoCapital = 0.0
+            let SaldoFinal = 0.0 
+            let TotaldeInteres =0.0
+            let TotalAbonoCapital=0.0
+            let Close=0.0 //Para guardar el valor a prestar mas el costo de cierre
+            let cuota=0
+            let SaldoInicial=0.0
+
+            if(parseFloat(amount)>=5000){
+                CapitalInicial=parseFloat(amount) + (parseFloat(amount)*0.04) 
+                Close=parseFloat(amount)*0.04
+                SaldoInicial=CapitalInicial
+                SaldoFinal=CapitalInicial //Solo para que el while de inicio debe ser distinto de 0
+                
+            }else{
+                CapitalInicial = parseFloat(amount) + 200 
+                Close=  200
+                SaldoInicial=CapitalInicial
+                SaldoFinal=CapitalInicial //Solo para que el while de inicio debe ser distinto de 0
+
+            }
+
+            while (SaldoFinal>0) {
+                console.log("1")
+                Capitalfinal = CapitalInicial + (CapitalInicial*tasa)
+                //obtenemos el interes de este primer periodo
+                InteresSemanal = (CapitalInicial * tasa)/4
+               
+                for (let i = 0; i < contador; i++) {
+
+                    if(SaldoInicial!==0){
+
+                        //Verificar si hemos llegado a la Penultima cuota
+                        if(SaldoFinal+InteresSemanal < parseFloat(quotaValue)){
+                            console.log("SF=",SaldoFinal)
+                            TotaldeInteres+=InteresSemanal
+                            AbonoCapital = SaldoFinal
+                            TotalAbonoCapital+=AbonoCapital
+                            SaldoFinal = SaldoInicial - AbonoCapital
+                            SaldoInicial= SaldoFinal
+                            cuota+=1
+                            
+                        }else{
+                            TotaldeInteres+=InteresSemanal
+                            AbonoCapital = parseFloat(quotaValue) - InteresSemanal
+                            TotalAbonoCapital+=AbonoCapital
+                            SaldoFinal = SaldoInicial - AbonoCapital
+                            SaldoInicial= SaldoFinal
+                            cuota+=1
+                        }
+                        
+                    }
+                    console.table((SaldoInicial).toFixed(2),(InteresSemanal).toFixed(2),(quotaValue),(AbonoCapital).toFixed(2),(SaldoFinal).toFixed(2),(Capitalfinal).toFixed(2))
+                }
+
+                CapitalInicial = Capitalfinal
+                
+            }
+
+            //console.log("ABONOC=",AbonoCapital)
+                
             setData({
                 ...data,
-                closingCostVar:(parseFloat(amount)*0.04).toFixed(2),
-                totalInterest:SumadeInteres.toFixed(2),
-                totalAmount:(parseFloat(amount)+parseFloat(SumadeInteres)+parseFloat(amount)*0.04).toFixed(2),
-                quotaValue:((parseFloat(amount)+parseFloat(SumadeInteres)+parseFloat(amount)*0.04)/quota).toFixed(2)
+                closingCostVar:parseFloat(Close).toFixed(2),
+                totalInterest:TotaldeInteres.toFixed(2),
+                totalAmount:(parseFloat(amount)+parseFloat(TotaldeInteres)+parseFloat(Close)).toFixed(2),
+                quota:cuota,
+                //quotaValue:((parseFloat(CP)+parseFloat(TotaldeInteres)+parseFloat(amount)*0.04)/quota).toFixed(2)
             })
 
-        }else{
-            setData({
-                ...data,
-                closingCostVar:(200).toFixed(2),
-                totalInterest:SumadeInteres.toFixed(2),
-                totalAmount:(parseFloat(amount)+parseFloat(SumadeInteres)+200).toFixed(2),
-                quotaValue:((parseFloat(amount)+parseFloat(SumadeInteres)+200)/quota).toFixed(2)
-            })  
+
         }
-         
-        //calcular valor de cada cuota
-        /*let MonthlyQuota=
-        (parseFloat(amount) + parseFloat(closingCostVar)) * Math.pow(
-                    (( 1-(Math.pow((1+TEM), - quota)))/ TEM)
-                    ,-1)*/
-
-        //******************calculo de interes total (Mensual)***************************//
-        //let InteresTotal= (( parseFloat(amount) + parseFloat(closingCostVar) ) *  parseFloat(rate) * parseInt(quota))/1200
-        //let InteresTotal=  ( parseFloat(amount) + parseFloat(closingCostVar) ) *  parseFloat(TasaM) * parseInt(quota)
-        //document.getElementById('totalInterest').value=formatter.format(InteresTotal)
-        //******************calculo de interes total (Mensual)***************************//
-        
-
-        //******************Calculo del Monto Total a Pagar*****************************//
-        //let totalAmount = parseFloat(amount) + parseFloat(InteresTotal) + parseFloat(closingCostVar)
-        //document.getElementById('totalAmount').value = formatter.format(totalAmount)
-        //******************Calculo del Monto Total a Pagar*****************************//
-        
-        //para el calculo de interes compuesto
-        //let MonthlyQuota= (parseFloat(amount) + parseFloat(closingCostVar)) * ( ( TEM * Math.pow((1+TEM),quota) ) / ((Math.pow((1+TEM), quota))-1) )
-        let Quota=parseFloat(parseFloat(totalAmount) / quota)
-         //document.getElementById('quotaValue').value=(parseFloat(amount) + parseFloat(InteresTotal)+parseFloat(closingCostVar))/quota
-         document.getElementById('quotaValue').value=formatter.format(Quota)
-
     }
 
 
