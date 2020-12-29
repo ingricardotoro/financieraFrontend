@@ -1,5 +1,6 @@
 import { Close } from '@material-ui/icons'
 import React, { useEffect, useState } from 'react'
+import TablaAmortizacionNC from './TablaAmortizacionNC'
 
  export const Calculator = () => {
 
@@ -20,6 +21,8 @@ import React, { useEffect, useState } from 'react'
 
     const [Error, setError] = useState(false)
     const [TipoCalculo, setTipoCalculo] = useState('NumeroDeCuotas') //o por ValordeCuotas
+    const [TablaAmortizacion, setTablaNumerodeCuotas] = useState({numeroDeCutoas:false, valorDeCuotas:false})
+    
 
     const {quota,quotaValue,rate,typeLoan,totalInterest,amount,frequency,tipotasa,tipoInteres,closingCostVar,totalAmount,TasaM} = data
 
@@ -62,47 +65,6 @@ import React, { useEffect, useState } from 'react'
         }
     }
 
-    /*const CalcularTasaM=()=>{
-
-        //establecer valor de tasa mensual
-        if(tipotasa==='Mensual'){
-            setData({
-                ...data,
-                TasaM:rate
-            })
-           
-        }else if(tipotasa==='Anual'){
-            setData({
-                ...data,
-                TasaM:rate/12
-            })
-        }
-
-    }*/
-
-    /*const CalcularCostoDeCierre = () =>{
-        console.log("CLO=",closingCostVar)
-         if(parseFloat(amount)>=5000){
-            setData({
-                ...data,
-                closingCostVar:parseFloat(amount)*0.04
-            })
-
-        }else{
-            setData({
-                ...data,
-                closingCostVar:200
-            })  
-        }
-        console.log("CLO=",closingCostVar)
-
-    }*/
-
-    //Para saber si calculamos por numero de cuotas o por valor de cuotas
-    const CambioTipodeCalculo =(tipo)=>{
-        setTipoCalculo(tipo)
-    }
-
     const CalcularCutoasInteresCompuesto =()=>{
        
         let CapitalInicial = 0.0
@@ -120,6 +82,8 @@ import React, { useEffect, useState } from 'react'
 
         //En caso de tener el numero de cuotas
         if(TipoCalculo==='NumeroDeCuotas'){
+
+            let Close=0.0
 
             if(frequency==='Mensual'){ 
                 periodos=parseInt(quota) 
@@ -145,24 +109,26 @@ import React, { useEffect, useState } from 'react'
 
             }
 
+            //Calculo del costo de Cierre
             if(parseFloat(amount)>=5000){
-                setData({
-                    ...data,
-                    closingCostVar:(parseFloat(amount)*0.04).toFixed(2),
-                    totalInterest:SumadeInteres.toFixed(2),
-                    totalAmount:(parseFloat(amount)+parseFloat(SumadeInteres)+parseFloat(amount)*0.04).toFixed(2),
-                    quotaValue:((parseFloat(amount)+parseFloat(SumadeInteres)+parseFloat(amount)*0.04)/quota).toFixed(2)
-                })
-
+                Close=+parseFloat(amount)*0.04
             }else{
-                setData({
-                    ...data,
-                    closingCostVar:(200).toFixed(2),
-                    totalInterest:SumadeInteres.toFixed(2),
-                    totalAmount:(parseFloat(amount)+parseFloat(SumadeInteres)+200).toFixed(2),
-                    quotaValue:((parseFloat(amount)+parseFloat(SumadeInteres)+200)/quota).toFixed(2)
-                })  
+                Close=200
             }
+
+            setData({
+                ...data,
+                closingCostVar:(Close).toFixed(2),
+                totalInterest:SumadeInteres.toFixed(2),
+                totalAmount:(parseFloat(amount)+parseFloat(SumadeInteres)+Close).toFixed(2),
+                quotaValue:((parseFloat(amount)+parseFloat(SumadeInteres)+Close)/quota).toFixed(2)
+            })
+
+            //Mostramos la tabla de amortizacion por numero de cuotas
+            setTablaNumerodeCuotas({
+                numeroDeCutoas:true,
+                valorDeCuotas:false
+            })
 
         }// Fin de Calculo Por Numero de Cuotas
 
@@ -201,7 +167,7 @@ import React, { useEffect, useState } from 'react'
             }
 
             while (SaldoFinal>0) {
-                console.log("1")
+                
                 Capitalfinal = CapitalInicial + (CapitalInicial*tasa)
                 //obtenemos el interes de este primer periodo
                 InteresSemanal = (CapitalInicial * tasa)/4
@@ -212,7 +178,6 @@ import React, { useEffect, useState } from 'react'
 
                         //Verificar si hemos llegado a la Penultima cuota
                         if(SaldoFinal+InteresSemanal < parseFloat(quotaValue)){
-                            console.log("SF=",SaldoFinal)
                             TotaldeInteres+=InteresSemanal
                             AbonoCapital = SaldoFinal
                             TotalAbonoCapital+=AbonoCapital
@@ -250,8 +215,8 @@ import React, { useEffect, useState } from 'react'
 
 
         }
-    }
 
+    }
 
     const handleInputChange = ({ target }) => {
 
@@ -420,8 +385,6 @@ import React, { useEffect, useState } from 'react'
 
                                 <div className="row">
 
-                                   
-
                                     <div className="col-sm-12 col-md-3">
                                         <label htmlFor="totalInterest">Total de Interes</label>
                                         <div className="input-group">
@@ -447,9 +410,23 @@ import React, { useEffect, useState } from 'react'
                                     </div>
                                     
                                 </div>                            
+                                
+                                {
+                                    TablaAmortizacion.numeroDeCutoas && 
+                                    <TablaAmortizacionNC 
+                                    CapitalInicial={amount}
+                                    Tasa={rate}
+                                    TipoTasa={tipotasa}
+                                    Quotas={quota}
+                                    TipoInteres={tipoInteres}
+                                    Frequency={frequency}
+                                    />
+                               }
 
                             </div>
-                        </div>
+                            
+                         </div>{/* FINAL DEL DIV CARD */}
+ 
                     </div>
                 </div>
             </div>
