@@ -15,8 +15,11 @@ function TablaAmortizacionNC(props) {
     let tasa=0.0
     let SaldoInicial=0.0
     let periodos=0, contador=0, days=7
-    let fecha = new Date (Date(DateStart));    
-
+    //let fecha = new Date (Date(DateStart));  
+    let fecha = Date.parse(DateStart)+1;
+	fecha = new Date(fecha);
+    fecha.setDate(fecha.getDate()+1)
+    console.log("FECHA=",fecha)
     //Obtenemos el valor de la tasa mensual
     if(TipoTasa==='Mensual'){
         tasa=parseInt(Tasa)/100
@@ -91,6 +94,7 @@ function TablaAmortizacionNC(props) {
                         //fecha.setDate(fecha.getDate()+days)
                         //fecha.toLocaleDateString()
                         //Lo guardamos en el arreglo de objetos
+                        console.log(fecha)
                         quotaRows[cont] = {
                             cont:cont+1,
                             SaldoInicial:SaldoInicial,//3200

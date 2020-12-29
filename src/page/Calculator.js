@@ -440,8 +440,10 @@ import TablaAmortizacionVC from './TablaAmortizacionVC';
                                         </div>
                                     </div>
                                     
-                                </div>                            
-                                
+                                </div>    
+
+                                <div className="table-responsive">
+                                                       
                                 {
                                     (tablaAmortizacionNC === true && Error===false) && 
                                     <TablaAmortizacionNC 
@@ -466,7 +468,7 @@ import TablaAmortizacionVC from './TablaAmortizacionVC';
                                     DateStart={datestart}
                                     />
                                }
-
+                                </div> 
                             </div>
                             
                          </div>{/* FINAL DEL DIV CARD */}
