@@ -3,7 +3,7 @@ import React from 'react'
 //Tabla de amortizacion por numero de cuotas
 function TablaAmortizacionNC(props) {
 
-    let {CapitalInicial,Tasa,TipoTasa,Quotas,TipoInteres, Frequency} = props
+    let {CapitalInicial,Tasa,TipoTasa,Quotas,TipoInteres, Frequency, DateStart} = props
     //let CapitalInicial = 0.0 
     let Capitalfinal=0.0
     let InteresSemanal = 0.0
@@ -14,7 +14,8 @@ function TablaAmortizacionNC(props) {
     let Close=0.0 //Para guardar el valor a prestar mas el costo de cierre
     let tasa=0.0
     let SaldoInicial=0.0
-    let periodos=0, contador=0
+    let periodos=0, contador=0, days=7
+    let fecha = new Date (Date(DateStart));    
 
     //Obtenemos el valor de la tasa mensual
     if(TipoTasa==='Mensual'){
@@ -33,10 +34,13 @@ function TablaAmortizacionNC(props) {
     //Calculo de los Periodos, redondeamos al entero mas alto, 10/4  = 3,  13/4  =4
     if(Frequency==='Mensual'){ 
         periodos=parseInt(Quotas) 
+        days=30
     }else if(Frequency==='Quincenal'){
         periodos=Math.ceil(parseInt(Quotas) /2)
+        days=14
     }else if(Frequency==='Semanal'){
         periodos=Math.ceil(parseInt(Quotas) /4)
+        days=7
     } 
 
     if(Frequency==='Semanal'){contador=4}
@@ -45,15 +49,13 @@ function TablaAmortizacionNC(props) {
 
     let quotaRows=[] // arreglo de objetos
 
-
     //Calculo del interes Compuesto mediante numero de cuotas
     if(TipoInteres === 'Compuesto'){
 
             CapitalInicial=parseFloat(CapitalInicial) + (parseFloat(Close))//3200 //este valor ira cambiando
-            let CapitalInicial1=parseFloat(CapitalInicial) + (parseFloat(Close))//3200 se usa este valor al finalnuevamente
+            //let CapitalInicial1=parseFloat(CapitalInicial) + (parseFloat(Close))//3200 se usa este valor al finalnuevamente
             //Calculo de Interes Total Compuesto
             TotaldeInteres = (CapitalInicial*(Math.pow((1+tasa),periodos)-1))//F4
-            console.log("I=",TotaldeInteres)
             //Calculo del valor de la cuota
             let quotaValue = ((parseFloat(CapitalInicial) + parseFloat(TotaldeInteres) ) / Quotas)//f4
 
@@ -62,21 +64,19 @@ function TablaAmortizacionNC(props) {
 
             let cont=0
 
-            while (SaldoFinal!=0) {  
+            while (SaldoFinal!==0) {  
 
                 Capitalfinal = (parseFloat(CapitalInicial) + parseFloat(CapitalInicial*tasa)) //3520 f2
-                InteresSemanal=((CapitalInicial*tasa)/4) //80 f2
+                InteresSemanal=((CapitalInicial*tasa)/contador) //80 f2
                 AbonoCapital = (parseFloat(quotaValue) - parseFloat(InteresSemanal))//f3
-                
                 
                 for (let i = 0; i < contador; i++) {
 
                     if(SaldoInicial!==0){
                     
                         //Localizamos la penultima fila para prepara el valor de cuota de pago de la ultima fila
-                        console.log("AQUI",parseFloat(SaldoFinal)+parseFloat(InteresSemanal))
                         if(parseFloat(SaldoFinal)+parseFloat(InteresSemanal) < quotaValue){
-                            console.log("SII")
+                          
                             AbonoCapital = SaldoFinal
                             quotaValue = AbonoCapital + InteresSemanal
                         }
@@ -86,6 +86,10 @@ function TablaAmortizacionNC(props) {
                         TotalAbonoCapital+=parseFloat(AbonoCapital)
                         
                         SaldoFinal = ((SaldoInicial) -(AbonoCapital))//f3
+                        
+
+                        //fecha.setDate(fecha.getDate()+days)
+                        //fecha.toLocaleDateString()
                         //Lo guardamos en el arreglo de objetos
                         quotaRows[cont] = {
                             cont:cont+1,
@@ -93,7 +97,8 @@ function TablaAmortizacionNC(props) {
                             InteresSemanal:InteresSemanal,//80
                             quotaValue:quotaValue,//354
                             AbonoCapital:AbonoCapital,//274
-                            SaldoFinal:SaldoFinal
+                            SaldoFinal:SaldoFinal,
+                            fecha:fecha.setDate(fecha.getDate()+days)
                         } 
 
                         SaldoInicial= SaldoFinal
@@ -118,6 +123,7 @@ function TablaAmortizacionNC(props) {
             <thead className="table-ligth" >
                 <tr>
                     <th scope="col">#</th>
+                    <th scope="col">Fechas</th>
                     <th scope="col">Saldo Inicial</th>
                     <th scope="col">Cuota</th>
                     <th scope="col">Interes</th>
@@ -127,9 +133,10 @@ function TablaAmortizacionNC(props) {
             </thead>
             <tbody>
                {
-                   quotaRows.map((cuota)=>(
-                    <tr>
+                   quotaRows.map((cuota,i)=>(
+                    <tr key={i}>
                         <th scope="row">{cuota.cont} </th>
+                        <td>{(new Date(cuota.fecha)).toLocaleDateString()}</td>
                         <td>{formatter.format((cuota.SaldoInicial).toFixed(2))}</td>
                         <td>{formatter.format(((cuota.quotaValue).toFixed(2)))}</td>
                         <td>{formatter.format(((cuota.InteresSemanal).toFixed(2)))}</td>

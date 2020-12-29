@@ -1,8 +1,16 @@
 import { Close } from '@material-ui/icons'
 import React, { useEffect, useState } from 'react'
 import TablaAmortizacionNC from './TablaAmortizacionNC'
+import TablaAmortizacionVC from './TablaAmortizacionVC';
 
  export const Calculator = () => {
+
+    let today =new Date();
+    let day = today.getDate();
+    let month = today.getMonth()+1;
+    let year = today.getFullYear();
+    today  = year + '-' + month + '-' + day;
+    
 
     const [data, setData] = useState({
         quota:0,
@@ -16,15 +24,16 @@ import TablaAmortizacionNC from './TablaAmortizacionNC'
         tipoInteres:'Compuesto',
         closingCostVar:0,
         TasaM:0,
-        totalAmount:0
+        totalAmount:0,
+        datestart:today
     })
 
     const [Error, setError] = useState(false)
     const [TipoCalculo, setTipoCalculo] = useState('NumeroDeCuotas') //o por ValordeCuotas
-    const [TablaAmortizacion, setTablaNumerodeCuotas] = useState({numeroDeCutoas:false, valorDeCuotas:false})
+    const [tablaAmortizacionNC, setTablaAmortizacionNC] = useState(false)
+    const [tablaAmortizacionVC, setTablaAmortizacionVC] = useState(false)
     
-
-    const {quota,quotaValue,rate,typeLoan,totalInterest,amount,frequency,tipotasa,tipoInteres,closingCostVar,totalAmount,TasaM} = data
+    const {quota,quotaValue,rate,typeLoan,totalInterest,amount,frequency,tipotasa,tipoInteres,closingCostVar,totalAmount,datestart} = data
 
     const formatter = new Intl.NumberFormat('es-HN', {
         style: 'currency',
@@ -41,7 +50,9 @@ import TablaAmortizacionNC from './TablaAmortizacionNC'
 
        /****************************************************** */
         if(tipoInteres==='Compuesto'){
-            CalcularCutoasInteresCompuesto()
+            if(Error===false){
+                CalcularCutoasInteresCompuesto()
+            }
         }else if(tipoInteres==='Simple'){
             //CalcularCutoasInteresSimple
         }else if(tipoInteres==='Nivelado'){
@@ -56,9 +67,13 @@ import TablaAmortizacionNC from './TablaAmortizacionNC'
          //********Validar Campos Requeridos************//
          if(amount === 0 || amount==='') {
             setError(true)
+            setTablaAmortizacionNC(false)
+            setTablaAmortizacionVC(false)
             return
         }else if( (quotaValue===0 || quotaValue==='') && (quota===0 || quota==='') ){
             setError(true)
+            setTablaAmortizacionNC(false)
+            setTablaAmortizacionVC(false)
             return
         }else{
             setError(false)
@@ -66,7 +81,7 @@ import TablaAmortizacionNC from './TablaAmortizacionNC'
     }
 
     const CalcularCutoasInteresCompuesto =()=>{
-       
+
         let CapitalInicial = 0.0
         let Interes =0.0
         let CapitalFinal=0.0
@@ -75,7 +90,7 @@ import TablaAmortizacionNC from './TablaAmortizacionNC'
 
         let tasa =0
         if(tipotasa==='Mensual'){
-          tasa=parseInt(rate)/100
+        tasa=parseInt(rate)/100
         }else if(tipotasa==='Anual'){
             tasa=(parseInt(rate)/12)/100
         }
@@ -125,18 +140,19 @@ import TablaAmortizacionNC from './TablaAmortizacionNC'
             })
 
             //Mostramos la tabla de amortizacion por numero de cuotas
-            setTablaNumerodeCuotas({
-                numeroDeCutoas:true,
-                valorDeCuotas:false
-            })
-
+            if(Error===true){
+                setTablaAmortizacionNC(false)
+            }else{
+                setTablaAmortizacionNC(true)
+            }
+            
         }// Fin de Calculo Por Numero de Cuotas
 
         //En el caso de tener el valor de la cuota en lugar del numero de cuotas
         if(TipoCalculo==='ValorDeCuotas'){
 
             let contador = 0
-           
+        
             if(frequency==='Semanal'){contador=4}
             if(frequency==='Quincenal'){contador=2}
             if(frequency==='Mensual'){contador=1}
@@ -171,7 +187,7 @@ import TablaAmortizacionNC from './TablaAmortizacionNC'
                 Capitalfinal = CapitalInicial + (CapitalInicial*tasa)
                 //obtenemos el interes de este primer periodo
                 InteresSemanal = (CapitalInicial * tasa)/4
-               
+            
                 for (let i = 0; i < contador; i++) {
 
                     if(SaldoInicial!==0){
@@ -213,6 +229,12 @@ import TablaAmortizacionNC from './TablaAmortizacionNC'
                 //quotaValue:((parseFloat(CP)+parseFloat(TotaldeInteres)+parseFloat(amount)*0.04)/quota).toFixed(2)
             })
 
+            //Mostramos la tabla de amortizacion por numero de cuotas
+            if(Error===true){
+                setTablaAmortizacionVC(false)
+            }else{
+                setTablaAmortizacionVC(true)
+            }
 
         }
 
@@ -367,15 +389,12 @@ import TablaAmortizacionNC from './TablaAmortizacionNC'
                                     </div>
 
                                     <div className="col-sm-12 col-md-3">
-                                    <label htmlFor="dateInicio">Calcular Préstamo</label>
+                                    <label htmlFor="datestart">Fecha de Inicio</label>
                                         <div className="input-group">
-                                            <button onClick={()=> calcular() } id="btnCalcular" className="btn btn-success width-100">CALCULAR</button>
+                                            <p className="input-group-addon" id="basic-addon1"><i className="icofont icofont-money"></i></p>
+                                            <input value={datestart} onChange={handleInputChange} name="datestart" id="datestart" type="date" className="form-control" />
                                         </div>
-                                        {Error===true ? 
-                                            <div class="alert alert-danger" role="alert">
-                                               Faltan Algunos Datos
-                                            </div>
-                                        : null}
+                                       
                                     </div>
                                     
                                 </div>
@@ -384,6 +403,18 @@ import TablaAmortizacionNC from './TablaAmortizacionNC'
                                 <hr />
 
                                 <div className="row">
+
+                                    <div className="col-sm-12 col-md-3">
+                                        <label htmlFor="dateInicio">Calcular Préstamo</label>
+                                            <div className="input-group">
+                                                <button onClick={()=> calcular() } id="btnCalcular" className="btn btn-success width-100">CALCULAR</button>
+                                            </div>
+                                            {Error===true ? 
+                                                <div class="alert alert-danger" role="alert">
+                                                Faltan Algunos Datos
+                                                </div>
+                                            : null}
+                                    </div>
 
                                     <div className="col-sm-12 col-md-3">
                                         <label htmlFor="totalInterest">Total de Interes</label>
@@ -412,14 +443,27 @@ import TablaAmortizacionNC from './TablaAmortizacionNC'
                                 </div>                            
                                 
                                 {
-                                    TablaAmortizacion.numeroDeCutoas && 
+                                    (tablaAmortizacionNC === true && Error===false) && 
                                     <TablaAmortizacionNC 
+                                        CapitalInicial={amount}
+                                        Tasa={rate}
+                                        TipoTasa={tipotasa}
+                                        Quotas={quota}
+                                        TipoInteres={tipoInteres}
+                                        Frequency={frequency}
+                                        DateStart={datestart}
+                                    />
+                                }
+                                { 
+                                    (tablaAmortizacionVC === true && Error===false) && 
+                                    <TablaAmortizacionVC 
                                     CapitalInicial={amount}
                                     Tasa={rate}
                                     TipoTasa={tipotasa}
-                                    Quotas={quota}
+                                    QuotasValue={quotaValue}
                                     TipoInteres={tipoInteres}
                                     Frequency={frequency}
+                                    DateStart={datestart}
                                     />
                                }
 
