@@ -19,7 +19,7 @@ function TablaAmortizacionNC(props) {
     let fecha = Date.parse(DateStart)+1;
 	fecha = new Date(fecha);
     fecha.setDate(fecha.getDate()+1)
-    console.log("FECHA=",fecha)
+   
     //Obtenemos el valor de la tasa mensual
     if(TipoTasa==='Mensual'){
         tasa=parseInt(Tasa)/100

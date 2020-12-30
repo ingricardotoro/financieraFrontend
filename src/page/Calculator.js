@@ -70,7 +70,7 @@ import TablaAmortizacionVC from './TablaAmortizacionVC';
             setTablaAmortizacionNC(false)
             setTablaAmortizacionVC(false)
             return
-        }else if( (quotaValue===0 || quotaValue==='') && (quota===0 || quota==='') ){
+        }else if( (quotaValue===0 || quotaValue==='' || parseFloat(quotaValue)<100) && (quota===0 || quota==='') ){
             setError(true)
             setTablaAmortizacionNC(false)
             setTablaAmortizacionVC(false)
@@ -144,6 +144,7 @@ import TablaAmortizacionVC from './TablaAmortizacionVC';
                 setTablaAmortizacionNC(false)
             }else{
                 setTablaAmortizacionNC(true)
+                setTablaAmortizacionVC(false)
             }
             
         }// Fin de Calculo Por Numero de Cuotas
@@ -234,6 +235,7 @@ import TablaAmortizacionVC from './TablaAmortizacionVC';
                 setTablaAmortizacionVC(false)
             }else{
                 setTablaAmortizacionVC(true)
+                setTablaAmortizacionNC(false)
             }
 
         }
@@ -445,7 +447,7 @@ import TablaAmortizacionVC from './TablaAmortizacionVC';
                                 <div className="table-responsive">
                                                        
                                 {
-                                    (tablaAmortizacionNC === true && Error===false) && 
+                                    (tablaAmortizacionNC === true && Error===false && parseInt(quota)>0) && 
                                     <TablaAmortizacionNC 
                                         CapitalInicial={amount}
                                         Tasa={rate}
@@ -457,7 +459,7 @@ import TablaAmortizacionVC from './TablaAmortizacionVC';
                                     />
                                 }
                                 { 
-                                    (tablaAmortizacionVC === true && Error===false) && 
+                                      (tablaAmortizacionVC === true && Error===false && parseFloat(quotaValue)>100) && 
                                     <TablaAmortizacionVC 
                                     CapitalInicial={amount}
                                     Tasa={rate}
@@ -466,7 +468,7 @@ import TablaAmortizacionVC from './TablaAmortizacionVC';
                                     TipoInteres={tipoInteres}
                                     Frequency={frequency}
                                     DateStart={datestart}
-                                    />
+                                    />  
                                }
                                 </div> 
                             </div>
