@@ -1,19 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Stepper from 'bs-stepper'
-
-let stepper = new Stepper(document.querySelector('.bs-stepper'))
-
+import FormCustomerNewRequest from '../../components/requests/FormCustomerNewRequest';
 
 export default function NewRequestPage() {
 
-    const next=()=>{
-        stepper.next()
-    }
-
-    const previous = () =>{
-        stepper.previous()
-    }
+    let stepper =null
+    useEffect(() => {
+        stepper = new Stepper(document.querySelector('.bs-stepper'), {
+            linear: false,
+            animation: true
+          })
+    }, [])
+    
+    const next=()=>{stepper.next()}
+    const previous = () =>{stepper.previous()}
   
   return (
     
@@ -55,36 +56,38 @@ export default function NewRequestPage() {
                             <div className="step" data-target="#logins-part">
                             <button type="button" className="step-trigger" role="tab" aria-controls="logins-part" id="logins-part-trigger">
                                 <span className="bs-stepper-circle">1</span>
-                                <span className="bs-stepper-label">Logins</span>
+                                <span className="bs-stepper-label">Datos Personales</span>
                             </button>
                             </div>
                             <div className="line" />
                             <div className="step" data-target="#segunda">
                             <button type="button" className="step-trigger" role="tab" aria-controls="segunda" id="segunda-trigger">
                                 <span className="bs-stepper-circle">2</span>
-                                <span className="bs-stepper-label">Various information</span>
+                                <span className="bs-stepper-label">Préstamo</span>
                             </button>
                             </div>
                             <div className="line" />
                             <div className="step" data-target="#tercera">
                             <button type="button" className="step-trigger" role="tab" aria-controls="tercera" id="tercera-trigger">
                                 <span className="bs-stepper-circle">3</span>
-                                <span className="bs-stepper-label">Tercera</span>
+                                <span className="bs-stepper-label">Referencias</span>
                             </button>
                             </div>
                             <div className="line" />
                             <div className="step" data-target="#cuarta">
                             <button type="button" className="step-trigger" role="tab" aria-controls="cuarta" id="cuarta-trigger">
                                 <span className="bs-stepper-circle">4</span>
-                                <span className="bs-stepper-label">Cuarta Etapa</span>
+                                <span className="bs-stepper-label">Garantia</span>
                             </button>
                             </div>
                         </div>
                         <div className="bs-stepper-content">
                             {/* your steps content here */}
                             <div id="logins-part" className="content fade" role="tabpanel" aria-labelledby="logins-part-trigger">
-                                <h1>Primera Etapa</h1>
-                                <button className="btn btn-primary btn-sm" onClick={()=>{next()}}>Siguiente</button>
+                               <FormCustomerNewRequest />
+                               <div style={{width:"90%", textAlign: "right"}}>
+                                    <button className="btn btn-primary" onClick={()=>{next()}}>Siguiente</button>
+                               </div>
                             </div>
                             <div id="segunda" className="content fade" role="tabpanel" aria-labelledby="segunda-trigger" > 
                                 <h1>Segunda Etapa</h1>

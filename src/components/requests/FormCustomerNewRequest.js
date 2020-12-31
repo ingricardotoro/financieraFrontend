@@ -29,9 +29,26 @@ import { URL_API } from '../../config/config';
 
 function FormCustomerNewRequest() {
     const classes = useStyles();
-    
+    const [data, setData] = useState({
+        customers:[],
+        value:'',
+        inputValue:'',
+        customValue:'',
+        codeCustomer:'',
+        identidad:'',
+        rtn:'',
+        fec_nac:'',
+        phone1:'',
+        phone2:'',
+        email1:'',
+        email2:'',
+        city:'',
+        location:''
+
+    })
+
     const [customers, setCustomers] = useState([])
-    const [value, setValue] = useState([])
+    const [value, setValue] = useState('')
     const [inputValue, setInputValue] = useState('')
     const [customValue, setCustomValue] = useState('')
 
@@ -54,13 +71,13 @@ function FormCustomerNewRequest() {
        
       const resp_customers = await Axios.get(URL_API +'/customers')   
       setCustomers(resp_customers.data.customers)
+      setInputValue('') // para la inicializacion inicial del  autocomplete, es necesario
   }
 
   const handleCustomSelect = (event,newValue)=>{
         
         setValue(newValue);
         setCustomValue(newValue._id);
-
         setCodeCustomer(newValue.codeCustomer)
         setIdentidad(newValue.personId.identidad)
         setRtn(newValue.personId.rtn)
@@ -85,12 +102,13 @@ function FormCustomerNewRequest() {
                 <div >
 
                 <Autocomplete
+
                     options={customers}
                     value={value}
-                    getOptionLabel={(option) => option?.personId?.name +" "+ option?.personId?.lastname}
+                    getOptionLabel={(option) => option?.personId?.name + " " + option?.personId?.lastname }
                     renderOption={(option) => (
                     <>
-                        {option?.personId?.name}  {option?.personId?.lastname}
+                        {option?.personId?.name} - {option?.personId?.lastname}
                     </>
                     )}
                     onChange={(event, newValue) => {
