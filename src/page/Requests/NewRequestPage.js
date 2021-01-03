@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Stepper from 'bs-stepper'
 import FormCustomerNewRequest from '../../components/requests/FormCustomerNewRequest';
@@ -58,27 +58,37 @@ export default function NewRequestPage() {
 
     let stepper =null
     useEffect(() => {
+        /*stepper = new Stepper(document.querySelector('.bs-stepper'), {
+            linear: false,
+            animation: true
+          })*/
+
+        }, [])
+    
+    const next=(step)=>{
+
         stepper = new Stepper(document.querySelector('.bs-stepper'), {
             linear: false,
             animation: true
           })
+        console.log(stepper)
 
-    }, [])
-    
-    const next=()=>{
-       
         if(DataRequest.customerId==="" || DataRequest.customerId===undefined){            
              setErrorCustomer(true)
         }else{
             //reiniciamos el stepper, porque al cambiar el estado lo elimina
-            stepper = new Stepper(document.querySelector('.bs-stepper'), {
+            /*stepper = new Stepper(document.querySelector('.bs-stepper'), {
                 linear: false,
                 animation: true
               })
-              setErrorCustomer(false)
-              stepper.next()
+              setErrorCustomer(false)*/
+              stepper.to(step)
         }
 
+    }
+
+    const previous =() =>{
+        stepper.previous()
     }
 
     const end = () =>{
@@ -118,7 +128,7 @@ export default function NewRequestPage() {
                 <div className="col-sm-12">
                     <div className="card">
                         <div className="card-block">
-                        <div className="bs-stepper">
+                        <div className="bs-stepper" >
                             
                             <div className="bs-stepper-header" role="tablist">
                                 {/* your steps here */}
@@ -151,19 +161,19 @@ export default function NewRequestPage() {
                                 </div>
                             </div>
 
-                            <div className="bs-stepper-content">
+                            <div className="bs-stepper-content" >
                                 {/* your steps content here */}
                                 <div id="first-part" className="content fade" role="tabpanel" aria-labelledby="first-part-trigger">
                                     <FormCustomerNewRequest setDataRequest={setDataRequest} DataRequest={DataRequest} ErrorCustomer={ErrorCustomer} setErrorCustomer={setErrorCustomer}  />
                                     <div style={{textAlign: "right"}}>
-                                        <button className="btn btn-primary" onClick={()=>{next()}}>Siguiente</button>
+                                        <button className="btn btn-primary" onClick={()=>{next(2)}}>Siguiente</button>
                                     </div>
                                 </div>
                                 <div id="segunda" className="content fade" role="tabpanel" aria-labelledby="segunda-trigger" > 
                                     <FormLoanNewRequest DataRequest={DataRequest} setDataRequest={setDataRequest} setTablaAmortizacionNC={setTablaAmortizacionNC} setTablaAmortizacionVC={setTablaAmortizacionVC} setError={setError} Error={Error} />
                                     <div style={{textAlign: "right", paddingBottom:"15px" }}>
-                                        <button className="btn btn-primary mr-1" onClick={()=>{stepper.previous()}}>Anterior</button>
-                                        <button className="btn btn-primary" onClick={()=>{stepper.next()}}>Siguiente</button>
+                                        <button className="btn btn-primary mr-1" onClick={()=>{previous()}}>Anterior</button>
+                                        <button className="btn btn-primary" onClick={()=>{next(3)}}>Siguiente</button>
                                     </div>
 
                                     <div className="table-responsive">
@@ -199,15 +209,15 @@ export default function NewRequestPage() {
                                 <div id="tercera" className="content fade" role="tabpanel" aria-labelledby="tercera-trigger" > 
                                    <FormReferencesNewRequest DataRequest={DataRequest} setDataRequest={setDataRequest} />
                                     <div style={{textAlign: "right" }}>
-                                        <button className="btn btn-primary" onClick={()=>{stepper.previous()}}>Anterior</button>
-                                        <button className="btn btn-primary" onClick={()=>{stepper.next()}}>Siguiente</button>
+                                        <button className="btn btn-primary" onClick={()=>{previous()}}>Anterior</button>
+                                        <button className="btn btn-primary" onClick={()=>{next(4)}}>Siguiente</button>
                                     </div>
                                 </div>
 
                                 <div id="cuarta" className="content fade" role="tabpanel" aria-labelledby="cuarta-trigger" > 
                                     <h1>Cuarta Etapa</h1>
                                     <div style={{textAlign: "right" }}>
-                                        <button className="btn btn-primary" onClick={()=>{stepper.previous()}}>Anterior</button>
+                                        <button className="btn btn-primary" onClick={()=>{previous()}}>Anterior</button>
                                         <button className="btn btn-primary" onClick={()=>{end()}}>Finalizar</button>
                                     </div>
                                 </div>

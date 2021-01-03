@@ -11,12 +11,12 @@ function TablaAmortizacionVC(props) {
     let InteresSemanal = 0.0
     let AbonoCapital = 0.0
     let SaldoFinal = 0.0 
-    let TotaldeInteres =0.0
+    //let TotaldeInteres =0.0
     let TotalAbonoCapital=0.0, TotaldeCuotas=0.0,TotaldeInteres2=0.0
     let Close=0.0 //Para guardar el valor a prestar mas el costo de cierre
     let tasa=0.0
     let SaldoInicial=0.0
-    let periodos =0,contador=0, days=7, cuotas=0
+    let periodos =0,contador=0, days=7  // cuotas=0
     //let fecha = new Date (Date(DateStart));  
     let fecha = Date.parse(DateStart)+1;
 	fecha = new Date(fecha);
@@ -104,7 +104,7 @@ function TablaAmortizacionVC(props) {
 
                         SaldoInicial= SaldoFinal
                         cont+=1 
-                        cuotas+=1
+                        //cuotas+=1
                     
                         CapitalInicial = Capitalfinal
                     }

@@ -7,7 +7,7 @@ import { URL_API } from '../../config/config';
 import { useForm } from '../../hooks/useForm';
 
 
-function FormReferencesNewRequest({DataRequest, setDataRequest) {
+function FormReferencesNewRequest({DataRequest, setDataRequest}) {
 
     const [value, setValue] = useState([])
     const [inputValue, setInputValue] = useState('')
