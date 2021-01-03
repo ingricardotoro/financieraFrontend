@@ -49,6 +49,7 @@ function FormCustomerNewRequest({setDataRequest,DataRequest,ErrorCustomer,setErr
 
     })
  
+    const [data2, setData2] = useState('')
   useEffect (() => {  
       obtenerClientes()
   }, [])
@@ -58,7 +59,9 @@ function FormCustomerNewRequest({setDataRequest,DataRequest,ErrorCustomer,setErr
       const resp_customers = await Axios.get(URL_API +'/customers')   
       setCustomers(resp_customers.data.customers)
       setInputValue('') // para la inicializacion inicial del  autocomplete, es necesario
-
+      const resp_lastCode = await Axios.post(URL_API +'/requests/lastcode')   
+      console.log(resp_lastCode.data.lastCode)
+      setData2(resp_lastCode.data.lastCode+1)
   }
 
   const handleCustomSelect = (event,newValue)=>{
@@ -137,12 +140,19 @@ function FormCustomerNewRequest({setDataRequest,DataRequest,ErrorCustomer,setErr
                 </div>
             </div>
 
-                <div className="col-sm-4 col-md-6">
-                    <label htmlFor="codeCustomer" className="block">Código de Cliente</label>
-                <div >
-                    <input value={data.codeCustomer} disabled name="codeCustomer" type="text" id="codeCustomer" className="required form-control" />
+                <div className="col-sm-4 col-md-3">
+                    <label htmlFor="codeRequest" className="block">Código de Solicitud</label>
+                     <div >
+                        <input value={data2} disabled name="codeRequest" type="text" id="codeRequest" className="required form-control" />
+                    </div>
                 </div>
-            </div>
+
+                <div className="col-sm-4 col-md-3">
+                    <label htmlFor="codeCustomer" className="block">Código de Cliente</label>
+                     <div >
+                        <input value={data.codeCustomer} disabled name="codeCustomer" type="text" id="codeCustomer" className="required form-control" />
+                    </div>
+                </div>
 
             </div>
 

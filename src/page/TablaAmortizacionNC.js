@@ -1,4 +1,5 @@
 import React from 'react'
+import { Fragment } from 'react'
 
 //Tabla de amortizacion por numero de cuotas
 function TablaAmortizacionNC(props) {
@@ -122,7 +123,8 @@ function TablaAmortizacionNC(props) {
       })
 
     return (
-
+        <Fragment>
+        <p>Tabla de Amortizacion por Numero de Cuotas</p>
         <table className="table table-bordered table-hover">
             <thead className="table-ligth" >
                 <tr>
@@ -161,6 +163,9 @@ function TablaAmortizacionNC(props) {
                 </tr>
             </tfoot>
         </table>
+        
+        </Fragment>
+
     )
 }
 

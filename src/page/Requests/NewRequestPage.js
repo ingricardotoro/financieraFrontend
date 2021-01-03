@@ -12,6 +12,8 @@ export default function NewRequestPage() {
     let day = today.getDate();
     let month = today.getMonth()+1;
     let year = today.getFullYear();
+    if(day < 10 ){ day= '0'+day} 
+    if(month < 10){ month = '0'+month}
     today  = year + '-' + month + '-' + day;
 
     const initialForm = {
@@ -53,8 +55,6 @@ export default function NewRequestPage() {
     const [tablaAmortizacionVC, setTablaAmortizacionVC] = useState(false)
     const [Error, setError] = useState(false)
 
-    
-
     let stepper =null
     useEffect(() => {
         stepper = new Stepper(document.querySelector('.bs-stepper'), {
@@ -78,7 +78,15 @@ export default function NewRequestPage() {
         }
 
     }
-    const previous = () =>{stepper.previous()}
+
+    const previous = () =>{
+            //reiniciamos el stepper, porque al cambiar el estado lo elimina
+        stepper = new Stepper(document.querySelector('.bs-stepper'), {
+            linear: false,
+            animation: true
+          })
+        stepper.previous()
+    }
   
   return (
     

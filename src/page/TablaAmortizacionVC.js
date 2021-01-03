@@ -1,4 +1,5 @@
 import React from 'react'
+import { Fragment } from 'react'
 
 //Tabla de amortizacion por numero de cuotas
 function TablaAmortizacionVC(props) {
@@ -108,9 +109,6 @@ function TablaAmortizacionVC(props) {
                         CapitalInicial = Capitalfinal
                     }
 
-        console.log("SF",SaldoFinal)
-
-
                 }
             }
     }
@@ -122,7 +120,8 @@ function TablaAmortizacionVC(props) {
       })
 
     return (
-
+        <Fragment >
+        <p>Tabla de Amortizacion por Valor de Cuotas</p>
         <table className="table table-bordered table-hover">
             <thead className="table-ligth" >
                 <tr>
@@ -161,6 +160,7 @@ function TablaAmortizacionVC(props) {
                 </tr>
             </tfoot>
         </table>
+        </Fragment>
     )
 }
 
