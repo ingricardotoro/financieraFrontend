@@ -6,19 +6,13 @@ function FormLoanNewRequest({DataRequest, setDataRequest,setTablaAmortizacionNC,
     
     const calcular=()=>{
 
-        console.log("AQUI 0")
-
         ValidarCampos() 
-        //CalcularTasaM()
-        //CalcularCostoDeCierre()
-
+    
        /****************************************************** */
         if(tipoInteres==='Compuesto'){
-            console.log("AQUI 0.1")
 
             if(Error===false){
-                console.log("AQUI 0.2")
-
+                
                 CalcularCutoasInteresCompuesto()
             }
         }else if(tipoInteres==='Simple'){
@@ -50,8 +44,6 @@ function FormLoanNewRequest({DataRequest, setDataRequest,setTablaAmortizacionNC,
 
     const CalcularCutoasInteresCompuesto =()=>{
 
-        console.log("AQUI 1")
-
         let CapitalInicial = 0.0
         let Interes =0.0
         let CapitalFinal=0.0
@@ -67,9 +59,6 @@ function FormLoanNewRequest({DataRequest, setDataRequest,setTablaAmortizacionNC,
 
         //En caso de tener el numero de cuotas
         if(DataRequest.tipoCalculo==='NumeroDeCuotas'){
-
-            console.log("AQUI 2.5")
-
 
             let Close=0.0
 
@@ -116,7 +105,6 @@ function FormLoanNewRequest({DataRequest, setDataRequest,setTablaAmortizacionNC,
             if(Error===true){
                 setTablaAmortizacionNC(false)
             }else{
-                console.log("AQUI 2")
                 setTablaAmortizacionNC(true)
                 setTablaAmortizacionVC(false)
             }
