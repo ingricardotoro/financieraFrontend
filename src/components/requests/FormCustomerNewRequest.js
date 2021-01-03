@@ -27,12 +27,14 @@ import { URL_API } from '../../config/config';
   }));
 
 
-function FormCustomerNewRequest() {
+function FormCustomerNewRequest({setDataRequest,DataRequest,ErrorCustomer,setErrorCustomer}) {
+
     const classes = useStyles();
+    const [customers, setCustomers] = useState([])
+    const [inputValue, setInputValue] = useState('')
+   
     const [data, setData] = useState({
-        customers:[],
         value:'',
-        inputValue:'',
         customValue:'',
         codeCustomer:'',
         identidad:'',
@@ -46,22 +48,6 @@ function FormCustomerNewRequest() {
         location:''
 
     })
-
-    const [customers, setCustomers] = useState([])
-    const [value, setValue] = useState('')
-    const [inputValue, setInputValue] = useState('')
-    const [customValue, setCustomValue] = useState('')
-
-    const [codeCustomer, setCodeCustomer] = useState('')
-    const [identidad, setIdentidad] = useState('')
-    const [rtn, setRtn] = useState('')
-    const [fec_nac, setFec_nac] = useState('')
-    const [phone1, setPhone1] = useState('')
-    const [phone2, setPhone2] = useState('')
-    const [email1, setEmail1] = useState('')
-    const [email2, setEmail2] = useState('')
-    const [city, setCity] = useState('')
-    const [location, setLocation] = useState('')
  
   useEffect (() => {  
       obtenerClientes()
@@ -72,31 +58,40 @@ function FormCustomerNewRequest() {
       const resp_customers = await Axios.get(URL_API +'/customers')   
       setCustomers(resp_customers.data.customers)
       setInputValue('') // para la inicializacion inicial del  autocomplete, es necesario
+
   }
 
   const handleCustomSelect = (event,newValue)=>{
+
+    setData({
         
-        setValue(newValue);
-        setCustomValue(newValue._id);
-        setCodeCustomer(newValue.codeCustomer)
-        setIdentidad(newValue.personId.identidad)
-        setRtn(newValue.personId.rtn)
-        setFec_nac(newValue.personId.fec_nac)
-        setPhone1(newValue.personId.phone1)
-        setPhone2(newValue.personId.phone2)
-        setEmail1(newValue.personId.email1)
-        setEmail2(newValue.personId.email2)
-        setCity(newValue.personId.city)
-        setLocation(newValue.personId.location)
+        value:newValue,
+        customValue:newValue._id,
+        codeCustomer:newValue.codeCustomer,
+        identidad:newValue.personId.identidad,
+        rtn:newValue.personId.rtn,
+        fec_nac:newValue.personId.fec_nac,
+        phone1:newValue.personId.phone1,
+        phone2:newValue.personId.phone2,
+        email1:newValue.personId.email1,
+        email2:newValue.personId.email2,
+        city:newValue.personId.city,
+        location:newValue.personId.location
+    })
+
+    setDataRequest({
+        ...DataRequest,
+        customerId:newValue._id
+    })
+
+    setErrorCustomer(false)
 
   }
 
     return (
         
         <div className="container">
-
             <div className="row">
-
                 <div className="col-sm-4 col-md-6">
                     <label htmlFor="free-solo-2-demo" className="block">Nombre de Cliente</label>
                 <div >
@@ -104,7 +99,7 @@ function FormCustomerNewRequest() {
                 <Autocomplete
 
                     options={customers}
-                    value={value}
+                    value={data.value}
                     getOptionLabel={(option) => option?.personId?.name + " " + option?.personId?.lastname }
                     renderOption={(option) => (
                     <>
@@ -132,6 +127,12 @@ function FormCustomerNewRequest() {
                         />                            
                     )}
                 />
+
+                {ErrorCustomer===true ? 
+                    <div class="alert alert-danger" role="alert">
+                        *El Cliente es Requerido
+                    </div>
+                : null}
                   
                 </div>
             </div>
@@ -139,7 +140,7 @@ function FormCustomerNewRequest() {
                 <div className="col-sm-4 col-md-6">
                     <label htmlFor="codeCustomer" className="block">Código de Cliente</label>
                 <div >
-                    <input value={codeCustomer} disabled name="codeCustomer" type="text" id="codeCustomer" className="required form-control" />
+                    <input value={data.codeCustomer} disabled name="codeCustomer" type="text" id="codeCustomer" className="required form-control" />
                 </div>
             </div>
 
@@ -156,7 +157,7 @@ function FormCustomerNewRequest() {
                 <div className="col-sm-12 col-md-6">
                     <div className="input-group">
                     <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-location-arrow"></i></span>
-                    <textarea value={location} disabled  name="location" id="location" className="form-control" rows="5" placeholder="Dirección del cliente"></textarea>  
+                    <textarea value={data.location} disabled  name="location" id="location" className="form-control" rows="5" placeholder="Dirección del cliente"></textarea>  
                     </div>
                 </div>
 
@@ -167,14 +168,14 @@ function FormCustomerNewRequest() {
                 <div className="col-sm-12 col-md-6">
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1">Id</span>
-                        <input value={identidad} disabled  name="identidad" id="identidad" type="text" className="form-control" placeholder="Número de Identidad" />
+                        <input value={data.identidad} disabled  name="identidad" id="identidad" type="text" className="form-control" placeholder="Número de Identidad" />
                     </div>
                 </div>
 
                 <div className="col-sm-12 col-md-6">
                         <div className="input-group">
                             <span className="input-group-addon" id="basic-addon1">RTN</span>
-                            <input value={rtn} disabled  name="rtn" id="rtn" type="text" className="form-control" placeholder="Número de RTN"/>
+                            <input value={data.rtn} disabled  name="rtn" id="rtn" type="text" className="form-control" placeholder="Número de RTN"/>
                         </div>
                 </div>
             
@@ -185,14 +186,14 @@ function FormCustomerNewRequest() {
                 <div className="col-sm-12 col-md-6">
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-iphone"></i></span>
-                        <input value={phone1} disabled  name="phone1" id="phone1" type="text" className="form-control" placeholder="Número de Teléfono 1" />
+                        <input value={data.phone1} disabled  name="phone1" id="phone1" type="text" className="form-control" placeholder="Número de Teléfono 1" />
                     </div>
                 </div>
 
                 <div className="col-sm-12 col-md-6">
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-iphone"></i></span>
-                        <input value={phone2} disabled  name="phone2" id="phone2" type="text" className="form-control" placeholder="Número de Teléfono 2"/>
+                        <input value={data.phone2} disabled  name="phone2" id="phone2" type="text" className="form-control" placeholder="Número de Teléfono 2"/>
                     </div>
                 </div>
                 
@@ -203,14 +204,14 @@ function FormCustomerNewRequest() {
                 <div className="col-sm-12 col-md-6">
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1">@</span>
-                        <input value={email1} disabled  name="email1" id="email1" type="email" className="form-control" placeholder="Correo eletrónico 1" />
+                        <input value={data.email1} disabled  name="email1" id="email1" type="email" className="form-control" placeholder="Correo eletrónico 1" />
                     </div>
                 </div>
 
                 <div className="col-sm-12 col-md-6">
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1">@</span>
-                        <input value={email2} disabled  name="email2" id="email2" type="email" className="form-control" placeholder="Correo electrónico 2"/>
+                        <input value={data.email2} disabled  name="email2" id="email2" type="email" className="form-control" placeholder="Correo electrónico 2"/>
                     </div>
                 </div>
                 
@@ -221,14 +222,14 @@ function FormCustomerNewRequest() {
                 <div className="col-sm-12 col-md-6">
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-location-pin"></i></span>
-                        <input value={city} disabled  name="city" id="city" type="text" className="form-control" placeholder="Localidad del Cliente" />
+                        <input value={data.city} disabled  name="city" id="city" type="text" className="form-control" placeholder="Localidad del Cliente" />
                     </div>
                 </div>
 
                 <div className="col-sm-12 col-md-6">
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-calendar mr-1"></i> Nacimiento</span>
-                        <input value={fec_nac} disabled  name="fec_nac" id="fec_nac" type="text" className="form-control" placeholder="Fecha de Nacimiento"/>
+                        <input value={data.fec_nac} disabled  name="fec_nac" id="fec_nac" type="text" className="form-control" placeholder="Fecha de Nacimiento"/>
                     </div>
                 </div>
                 

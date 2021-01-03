@@ -11,6 +11,7 @@ import NewRequestPage from "../page/Requests/NewRequestPage";
 import ListLoansPage from "../page/Loans/ListLoans";
 import CalculatorPage from "../page/Calculator"
 import PaysPage from "../page/PaysPage"
+import TestPage from "../page/Test"
 
 const StackRoutes = () => {
    
@@ -29,6 +30,9 @@ const StackRoutes = () => {
 
             <Route exact path="/calculadora" component={CalculatorPage} />
             <Route exact path="/pagos" component={PaysPage} />
+
+            <Route exact path="/test" component={TestPage} />
+
          
          </Switch>
             
