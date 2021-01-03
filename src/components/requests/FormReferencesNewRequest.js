@@ -12,24 +12,6 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
     const [value, setValue] = useState([])
     const [inputValue, setInputValue] = useState('')
 
-    const [formValues, handleInputChange] = useForm({
-        codeCustomer:'c-112',
-        name:'',
-        lastname:'',
-        identidad:'',
-        gender:'',
-        rtn:'',
-        fec_nac:'',
-        phone1:'',
-        phone2:'',
-        email1:'',
-        email2:'',
-        profesion:'',
-        city:'',
-        location:'',
-        photo:'',
-    })
-
     const [aval, setAval] = useState([])
 
     useEffect (() => {  
@@ -42,8 +24,13 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
         setAval(resp_customers.data.customers)
     }
 
-    const handleSubmit = ()=>{
+    const handleInputChange = ({ target }) => {
 
+        setDataRequest({
+            ...DataRequest,
+            [target.name]: target.value
+        })
+       
     }
   
     return (
@@ -55,21 +42,21 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
                     <label htmlFor="totalInteres">Referencia Personal</label>
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-user"></i></span>
-                        <input id="referecia1" className="form-control" name="referencia1" type="text" placeholder="Nombre de Referencia" />
+                        <input onChange={handleInputChange}  value={DataRequest.refName1} id="refName1" className="form-control" name="refName1" type="text" placeholder="Nombre de Referencia" />
                     </div>
                 </div>
                 <div className="col-sm-12 col-md-4">
                 <label htmlFor="totalInteres">Relación o Parentesco</label>
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-link"></i> </span> 
-                        <input id="relacion" className="form-control" name="relacion" type="text" placeholder="Relación o Parentesco" />
+                        <input onChange={handleInputChange} value={DataRequest.refRelation1} id="refRelation1" className="form-control" name="refRelation1" type="text" placeholder="Relación o Parentesco" />
                     </div>
                 </div>
                 <div className="col-sm-12 col-md-4">
                 <label htmlFor="totalInteres">Número de Teléfono</label>
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-iphone"></i> </span> 
-                        <input id="telefonoRef1" className="form-control" name="telefonoRef1" type="text" placeholder="Teléfono de Referencia" />
+                        <input onChange={handleInputChange} value={DataRequest.refPhone1} id="refPhone1" className="form-control" name="refPhone1" type="text" placeholder="Teléfono de Referencia" />
                     </div>
                 </div>
             </div>
@@ -79,21 +66,21 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
                     <label htmlFor="totalInteres">Referencia Familiar</label>
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-user"></i></span>
-                        <input id="referencia2" className="form-control" name="referencia2" type="text" placeholder="Nombre de Referencia" />
+                        <input onChange={handleInputChange} value={DataRequest.refName2} id="refName2" className="form-control" name="refName2" type="text" placeholder="Nombre de Referencia" />
                     </div>
                 </div>
                 <div className="col-sm-12 col-md-4">
                 <label htmlFor="totalInteres">Relación o Parentesco</label>
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-link"></i> </span> 
-                        <input id="relacion" className="form-control" name="relacion" type="text" placeholder="Relación o Parentesco" />
+                        <input onChange={handleInputChange} value={DataRequest.refRelation2} id="refRelation2" className="form-control" name="refRelation2" type="text" placeholder="Relación o Parentesco" />
                     </div>
                 </div>
                 <div className="col-sm-12 col-md-4">
                 <label htmlFor="totalInteres">Número de Teléfono</label>
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-iphone"></i></span> 
-                        <input id="telefonoRef1" className="form-control" name="telefonoRef1" type="text" placeholder="Teléfono de Referencia" />
+                        <input onChange={handleInputChange} value={DataRequest.refPhone2} id="refPhone2" className="form-control" name="refPhone2" type="text" placeholder="Teléfono de Referencia" />
                     </div>
                 </div>
     
@@ -234,7 +221,7 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
                     </div>
 
                     <div className="modal-body">
-                        <form onSubmit={handleSubmit}>
+                        <form >
                         <div className="row">
                             <input value={"C-110"} onChange={handleInputChange} name="codeCustomer" id="codeCustomer" type="hidden" />
                             {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
@@ -384,7 +371,7 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
 
                     <div className="modal-footer">
                         <button type="button" className="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="submit" onClick={handleSubmit} className="btn btn-primary">Guardar</button>
+                        <button type="submit" className="btn btn-primary">Guardar</button>
                     </div>
                     </div>
                     </div>

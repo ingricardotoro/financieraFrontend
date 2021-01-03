@@ -50,9 +50,9 @@ function FormCustomerNewRequest({setDataRequest,DataRequest,ErrorCustomer,setErr
     })
  
     const [data2, setData2] = useState('')
-  useEffect (() => {  
-      obtenerClientes()
-  }, [])
+    useEffect (() => {  
+        obtenerClientes()
+    }, [])
 
   const obtenerClientes = async()=>{
        
@@ -62,6 +62,11 @@ function FormCustomerNewRequest({setDataRequest,DataRequest,ErrorCustomer,setErr
       const resp_lastCode = await Axios.post(URL_API +'/requests/lastcode')   
       console.log(resp_lastCode.data.lastCode)
       setData2(resp_lastCode.data.lastCode+1)
+
+      setDataRequest({
+        ...DataRequest,
+        codeRequest:parseInt(resp_lastCode.data.lastCode)+1
+    })
   }
 
   const handleCustomSelect = (event,newValue)=>{

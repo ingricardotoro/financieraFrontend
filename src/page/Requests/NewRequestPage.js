@@ -57,32 +57,18 @@ export default function NewRequestPage() {
     const [Error, setError] = useState(false)
 
     let stepper =null
-    useEffect(() => {
-        /*stepper = new Stepper(document.querySelector('.bs-stepper'), {
-            linear: false,
-            animation: true
-          })*/
-
-        }, [])
-    
+   
     const next=(step)=>{
 
         stepper = new Stepper(document.querySelector('.bs-stepper'), {
             linear: false,
             animation: true
           })
-        console.log(stepper)
 
         if(DataRequest.customerId==="" || DataRequest.customerId===undefined){            
-             setErrorCustomer(true)
+            setErrorCustomer(true)
         }else{
-            //reiniciamos el stepper, porque al cambiar el estado lo elimina
-            /*stepper = new Stepper(document.querySelector('.bs-stepper'), {
-                linear: false,
-                animation: true
-              })
-              setErrorCustomer(false)*/
-              stepper.to(step)
+            stepper.to(step)
         }
 
     }
