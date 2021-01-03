@@ -3,25 +3,36 @@ import { Link } from 'react-router-dom';
 import Stepper from 'bs-stepper'
 import FormCustomerNewRequest from '../../components/requests/FormCustomerNewRequest';
 import FormLoanNewRequest from '../../components/requests/FormLoanNewRequest';
+import TablaAmortizacionNC from '../TablaAmortizacionNC';
+import TablaAmortizacionVC from '../TablaAmortizacionVC';
 
 export default function NewRequestPage() {
 
+    let today =new Date();
+    let day = today.getDate();
+    let month = today.getMonth()+1;
+    let year = today.getFullYear();
+    today  = year + '-' + month + '-' + day;
+
     const initialForm = {
         customerId:'',
-        codeRequest:'',
-        typeLoan:'',
-        typeCalculo:'',
-        amount:'',
-        rate:'',
-        frequency:'',
-        quota:'',
-        quotaValue:'',
-        totalInterest:'',
-        closingCost:'',
-        startDate:'',
-        sucursal:'',
+        codeRequest:0,
+        typeLoan:'Solidario',
+        tipoCalculo:'NumeroDeCuotas',
+        amount:0,
+        rate:10,
+        frequency:'Semanal',
+        tipotasa:'Mensual',
+        tipoInteres:'Compuesto',
+        quota:0,
+        quotaValue:0,
+        totalInterest:0,
+        closingCostVar:0,
+        totalAmount:0,
+        datestart:today,
+        sucursal:'Central',
         details:'',
-        stateRequest:'',
+        stateRequest:'Pendiente',
         refName1:'',
         refPhone1:'',
         refRelation1:'',
@@ -34,8 +45,15 @@ export default function NewRequestPage() {
         approvedBy:'',
         declinedBy:'',
     }
+
     const [DataRequest, setDataRequest] = useState(initialForm)
     const [ErrorCustomer, setErrorCustomer] = useState(false)
+
+    const [tablaAmortizacionNC, setTablaAmortizacionNC] = useState(false)
+    const [tablaAmortizacionVC, setTablaAmortizacionVC] = useState(false)
+    const [Error, setError] = useState(false)
+
+    
 
     let stepper =null
     useEffect(() => {
@@ -56,7 +74,7 @@ export default function NewRequestPage() {
                 animation: true
               })
               setErrorCustomer(false)
-              step per.next()
+              stepper.next()
         }
 
     }
@@ -131,25 +149,60 @@ export default function NewRequestPage() {
                             <div className="bs-stepper-content">
                                 {/* your steps content here */}
                                 <div id="first-part" className="content fade" role="tabpanel" aria-labelledby="first-part-trigger">
-                                    <FormCustomerNewRequest setDataRequest={setDataRequest} DataRequest={DataRequest} ErrorCustomer={ErrorCustomer} setErrorCustomer={setErrorCustomer} />
-                                    <div style={{width:"90%", textAlign: "right"}}>
-                                            <button className="btn btn-primary" onClick={()=>{next()}}>Siguiente</button>
+                                    <FormCustomerNewRequest setDataRequest={setDataRequest} DataRequest={DataRequest} ErrorCustomer={ErrorCustomer} setErrorCustomer={setErrorCustomer}  />
+                                    <div style={{textAlign: "right"}}>
+                                        <button className="btn btn-primary" onClick={()=>{next()}}>Siguiente</button>
                                     </div>
                                 </div>
                                 <div id="segunda" className="content fade" role="tabpanel" aria-labelledby="segunda-trigger" > 
-                                    <FormLoanNewRequest />
-                                    <button className="btn btn-primary btn-sm" onClick={()=>{previous()}}>Anterior</button>
-                                    <button className="btn btn-primary btn-sm" onClick={()=>{next()}}>Siguiente</button>
+                                    <FormLoanNewRequest DataRequest={DataRequest} setDataRequest={setDataRequest} setTablaAmortizacionNC={setTablaAmortizacionNC} setTablaAmortizacionVC={setTablaAmortizacionVC} setError={setError} Error={Error} />
+                                    <div style={{textAlign: "right", paddingBottom:"15px" }}>
+                                        <button className="btn btn-primary mr-1" onClick={()=>{previous()}}>Anterior</button>
+                                        <button className="btn btn-primary" onClick={()=>{next()}}>Siguiente</button>
+                                    </div>
+
+                                    <div className="table-responsive">
+                                                       
+                                        {
+                                            (tablaAmortizacionNC === true && Error===false && parseInt(DataRequest.quota)>0) && 
+                                            <TablaAmortizacionNC 
+                                                CapitalInicial={DataRequest.amount}
+                                                Tasa={DataRequest.rate}
+                                                TipoTasa={DataRequest.tipotasa}
+                                                Quotas={DataRequest.quota}
+                                                TipoInteres={DataRequest.tipoInteres}
+                                                Frequency={DataRequest.frequency}
+                                                DateStart={DataRequest.datestart}
+                                            />
+                                        }
+                                        { 
+                                            (tablaAmortizacionVC === true && Error===false && parseFloat(DataRequest.quotaValue)>100) && 
+                                            <TablaAmortizacionVC 
+                                            CapitalInicial={DataRequest.amount}
+                                            Tasa={DataRequest.rate}
+                                            TipoTasa={DataRequest.tipotasa}
+                                            QuotasValue={DataRequest.quotaValue}
+                                            TipoInteres={DataRequest.tipoInteres}
+                                            Frequency={DataRequest.frequency}
+                                            DateStart={DataRequest.datestart}
+                                            />  
+                                        }
+                                    </div> 
+
                                 </div>
                                 <div id="tercera" className="content fade" role="tabpanel" aria-labelledby="tercera-trigger" > 
                                     <h1>Tercera Etapa</h1>
-                                    <button className="btn btn-primary btn-sm" onClick={()=>{previous()}}>Anterior</button>
-                                    <button className="btn btn-primary btn-sm" onClick={()=>{next()}}>Siguiente</button>
+                                    <div style={{textAlign: "right" }}>
+                                        <button className="btn btn-primary" onClick={()=>{previous()}}>Anterior</button>
+                                        <button className="btn btn-primary" onClick={()=>{next()}}>Siguiente</button>
+                                    </div>
                                 </div>
                                 <div id="cuarta" className="content fade" role="tabpanel" aria-labelledby="cuarta-trigger" > 
                                     <h1>Cuarta Etapa</h1>
-                                    <button className="btn btn-primary btn-sm" onClick={()=>{previous()}}>Anterior</button>
-                                    <button className="btn btn-primary btn-sm" onClick={()=>{next()}}>Finalizar</button>
+                                    <div style={{textAlign: "right" }}>
+                                        <button className="btn btn-primary" onClick={()=>{previous()}}>Anterior</button>
+                                        <button className="btn btn-primary" onClick={()=>{next()}}>Finalizar</button>
+                                    </div>
                                 </div>
                             </div>
                         

@@ -1,5 +1,4 @@
-import { Close } from '@material-ui/icons'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import TablaAmortizacionNC from './TablaAmortizacionNC'
 import TablaAmortizacionVC from './TablaAmortizacionVC';
 
@@ -35,19 +34,10 @@ import TablaAmortizacionVC from './TablaAmortizacionVC';
     
     const {quota,quotaValue,rate,typeLoan,totalInterest,amount,frequency,tipotasa,tipoInteres,closingCostVar,totalAmount,datestart} = data
 
-    const formatter = new Intl.NumberFormat('es-HN', {
-        style: 'currency',
-        currency: 'LPS',
-        minimumFractionDigits: 2
-      })
-
-
     const calcular=()=>{
 
         ValidarCampos() 
-        //CalcularTasaM()
-        //CalcularCostoDeCierre()
-
+        
        /****************************************************** */
         if(tipoInteres==='Compuesto'){
             if(Error===false){
@@ -391,7 +381,7 @@ import TablaAmortizacionVC from './TablaAmortizacionVC';
                                     </div>
 
                                     <div className="col-sm-12 col-md-3">
-                                    <label htmlFor="datestart">Fecha de Inicio</label>
+                                        <label htmlFor="datestart">Fecha de Inicio</label>
                                         <div className="input-group">
                                             <p className="input-group-addon" id="basic-addon1"><i className="icofont icofont-money"></i></p>
                                             <input value={datestart} onChange={handleInputChange} name="datestart" id="datestart" type="date" className="form-control" />
