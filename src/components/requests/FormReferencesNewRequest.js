@@ -7,7 +7,7 @@ import { URL_API } from '../../config/config';
 import { useForm } from '../../hooks/useForm';
 
 
-function FormReferencesNewRequest() {
+function FormReferencesNewRequest({DataRequest, setDataRequest) {
 
     const [value, setValue] = useState([])
     const [inputValue, setInputValue] = useState('')
@@ -29,11 +29,8 @@ function FormReferencesNewRequest() {
         location:'',
         photo:'',
     })
-   
-   
 
     const [aval, setAval] = useState([])
-
 
     useEffect (() => {  
         obtenerClientes()
@@ -49,7 +46,6 @@ function FormReferencesNewRequest() {
 
     }
   
-
     return (
         <div className="container">
             
