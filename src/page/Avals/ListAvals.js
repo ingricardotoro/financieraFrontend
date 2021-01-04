@@ -12,10 +12,10 @@ import { useForm } from '../../hooks/useForm';
 import { URL_API } from '../../config/config';
 import { Link } from 'react-router-dom';
 
-function ListCustomers() {
+function ListAvals() {
 
-    const [formValues, handleInputChange] = useForm({
-        //codeCustomer:'',
+    let initialState = {
+        codeAval:0,
         name:'',
         lastname:'',
         identidad:'',
@@ -30,89 +30,82 @@ function ListCustomers() {
         city:'',
         location:'',
         photo:'',
-    })
+    }
+
+    const [values, setValues] = useState(initialState)
+
+    const handleInputChange = ({ target }) => {
+
+        setValues({
+            ...values,
+            [target.name]: target.value
+        })
+    }
    
    
-    const [customers, setCustomers] = useState([])
-    const [codeCustomer, setCodeCustomer] = useState(0)
-    const [customersFilters, setCustomersFilters] = useState([])
+    const [avals, setAvals] = useState([])
+    const [avalsFilters, setAvalsFilters] = useState([])
     const [finding, setFinding] = useState(false)
 
-    const [totalCustomersRegister, setTotalCustomersRegister] = useState(0)
-    const [totalCustomersWithLoanActive, setTotalCustomersWithLoanActive] = useState(0)
-    const [totalCustomersSolved, setTotalCustomersSolved] = useState(0)
-    const [totalCustomersDefaulter, setTotalCustomersDefaulter] = useState(0)
-
+    const [totalAvalsRegister, setTotalAvalsRegister] = useState(0)
+   
     useEffect(() => {
-       
-        obtenerClientes()
+    
+        obtenerAvales()
 
     }, [])
 
-    const obtenerClientes = async()=>{
+    const obtenerAvales = async()=>{
 
-        const resp_customers = await axios.get(URL_API+'/customers')
-        const resp_MaxCode = await axios.get(URL_API+'/customers/lastCode')
+        const resp_avales = await axios.get(URL_API+'/avals')
+        const resp_MaxCode = await axios.get(URL_API+'/avals/lastCode')
         
-        //arreglo principal de clientes
-        setCustomers(resp_customers.data.customers)
+        //arreglo principal de avales
+        setAvals(resp_avales.data.avals)
         //Arreglo para realizar las busquedas
-        setCustomersFilters(resp_customers.data.customers)
+        setAvalsFilters(resp_avales.data.avals)
 
-        setTotalCustomersRegister(resp_customers.data.customers.length)
-
-        //Obtenemos la cantidad total de clientes con prestamos activo
-        customers.map(customer =>(
-
-            customer.LoanActive ===  true 
-            ? setTotalCustomersWithLoanActive(setTotalCustomersWithLoanActive+1)
-            : null
-        ))    
+        setTotalAvalsRegister(resp_avales.data.avals.length)    
 
         //no es una busqueda por filtro de busqueda
         setFinding(false)
         
-        //Obtenemos la cantidad total de clients morosos
-        customers.map(customer =>(
-            customer.defaulter === true 
-            ? setTotalCustomersDefaulter(totalCustomersDefaulter+1)
-            : null
-        ))
-
-        //Obtenemos la cantidad total de clients solventes
-        customers.map(customer =>(
-            customer.solved === true 
-            ? setTotalCustomersSolved(totalCustomersSolved+1)
-            : null
-        ))
-
-        //obtenemos el siguente codigo de cliente a ingresar
-        if(resp_MaxCode.data.LastCode[0]){
-            setCodeCustomer(resp_MaxCode.data.LastCode[0].codeCustomer+1)
+        //obtenemos el siguente codigo de aval a ingresar
+        if(resp_MaxCode.data.LastCode.length>0){
+            //AddCodeAval(resp_MaxCode.data.LastCode[0].codeAval+1)
+            //setCodeAval(resp_MaxCode.data.LastCode[0].codeAval+1)
+            setValues({
+               ...values,
+                codeAval: parseInt(resp_MaxCode.data.LastCode[0].codeAval)+1
+            })
         }else{
-            setCodeCustomer(1)
+           
+            setValues({
+               ...values,
+                codeAval: 1
+            })
         }
       
     }
 
-    const DesactivarCliente = async(idCustomer)=>{
+    const DesactivarAval = async(idAval)=>{
 
-        const resp_desactivar = await axios.put(URL_API+'/customers/updateActive/'+idCustomer, {active:false})
+        const resp_desactivar = await axios.put(URL_API+'/avals/updateActive/'+idAval, {active:false})
         if (resp_desactivar.data.ok ===true){
-            obtenerClientes()   
+            obtenerAvales()   
         }
     }
 
-    const ActivarCliente = async(idCustomer)=>{
-        const resp_activar = await axios.put(URL_API+'/customers/updateActive/'+idCustomer, {active:true})
+    const ActivarAval = async(idAval)=>{
+        const resp_activar = await axios.put(URL_API+'/avals/updateActive/'+idAval, {active:true})
         if (resp_activar.data.ok ===true){
-            obtenerClientes()   
+            obtenerAvales()   
         }
     }
 
     //funcion para filtrar y realizar busquedas por nombre y apellido
     const filterItems = (query)=> {
-        return customers.filter(function(el) {
+        return avals.filter(function(el) {
             return (el.personId.name.toLowerCase().indexOf(query.toLowerCase()) > -1 ||
                     el.personId.lastname.toLowerCase().indexOf(query.toLowerCase()) > -1
                     )
@@ -120,42 +113,43 @@ function ListCustomers() {
       }
 
     //funcion para mostrar los valores que han sido filtrados y buscados
-    const handleFindCustomer =(e)=>{
+    const handleFindAval =(e)=>{
         
         if(e.target.value!=0){
             let filters = filterItems(e.target.value)
-            setCustomersFilters(filters)
+            setAvalsFilters(filters)
             setFinding(true)
         }else{
-            obtenerClientes()
+            obtenerAvales()
         }
-
     }
 
     //realizar busquedas mediante el boton de buscar
-    const handleButtonFindCustomer = ()=>{
+    const handleButtonFindAvals = ()=>{
        
-        let query = document.getElementById("textFindCustomer").value
+        let query = document.getElementById("textFindAval").value
         if(query!=0){
             let filters = filterItems(query)
-            setCustomersFilters(filters)
+            setAvalsFilters(filters)
             setFinding(true)
         }else{
-            obtenerClientes()
+            obtenerAvales()
         }
     }
 
-    //funcion para crear nuevos clientes
+    const reset = () => {
+        setValues(initialState)
+    }
+
+    //funcion para crear nuevos avales
     const handleSubmit = async(e)=>{
         
         e.preventDefault()
+        //values.codeAval = codeAval
 
-        formValues.codeCustomer = codeCustomer
-
-        await axios.post(URL_API+'/customers', formValues)
-
-        obtenerClientes()
-     
+        await axios.post(URL_API+'/avals', values)
+        reset()
+        obtenerAvales()
         document.getElementById("closeModal").click();
     } 
 
@@ -170,8 +164,8 @@ function ListCustomers() {
                 {/* Page-header start */}
                 <div className="page-header mt-5">
                     <div className="page-header-title">
-                        <h4>Gestión de Clientes del Sistema</h4>
-                        <span>Módulo para gestionar los clientes registrados</span>
+                        <h4>Gestión de Avales del Sistema</h4>
+                        <span>Módulo para gestionar los avales registrados</span>
                     </div>
                     <div className="page-header-breadcrumb">
                         <ul className="breadcrumb-title">
@@ -180,7 +174,7 @@ function ListCustomers() {
                                 <i className="icofont icofont-user" />
                             </a>
                             </li>
-                            <li className="breadcrumb-item">Módulo de Clientes
+                            <li className="breadcrumb-item">Módulo de Avales
                             </li>
                             
                         </ul>
@@ -199,45 +193,13 @@ function ListCustomers() {
                         <div className="col-md-6 col-xl-3">
                             <div className="card social-widget-card">
                             <div className="card-block-big bg-facebook">
-                                <h3>{totalCustomersRegister}</h3>
-                                <span className="m-t-10" style={{color:"white", fontSize:16}}>Clientes Registrados</span>
+                                <h3>{totalAvalsRegister}</h3>
+                                <span className="m-t-10" style={{color:"white", fontSize:16}}>Avales Registrados</span>
                                 <i className="icofont icofont-edit" style={{opacity:1}}  />
                             </div>
                             </div>
                         </div>
-                        {/* Facebook card end */}
-                        {/* Twitter card start */}
-                        <div className="col-md-6 col-xl-3">
-                            <div className="card social-widget-card">
-                            <div className="card-block-big bg-twitter">
-                                <h3>{totalCustomersWithLoanActive} </h3>
-                                <span className="m-t-10 size-16" style={{color:"white", fontSize:16}}>Con Préstamo Activos</span>
-                                <i className="icofont icofont-money" style={{opacity:1}} />
-                            </div>
-                            </div>
-                        </div>
-                        {/* Twitter card end */}
-                        {/* Linked in card start */}
-                        <div className="col-md-6 col-xl-3">
-                            <div className="card social-widget-card">
-                            <div className="card-block-big" style={{backgroundColor:"#40b572"}}>
-                                <h3>{totalCustomersSolved} </h3>
-                                <span className="m-t-10 size-16" style={{color:"white", fontSize:16}}>Clientes Al Dia</span>
-                                <i className="icofont icofont-check-circled" style={{opacity:1}} />
-                            </div>
-                            </div>
-                        </div>
-                        {/* Linked in card end */}
-                        {/* Google-plus card start */}
-                        <div className="col-md-6 col-xl-3">
-                            <div className="card social-widget-card">
-                            <div className="card-block-big bg-google-plus">
-                                <h3>{totalCustomersDefaulter} </h3>
-                                <span className="m-t-10 size-16"style={{color:"white", fontSize:16}}>Clientes en Mora</span>
-                                <i className="icofont icofont-close-circled" style={{opacity:1}} />
-                            </div>
-                            </div>
-                        </div>
+                        
                     </div>
 
                     
@@ -245,24 +207,24 @@ function ListCustomers() {
 
                         {/* Facebook card start */}
                         <div className="col-md-6 col-xl-8">
-                            <input onChange={handleFindCustomer} type="text" id="textFindCustomer" className="mt-3 form-control form-control-round" style={{borderRadius: "50px"}} placeholder="Buscar Cliente ..."  />
+                            <input onChange={handleFindAval} type="text" id="textFindCustomer" className="mt-3 form-control form-control-round" style={{borderRadius: "50px"}} placeholder="Buscar Aval ..."  />
                         </div>
                         {/* Facebook card end */}
                        
                        
                         {/* Linked in card start */}
                         <div className="col-sm-12 col-md-3 col-xl-2">
-                            <button onClick={() => handleButtonFindCustomer()} className="col-sm-12 mt-3 btn btn-primary  btn-round f-right d-inline-flex">
+                            <button onClick={() => handleButtonFindAvals()} className="col-sm-12 mt-3 btn btn-primary  btn-round f-right d-inline-flex">
                                 {<SearchIcon />} 
-                                Buscar Cliente  
+                                Buscar Aval  
                             </button>
                         </div>
                         {/* Linked in card end */}
                         {/* Google-plus card start */}
                         <div className=" col-sm-12 col-md-3 col-xl-2">
-                            <button className="col-sm-12 mt-3 btn btn-success btn-round f-right d-inline-flex" data-toggle="modal" data-target="#modalNewCustomer">
+                            <button className="col-sm-12 mt-3 btn btn-success btn-round f-right d-inline-flex" data-toggle="modal" data-target="#modalNewAval">
                                 {<AddCircleIcon />}     
-                                Nuevo Cliente  
+                                Crear Nuevo Aval  
                             </button>
                         </div>
 
@@ -291,21 +253,21 @@ function ListCustomers() {
 
                                 {     finding === false ? 
 
-                                       customers?.map(customer => ( 
+                                       avals?.map(aval => ( 
 
-                                        <tr className={customer.active ? null : "desactivado"}  key={customer._id}>
+                                        <tr className={aval.active ? null : "desactivado"}  key={aval._id}>
                                             <th scope="row">1</th>
                                             <td> <Avatar alt="Remy Sharp" src="assets/images/avatar-4.png" /></td>
-                                            <td>{customer.codeCustomer}</td>
-                                            <td>{customer.personId.name}</td>
-                                            <td>{customer.personId.lastname}</td>    
-                                            <td>{customer.personId.identidad}</td>
-                                            <td>{customer.personId.phone1}</td>
-                                            <td><Link to ={`clientes/expediente/${customer._id}`} className="btn btn-sm btn-success "> {<InfoIcon />}</Link></td>
+                                            <td>{aval.codeAval}</td>
+                                            <td>{aval.personId.name}</td>
+                                            <td>{aval.personId.lastname}</td>    
+                                            <td>{aval.personId.identidad}</td>
+                                            <td>{aval.personId.phone1}</td>
+                                            <td><Link to ={`clientes/expediente/${aval._id}`} className="btn btn-sm btn-success "> {<InfoIcon />}</Link></td>
                                             <td>
-                                                {customer.active === true 
-                                                    ? <button onClick={() => DesactivarCliente(customer._id)} className="btn btn-sm btn-danger"> {<NotInterestedIcon />}</button> 
-                                                    : <button onClick={() =>ActivarCliente(customer._id)} className="btn btn-sm btn-success"> {<CheckCircleOutlineIcon />}</button>
+                                                {aval.active === true 
+                                                    ? <button onClick={() => DesactivarAval(aval._id)} className="btn btn-sm btn-danger"> {<NotInterestedIcon />}</button> 
+                                                    : <button onClick={() =>ActivarAval(aval._id)} className="btn btn-sm btn-success"> {<CheckCircleOutlineIcon />}</button>
                                                 }
                                             </td>
                                         </tr>
@@ -313,26 +275,25 @@ function ListCustomers() {
 
                                         :
 
-                                        customersFilters?.map(customer => ( 
+                                        avalsFilters?.map(aval => ( 
 
-                                            <tr className={customer.active ? null : "desactivado"}  key={customer._id}>
+                                            <tr className={aval.active ? null : "desactivado"}  key={aval._id}>
                                                 <th scope="row">1</th>
                                                 <td> <Avatar alt="Remy Sharp" src="assets/images/avatar-4.png" /></td>
-                                                <td>{customer.codeCustomer}</td>
-                                                <td>{customer.personId.name}</td>
-                                                <td>{customer.personId.lastname}</td>    
-                                                <td>{customer.personId.identidad}</td>
-                                                <td>{customer.personId.phone1}</td>
-                                                <td><Link to ={`clientes/expediente/${customer.personId._id}`} className="btn btn-sm btn-success "> {<InfoIcon />}</Link></td>
+                                                <td>{aval.codeAval}</td>
+                                                <td>{aval.personId.name}</td>
+                                                <td>{aval.personId.lastname}</td>    
+                                                <td>{aval.personId.identidad}</td>
+                                                <td>{aval.personId.phone1}</td>
+                                                <td><Link to ={`clientes/expediente/${aval.personId._id}`} className="btn btn-sm btn-success "> {<InfoIcon />}</Link></td>
                                                 <td>
-                                                    {customer.active === true 
-                                                        ? <button onClick={() => DesactivarCliente(customer._id)} className="btn btn-sm btn-danger"> {<NotInterestedIcon />}</button> 
-                                                        : <button onClick={() =>ActivarCliente(customer._id)} className="btn btn-sm btn-success"> {<CheckCircleOutlineIcon />}</button>
+                                                    {aval.active === true 
+                                                        ? <button onClick={() => DesactivarAval(aval._id)} className="btn btn-sm btn-danger"> {<NotInterestedIcon />}</button> 
+                                                        : <button onClick={() =>ActivarAval(aval._id)} className="btn btn-sm btn-success"> {<CheckCircleOutlineIcon />}</button>
                                                     }
                                                 </td>
                                             </tr>
                                             )) 
-
 
                                      } 
                             
@@ -356,11 +317,11 @@ function ListCustomers() {
             </div>
 
                 {/* Modal */}
-                <div className="modal fade" id="modalNewCustomer" tabIndex={-1} role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal fade" id="modalNewAval" tabIndex={-1} role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div className="modal-dialog modal-lg modal-dialog-centered " role="document">
                         <div className="modal-content">
                     <div className="modal-header">
-                        <h5 className="modal-title" id="exampleModalLabel">Crear Nuevo Cliente  <strong>Código: {codeCustomer} </strong></h5>
+                        <h5 className="modal-title" id="exampleModalLabel">Crear Nuevo Aval  <strong>Código: {parseInt(values.codeAval)} </strong></h5>
                             <button id="closeModal" type="button" className="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                         </button>
@@ -369,8 +330,8 @@ function ListCustomers() {
                     <div className="modal-body">
                         <form onSubmit={handleSubmit}>
                         <div className="row">
-                            <input value={codeCustomer} onChange={handleInputChange} name="codeCustomer" id="codeCustomer" type="hidden" />
-                            {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
+                             {/*<input value={codeAval} onChange={handleInputChange} name="codeAval" id="codeAval" type="hidden" />
+                            <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">
                                     <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-edit"></i></span>
@@ -531,12 +492,4 @@ function ListCustomers() {
     )
 }
 
-/*const useStyles = makeStyles((theme) => ({
-    button: {
-      margin: theme.spacing(1),
-      color: "#fff",
-      marginRight: "5px"
-    },
-  }));*/
-
-export default ListCustomers
+export default ListAvals

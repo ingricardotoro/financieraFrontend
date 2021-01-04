@@ -60,7 +60,7 @@ function FormCustomerNewRequest({setDataRequest,DataRequest,ErrorCustomer,setErr
       setCustomers(resp_customers.data.customers)
       setInputValue('') // para la inicializacion inicial del  autocomplete, es necesario
       const resp_lastCode = await Axios.post(URL_API +'/requests/lastcode')   
-      console.log(resp_lastCode.data.lastCode)
+      
       setData2(resp_lastCode.data.lastCode+1)
 
       setDataRequest({

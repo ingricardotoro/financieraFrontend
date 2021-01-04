@@ -4,24 +4,29 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Axios from 'axios';
 import { URL_API } from '../../config/config';
-import { useForm } from '../../hooks/useForm';
-
 
 function FormReferencesNewRequest({DataRequest, setDataRequest}) {
 
-    const [value, setValue] = useState([])
+    const [data, setData] = useState({
+        value1:0,
+        value2:0,
+        NameAval1:'',
+        NameAval2:'',
+        PhoneAval1:'',
+        PhoneAval2:''
+    })
     const [inputValue, setInputValue] = useState('')
 
-    const [aval, setAval] = useState([])
+    const [avals, setAvals] = useState([])
 
     useEffect (() => {  
-        obtenerClientes()
+        obtenerAvales()
     }, [])
   
-    const obtenerClientes = async()=>{
+    const obtenerAvales = async()=>{
   
-        const resp_customers = await Axios.get(URL_API +'/customers')
-        setAval(resp_customers.data.customers)
+        const resp_avlas = await Axios.get(URL_API +'/avals')
+        setAvals(resp_avlas.data.avals)
     }
 
     const handleInputChange = ({ target }) => {
@@ -32,6 +37,38 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
         })
        
     }
+
+    const handleCustomSelect1 = (event,newValue)=>{
+
+        setData({
+            ...data,
+            value1:newValue,
+            NameAval1:newValue.personId.name,
+            PhoneAval1:newValue.personId.lastname
+        })
+    
+        setDataRequest({
+            ...DataRequest,
+            aval1Id:newValue._id
+        })
+
+      }
+
+      const handleCustomSelect2 = (event,newValue)=>{
+
+        setData({
+            ...data,
+            value2:newValue,
+            NameAval2:newValue.personId.name,
+            PhoneAval2:newValue.personId.lastname
+        })
+    
+        setDataRequest({
+            ...DataRequest,
+            aval2Id:newValue._id
+        })
+
+      }
   
     return (
         <div className="container">
@@ -94,17 +131,17 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
                    
                     <p></p>
                     <Autocomplete
-                        options={aval}
-                        value={value}
-                        getOptionLabel={(option) => option.name + option.lastname}
+                        options={avals}
+                        value={data.value1}
+                        getOptionLabel={(option) => option?.personId?.name  + " " + option?.personId?.lastname}
                         renderOption={(option) => (
                         <>
-                            {option.name} {option.lastname}
+                            {option.personId?.name} - {option.personId?.lastname}
                         </>
                         )}
                         onChange={(event, newValue) => {
                             if(newValue!==null){
-                                //handleCustomSelect(event,newValue)
+                                handleCustomSelect1(event,newValue)
                                 }}
                             }
                             
@@ -126,10 +163,10 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
                 </div>
 
                 <div className="col-sm-4 col-md-4">
-                    <label htmlfor="free-solo-2-demo" className="block">Identidad de Aval 1</label>
+                    <label htmlfor="free-solo-2-demo" className="block">Nombre de Aval 1</label>
                     <div className="input-group">
                     <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-user"></i></span>
-                        <input disabled id="codeAval" className="form-control" name="codeAval" type="text" placeholder="Nombre de Referencia" />
+                        <input value={data.NameAval1} disabled id="NameAval1"  name="NameAval1" className="form-control" type="text" placeholder="Nombre de Aval 1" />
                     </div>
                 </div>
 
@@ -137,7 +174,7 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
                     <label htmlfor="free-solo-2-demo" className="block">Teléfono de Aval 1</label>
                     <div className="input-group">
                     <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-user"></i></span>
-                        <input disabled id="codeAval" className="form-control" name="codeAval" type="text" placeholder="Nombre de Referencia" />
+                        <input value={data.PhoneAval1}  disabled id="PhoneAval1" className="form-control" name="PhoneAval1" type="text" placeholder="Telefono de Aval 1" />
                     </div>
                 </div>
                   
@@ -151,17 +188,17 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
                    <p></p>
                 
                     <Autocomplete
-                        options={aval}
-                        value={value}
-                        getOptionLabel={(option) => option.name + option.lastname}
+                        options={avals}
+                        value={data.value2}
+                        getOptionLabel={(option) => option.personId?.name + option.personId?.lastname}
                         renderOption={(option) => (
                         <>
-                            {option.name} {option.lastname}
+                            {option.personId?.name} {option.personId?.lastname}
                         </>
                         )}
                         onChange={(event, newValue) => {
                             if(newValue!==null){
-                                //handleCustomSelect(event,newValue)
+                                handleCustomSelect2(event,newValue)
                                 }}
                             }
                             
@@ -186,7 +223,7 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
                     <label htmlfor="free-solo-2-demo" className="block">Identidad de Aval 2</label>
                     <div className="input-group">
                     <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-user"></i></span>
-                        <input disabled id="codeAval" className="form-control" name="codeAval" type="text" placeholder="Nombre de Referencia" />
+                        <input value={data.NameAval2} disabled id="NameAval2"  name="NameAval2"  className="form-control"  type="text" placeholder="Nombre de Aval 2" />
                     </div>
                 </div>
 
@@ -194,7 +231,7 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
                     <label htmlfor="free-solo-2-demo" className="block">Teléfono de Aval 2</label>
                     <div className="input-group">
                     <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-user"></i></span>
-                        <input disabled id="codeAval" className="form-control" name="codeAval" type="text" placeholder="Nombre de Referencia" />
+                        <input value={data.PhoneAval2}  disabled id="PhoneAval2" className="form-control" name="PhoneAval2" type="text" placeholder="Telefono de Aval 2" />
                     </div>
                 </div>
                   

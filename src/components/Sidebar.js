@@ -39,21 +39,28 @@ function Sidebar() {
                             </li>
 
                             <li className="pcoded-hasmenu">
-                                <Link  to="/clientes">
+                                <Link  to="#">
                                     <span className="pcoded-micon"><i className="ti-user"></i></span>
                                     <span className="pcoded-mtext" data-i18n="nav.dash.main">Clientes</span>
                                     <span className="pcoded-mcaret"></span>
                                 </Link>
 
-                               {/*  <ul className="pcoded-submenu">
+                                 <ul className="pcoded-submenu">
                                     <li className="">
-                                        <Link  to="clientes">
+                                        <Link  to="/clientes">
                                             <span className="pcoded-micon"><i className="ti-angle-right"></i></span>
                                             <span className="pcoded-mtext" data-i18n="nav.dash.default">Ver Clientes</span>
                                             <span className="pcoded-mcaret"></span>
                                         </Link>
                                     </li>
-                                </ul> */}
+                                    <li className="">
+                                        <Link  to="/avales">
+                                            <span className="pcoded-micon"><i className="ti-angle-right"></i></span>
+                                            <span className="pcoded-mtext" data-i18n="nav.dash.default">Ver Avales</span>
+                                            <span className="pcoded-mcaret"></span>
+                                        </Link>
+                                    </li>
+                                </ul>
 
                             </li>
 

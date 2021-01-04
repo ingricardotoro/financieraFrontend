@@ -16,6 +16,15 @@ export const useForm = (initialState = {}) => {
         })
     }
 
+    const AddCodeAval = (code) => {
+        console.log("SI HOOK")
 
-    return [values, handleInputChange, reset]
+        setValues({
+            ...values,
+            codeAval: code
+        })
+    }
+
+
+    return [values, handleInputChange, reset, AddCodeAval, setValues]
 }
