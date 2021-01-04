@@ -15,7 +15,8 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
         PhoneAval1:'',
         PhoneAval2:''
     })
-    const [inputValue, setInputValue] = useState('')
+    const [inputValue1, setInputValue1] = useState('')
+    const [inputValue2, setInputValue2] = useState('')
 
     const [avals, setAvals] = useState([])
 
@@ -39,7 +40,7 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
     }
 
     const handleCustomSelect1 = (event,newValue)=>{
-
+        console.log(newValue)
         setData({
             ...data,
             value1:newValue,
@@ -55,7 +56,7 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
       }
 
       const handleCustomSelect2 = (event,newValue)=>{
-
+        console.log(newValue)
         setData({
             ...data,
             value2:newValue,
@@ -133,7 +134,7 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
                     <Autocomplete
                         options={avals}
                         value={data.value1}
-                        getOptionLabel={(option) => option?.personId?.name  + " " + option?.personId?.lastname}
+                        getOptionLabel={(option) => option?.personId?.name  +  option?.personId?.lastname}
                         renderOption={(option) => (
                         <>
                             {option.personId?.name} - {option.personId?.lastname}
@@ -145,9 +146,9 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
                                 }}
                             }
                             
-                        inputValue={inputValue}
+                        inputValue={inputValue1}
                         onInputChange={(event, newInputValue) => {
-                        setInputValue(newInputValue);
+                        setInputValue1(newInputValue);
                         
                         }}
                         renderInput={(params) => (
@@ -202,9 +203,9 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
                                 }}
                             }
                             
-                        inputValue={inputValue}
+                        inputValue={inputValue2}
                         onInputChange={(event, newInputValue) => {
-                        setInputValue(newInputValue);
+                        setInputValue2(newInputValue);
                         
                         }}
                         renderInput={(params) => (
@@ -244,7 +245,6 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
                 </div>    
             </div>
             <hr />
-            
            
             {/* Modal */}
             <div className="modal fade" id="modalNewAval" tabIndex={-1} role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

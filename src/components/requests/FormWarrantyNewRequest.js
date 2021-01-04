@@ -1,10 +1,14 @@
 import React from 'react'
 
-function FormWarrantyNewRequest() {
+function FormWarrantyNewRequest({DataRequest, setDataRequest}) {
 
-    const handleInputChange = ()=>{
-
+    const handleInputChange = ({ target }) => {
+        setDataRequest({
+            ...DataRequest,
+            [target.name]: target.value
+        })
     }
+
     return (
         <div className="container">
 
@@ -14,18 +18,17 @@ function FormWarrantyNewRequest() {
                     <label htmlFor="">Tipo de Garantia</label>
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-list"></i></span>
-                        <select  name="city" id="city" className="form-control col-md-12"> 
-                            <option value="opt1">Selecione Tipo de Garantia</option>
-                            <option value="1">Articulo Electrónico</option>
-                            <option value="2">Articulo Domestico</option>
-                            <option value="3">Vehículo Liviano</option>
-                            <option value="4">Vehículo Pesado</option>
-                            <option value="5">Motocicleta</option>
-                            <option value="6">Casa/Apartameto</option>
-                            <option value="7">Terreno</option>
-                            <option value="8">Joyas</option>
-                            <option value="9">Otro</option>
-                            
+                        <select onChange={handleInputChange} value={DataRequest.typeWarranty}  name="typeWarranty" id="typeWarranty" className="form-control col-md-12"> 
+                            <option selected value="Sin Garantia">Selecione Tipo de Garantia</option>
+                            <option value="Articulo Electronico">Artículo Electrónico</option>
+                            <option value="Articulo Domestico">Artículo Doméstico</option>
+                            <option value="Vehiculo Liviano">Vehículo Liviano</option>
+                            <option value="Vehiculo Pesado">Vehículo Pesado</option>
+                            <option value="Motocicleta">Motocicleta</option>
+                            <option value="Casa/Apartameto">Casa/Apartameto</option>
+                            <option value="Terreno">Terreno</option>
+                            <option value="Joyas">Joyas</option>
+                            <option value="Otro">Otro</option>
                         </select>
                     </div>
                 </div>
@@ -34,7 +37,7 @@ function FormWarrantyNewRequest() {
                     <label htmlFor="">Modelo</label>
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-edit mr-1"></i></span>
-                        <input onChange={handleInputChange}  name="modelo" id="modelo" type="text" className="form-control" placeholder="Modelo de la Garantia"/>
+                        <input value={DataRequest.modelo} onChange={handleInputChange}  name="modelo" id="modelo" type="text" className="form-control" placeholder="Modelo de la Garantia"/>
                     </div>
                 </div>
 
@@ -42,7 +45,7 @@ function FormWarrantyNewRequest() {
                 <label htmlFor="">Marca</label>
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-edit mr-1"></i></span>
-                        <input onChange={handleInputChange}  name="email1" id="email1" type="text" className="form-control" placeholder="Marca de la Garantia"/>
+                        <input value={DataRequest.marca} onChange={handleInputChange}  name="marca" id="marca" type="text" className="form-control" placeholder="Marca de la Garantia"/>
                     </div>
                 </div>
 
@@ -53,21 +56,21 @@ function FormWarrantyNewRequest() {
                     <label htmlFor="">Serie</label>
                         <div className="input-group">
                             <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-edit mr-1"></i></span>
-                            <input onChange={handleInputChange}  name="modelo" id="modelo" type="text" className="form-control" placeholder="Serie de la Garantia"/>
+                            <input value={DataRequest.serie} onChange={handleInputChange}  name="serie" id="serie" type="text" className="form-control" placeholder="Serie de la Garantia"/>
                         </div>
                 </div>
                 <div className="col-sm-12 col-md-4">
                     <label htmlFor="">Color</label>
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-edit mr-1"></i></span>
-                        <input onChange={handleInputChange}  name="modelo" id="modelo" type="text" className="form-control" placeholder="Color de la Garantia"/>
+                        <input value={DataRequest.color} onChange={handleInputChange}  name="color" id="color" type="text" className="form-control" placeholder="Color de la Garantia"/>
                     </div>
                 </div>
                 <div className="col-sm-12 col-md-4">
                     <label htmlFor="">Año</label>
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-edit mr-1"></i></span>
-                        <input onChange={handleInputChange}  name="modelo" id="modelo" type="text" className="form-control" placeholder="Año de la Garantia"/>
+                        <input value={DataRequest.anioDeGarantia} onChange={handleInputChange}  name="anio" id="anio" type="text" className="form-control" placeholder="Año de la Garantia"/>
                     </div>
                 </div>
 
@@ -78,21 +81,21 @@ function FormWarrantyNewRequest() {
                     <label htmlFor="">Precio de Compra</label>
                         <div className="input-group">
                             <span className="input-group-addon" id="basic-addon1">LPS</span>
-                            <input onChange={handleInputChange}  name="modelo" id="modelo" type="text" className="form-control" placeholder="Precio de Compra"/>
+                            <input value={DataRequest.precioCompra} onChange={handleInputChange}  name="precioCompra" id="precioCompra" type="text" className="form-control" placeholder="Precio de Compra"/>
                         </div>
                 </div>
                 <div className="col-sm-12 col-md-4">
                     <label htmlFor="">Precio den Mercado</label>
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1">LPS</span>
-                        <input onChange={handleInputChange}  name="modelo" id="modelo" type="text" className="form-control" placeholder="Precio en Mercado"/>
+                        <input value={DataRequest.precioMercado} onChange={handleInputChange}  name="precioMercado" id="precioMercado" type="text" className="form-control" placeholder="Precio en Mercado"/>
                     </div>
                 </div>
                 <div className="col-sm-12 col-md-4">
                     <label htmlFor="">Observaciones</label>
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-edit mr-1"></i></span>
-                        <input onChange={handleInputChange}  name="modelo" id="modelo" type="text" className="form-control" placeholder="Observaciones"/>
+                        <input value={DataRequest.obsDeGarantia} onChange={handleInputChange}  name="obsDeGarantia" id="obsDeGarantia" type="text" className="form-control" placeholder="Observaciones"/>
                     </div>
                 </div>
 

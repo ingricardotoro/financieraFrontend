@@ -6,6 +6,7 @@ import FormLoanNewRequest from '../../components/requests/FormLoanNewRequest';
 import TablaAmortizacionNC from '../TablaAmortizacionNC';
 import TablaAmortizacionVC from '../TablaAmortizacionVC';
 import FormReferencesNewRequest from '../../components/requests/FormReferencesNewRequest';
+import FormWarrantyNewRequest from '../../components/requests/FormWarrantyNewRequest';
 
 export default function NewRequestPage() {
 
@@ -44,6 +45,15 @@ export default function NewRequestPage() {
         refRelation2:'',
         aval1Id:'',
         aval2Id:'',
+        typeWarranty:'',
+        modelo:'',
+        marca:'',
+        serie:'',
+        color:'',
+        anioDeGarantia:'',
+        precioCompra:0,
+        precioMercado:0,
+        obsDeGarantia:'',
         createdBy:'',
         approvedBy:'',
         declinedBy:'',
@@ -59,22 +69,26 @@ export default function NewRequestPage() {
     let stepper =null
    
     const next=(step)=>{
-
-        stepper = new Stepper(document.querySelector('.bs-stepper'), {
-            linear: false,
-            animation: true
-          })
-
-        if(DataRequest.customerId==="" || DataRequest.customerId===undefined){            
+        
+        if(DataRequest.customerId==="" || DataRequest.customerId===undefined ){ 
             setErrorCustomer(true)
+            
         }else{
+            stepper = new Stepper(document.querySelector('.bs-stepper'), {
+                linear: false,
+                animation: true
+              })
             stepper.to(step)
         }
 
     }
 
-    const previous =() =>{
-        stepper.previous()
+    const previous =(step) =>{
+        stepper = new Stepper(document.querySelector('.bs-stepper'), {
+            linear: false,
+            animation: true
+          })
+        stepper.to(step)
     }
 
     const end = () =>{
@@ -158,7 +172,7 @@ export default function NewRequestPage() {
                                 <div id="segunda" className="content fade" role="tabpanel" aria-labelledby="segunda-trigger" > 
                                     <FormLoanNewRequest DataRequest={DataRequest} setDataRequest={setDataRequest} setTablaAmortizacionNC={setTablaAmortizacionNC} setTablaAmortizacionVC={setTablaAmortizacionVC} setError={setError} Error={Error} />
                                     <div style={{textAlign: "right", paddingBottom:"15px" }}>
-                                        <button className="btn btn-primary mr-1" onClick={()=>{previous()}}>Anterior</button>
+                                        <button className="btn btn-primary mr-1" onClick={()=>{previous(1)}}>Anterior</button>
                                         <button className="btn btn-primary" onClick={()=>{next(3)}}>Siguiente</button>
                                     </div>
 
@@ -195,15 +209,15 @@ export default function NewRequestPage() {
                                 <div id="tercera" className="content fade" role="tabpanel" aria-labelledby="tercera-trigger" > 
                                    <FormReferencesNewRequest DataRequest={DataRequest} setDataRequest={setDataRequest} />
                                     <div style={{textAlign: "right" }}>
-                                        <button className="btn btn-primary" onClick={()=>{previous()}}>Anterior</button>
+                                        <button className="btn btn-primary mr-1" onClick={()=>{previous(2)}}>Anterior</button>
                                         <button className="btn btn-primary" onClick={()=>{next(4)}}>Siguiente</button>
                                     </div>
                                 </div>
 
                                 <div id="cuarta" className="content fade" role="tabpanel" aria-labelledby="cuarta-trigger" > 
-                                    <h1>Cuarta Etapa</h1>
+                                   <FormWarrantyNewRequest DataRequest={DataRequest} setDataRequest={setDataRequest} />
                                     <div style={{textAlign: "right" }}>
-                                        <button className="btn btn-primary" onClick={()=>{previous()}}>Anterior</button>
+                                        <button className="btn btn-primary mr-1" onClick={()=>{previous(3)}}>Anterior</button>
                                         <button className="btn btn-primary" onClick={()=>{end()}}>Finalizar</button>
                                     </div>
                                 </div>

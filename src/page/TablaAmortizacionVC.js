@@ -76,7 +76,7 @@ function TablaAmortizacionVC(props) {
                 AbonoCapital = (parseFloat(quotaValue) - parseFloat(InteresSemanal))//f3
                 
                 for (let i = 0; i < contador; i++) {
-                    console.log("SI=",SaldoInicial)
+                    
                     if(SaldoInicial>0){
                     
                         //Localizamos la penultima fila para prepara el valor de cuota de pago de la ultima fila
