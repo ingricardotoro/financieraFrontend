@@ -8,6 +8,7 @@ import ListRequestPage from '../page/Requests/ListRequestPage'
 import RecordsPage from '../page/Customers/Records'
 //import Inicio from "../components/Inicio";
 import NewRequestPage from "../page/Requests/NewRequestPage";
+import ViewRequestPage from "../page/Requests/ViewRequestPage";
 import ListLoansPage from "../page/Loans/ListLoans";
 import CalculatorPage from "../page/Calculator"
 import ListAvals from "../page/Avals/ListAvals"
@@ -26,6 +27,7 @@ const StackRoutes = () => {
             <Route exact path="/avales" component={ListAvals} />
 
             <Route exact path="/solicitudes/crear" component={NewRequestPage} />
+            <Route exact path="/solicitudes/ver/:id" component={ViewRequestPage} />
             <Route exact path="/solicitudes" component={ListRequestPage} />
 
             <Route exact path="/prestamos" component={ListLoansPage} />

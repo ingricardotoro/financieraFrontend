@@ -15,21 +15,18 @@ function FormWarrantyNewRequest({DataRequest, setDataRequest}) {
             <div className="row">
 
                 <div className="col-sm-12 col-md-4">
-                    <label htmlFor="">Tipo de Garantia</label>
+                    <label htmlFor="">Descripción de Garantia</label>
                     <div className="input-group">
-                        <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-list"></i></span>
-                        <select onChange={handleInputChange} value={DataRequest.typeWarranty}  name="typeWarranty" id="typeWarranty" className="form-control col-md-12"> 
-                            <option selected value="Sin Garantia">Selecione Tipo de Garantia</option>
-                            <option value="Articulo Electronico">Artículo Electrónico</option>
-                            <option value="Articulo Domestico">Artículo Doméstico</option>
-                            <option value="Vehiculo Liviano">Vehículo Liviano</option>
-                            <option value="Vehiculo Pesado">Vehículo Pesado</option>
-                            <option value="Motocicleta">Motocicleta</option>
-                            <option value="Casa/Apartameto">Casa/Apartameto</option>
-                            <option value="Terreno">Terreno</option>
-                            <option value="Joyas">Joyas</option>
-                            <option value="Otro">Otro</option>
-                        </select>
+                        <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-edit mr-1"></i></span>
+                        <input type="text" onChange={handleInputChange} value={DataRequest.typeWarranty}  name="typeWarranty" id="typeWarranty" className="form-control col-md-12"/>
+                    </div>
+                </div>
+
+                <div className="col-sm-12 col-md-4">
+                    <label htmlFor="">Marca</label>
+                    <div className="input-group">
+                        <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-edit mr-1"></i></span>
+                        <input value={DataRequest.marca} onChange={handleInputChange}  name="marca" id="marca" type="text" className="form-control" placeholder="Marca de la Garantia"/>
                     </div>
                 </div>
 
@@ -38,14 +35,6 @@ function FormWarrantyNewRequest({DataRequest, setDataRequest}) {
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-edit mr-1"></i></span>
                         <input value={DataRequest.modelo} onChange={handleInputChange}  name="modelo" id="modelo" type="text" className="form-control" placeholder="Modelo de la Garantia"/>
-                    </div>
-                </div>
-
-                <div className="col-sm-12 col-md-4">
-                <label htmlFor="">Marca</label>
-                    <div className="input-group">
-                        <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-edit mr-1"></i></span>
-                        <input value={DataRequest.marca} onChange={handleInputChange}  name="marca" id="marca" type="text" className="form-control" placeholder="Marca de la Garantia"/>
                     </div>
                 </div>
 

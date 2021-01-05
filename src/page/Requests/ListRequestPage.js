@@ -31,26 +31,27 @@ function ListRequestPage() {
 
         //arreglo principal de solicitudes
         setRequests(resp_requests.data.requests)
-            //Arreglo para realizar las busquedas
-        setRequestsFilters(resp_requests.data.requests)
-
-        setToTalRequestsRegistradas(resp_requests.data.requests.length)
-
-        //Obtenemos la cantidad total de solicitudes con estado pendiente
-        requests.map(request => (
+     
+          //Obtenemos la cantidad total de solicitudes con estado pendiente
+          requests?.map(request => (
             request.stateRequest === 'Pendiente' ?
-            setTotalRequestsPendientes(totalRequestsPendientes + 1) :
-            null
+            setTotalRequestsPendientes(totalRequestsPendientes + 1)
+            /*setTotalRequestsPendientes( (prevState) => ({
+                totalRequestsPendientes: prevState.totalRequestsPendientes + 1
+              }))*/
+              :null
+            //setTotalRequestsPendientes(totalRequestsPendientes + 1) :
+            
         ))
-
-        //no es una busqueda por filtro de busqueda
-        setFinding(false)
 
         //Obtenemos la cantidad total de solicitdes aprobadas
         requests.map(request => (
             request.stateRequest === 'Aprobada' ?
-            setTotalRequestsAprobadas(totalRequestsAprobadas + 1) :
-            null
+            setTotalRequestsAprobadas( (prevState) => ({
+                totalRequestsAprobadas: prevState.totalRequestsAprobadas + 1
+              }))
+            //setTotalRequestsAprobadas(totalRequestsAprobadas + 1) :
+            : null
         ))
 
         //Obtenemos la cantidad total de solicitudes Denegadas
@@ -59,6 +60,13 @@ function ListRequestPage() {
             setTotalRequestsDenegadas(totalRequestsDenegadas + 1) :
             null
         ))
+            //Arreglo para realizar las busquedas
+        setRequestsFilters(resp_requests.data.requests)
+
+        setToTalRequestsRegistradas(resp_requests.data.requests.length)
+
+        //no es una busqueda por filtro de busqueda
+        setFinding(false)
 
     }
 
@@ -103,6 +111,7 @@ function ListRequestPage() {
                     <div className="card">
                     <div className="card-header">
 
+                    {/* Tarjetas Superiores */}
                     <div className="row">
                         {/* Facebook card start */}
                         <div className="col-md-6 col-xl-3">
@@ -168,14 +177,14 @@ function ListRequestPage() {
                         {/* Linked in card end */}
                         {/* Google-plus card start */}
                          <div className=" col-sm-12 col-md-2 col-xl-2">
-                            <button className="col-sm-12 mt-3 btn btn-success btn-round f-right d-inline-flex" >
+                            <a href='/solicitudes/crear' className="col-sm-12 mt-3 btn btn-success btn-round f-right d-inline-flex" >
                                  
-                                <Link style={{color:"white"}} to="/solicitudes/crear">
+                               {/*  <Link style={{color:"white"}} to="/solicitudes/crear">
                                     {<AddCircleIcon />}     
                                     Crear Solicitud
-                                </Link> 
-                                
-                            </button>
+                                </Link> */} 
+                                    Crear Solicitud
+                            </a>
                         </div> 
 
 
@@ -214,7 +223,7 @@ function ListRequestPage() {
                                         <td>{request.amount}</td>
                                         <td>{request.quota} Cuotas {request.frequency}</td>
                                         <td>{request.sucursal}</td>
-                                        <td><button className="btn btn-sm btn-primary "> {<InfoIcon />}</button></td>
+                                        <td><Link to={"/solicitudes/ver/"+request._id} className="btn btn-sm btn-primary "> {<InfoIcon />}</Link></td>
                                         {
                                             request.stateRequest==='Pendiente' && <td><button className="btn btn-sm btn-warning d-inline-flex"> {<HourglassEmptyIcon />} {request.stateRequest}</button> </td>
                                         }
