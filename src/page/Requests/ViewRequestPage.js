@@ -1,26 +1,44 @@
 import Axios from 'axios'
 import React from 'react'
 import { useState } from 'react'
+import { Fragment } from 'react'
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { URL_API } from '../../config/config'
 import fondoImg from '../../config/slider8.jpg'
 import userImg from '../../user.png'
+import toastr from 'toastr'
 
 export const ViewRequestPage = (props) => {
 
     const [Request, setRequest] = useState([])
+    const idRequest = props.match.params.id
 
     const obtenerSolicitud = async() => {
 
-        const idRequest = props.match.params.id
-
-        const resp_request = await Axios.get(URL_API + '/requests/'+idRequest)
-        const Solicitud = resp_request.data.request 
-
+        const resp_request = await Axios.get(URL_API + '/requests/'+idRequest)    
         //arreglo principal de solicitudes
         setRequest(resp_request.data.request)
+    }
 
+    const aproveRequest = async() =>{
+        const resp_aproveRequest = await Axios.put(URL_API + '/requests/aprove/'+idRequest)
+        if (resp_aproveRequest.data.ok===true) {
+            toastr.info('La Solicitud ha sido Aprobada')
+            props.history.push('/solicitudes')
+        }else{
+            alert("Error Aprobando la Solicitud")
+        }
+    }
+    const declineRequest = async() =>{
+        alert("hi")
+        const resp_declineRequest = await Axios.put(URL_API + '/requests/decline/'+idRequest)
+        if (resp_declineRequest.data.ok===true) {
+            toastr.info('La Solicitud ha sido Denegada')
+            props.history.push('/solicitudes')
+        }else{
+            alert("Error Denegando la Solicitud")
+        }
     }
 
     useEffect(() => {
@@ -197,8 +215,30 @@ export const ViewRequestPage = (props) => {
                                        
                                     </div>
                                     <div className="col-sm-12 col-md-12">
-                                            <button className="btn btn-success width-50 mr-1">Aprobar Solicitud</button>
-                                            <button className="btn btn-danger width-50">Denegar Solicitud</button>
+
+                                    {Request?.stateRequest==='Pendiente' 
+                                       ?<Fragment>
+                                        <button onClick={()=>declineRequest()} className="btn btn-danger width-50 mr-1">Denegar Solicitud</button> 
+                                        <button onClick={()=>aproveRequest()} className="btn btn-success width-50 ">Aprobar Solicitud</button>
+                                        </Fragment>
+                                        :null
+                                    }
+
+                                    {Request?.stateRequest==='Aprobada' 
+                                        ? <div class="alert alert-success" style={{textAlign:"center"}} role="alert">
+                                            <strong>{Request?.stateRequest}</strong>
+                                          </div>
+                                        :null
+                                    }
+
+                                    {Request?.stateRequest==='Denegada' 
+                                       ? 
+                                        <div class="alert alert-danger" style={{textAlign:"center"}} role="alert">
+                                            <strong>{Request?.stateRequest}</strong>
+                                          </div>
+                                       :null
+                                    }
+                                   
                                         </div>
                                 </div>
                                 
