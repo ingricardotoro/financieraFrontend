@@ -70,7 +70,7 @@ function FormWarrantyNewRequest({DataRequest, setDataRequest}) {
                     <label htmlFor="">Año</label>
                     <div className="input-group">
                         <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-edit mr-1"></i></span>
-                        <input value={DataRequest.anioDeGarantia} onChange={handleInputChange}  name="anio" id="anio" type="text" className="form-control" placeholder="Año de la Garantia"/>
+                        <input value={DataRequest.anioDeGarantia} onChange={handleInputChange}  name="anioDeGarantia" id="anioDeGarantia" type="text" className="form-control" placeholder="Año de la Garantia"/>
                     </div>
                 </div>
 

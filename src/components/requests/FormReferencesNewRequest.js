@@ -40,12 +40,12 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
     }
 
     const handleCustomSelect1 = (event,newValue)=>{
-        console.log(newValue)
+      
         setData({
             ...data,
             value1:newValue,
-            NameAval1:newValue.personId.name,
-            PhoneAval1:newValue.personId.lastname
+            NameAval1:newValue.personId.name +" "+ newValue.personId.lastname,
+            PhoneAval1:newValue.personId.phone1
         })
     
         setDataRequest({
@@ -56,12 +56,12 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
       }
 
       const handleCustomSelect2 = (event,newValue)=>{
-        console.log(newValue)
+       
         setData({
             ...data,
             value2:newValue,
-            NameAval2:newValue.personId.name,
-            PhoneAval2:newValue.personId.lastname
+            NameAval2:newValue.personId.name +" "+ newValue.personId.lastname,
+            PhoneAval2:newValue.personId.phone1
         })
     
         setDataRequest({

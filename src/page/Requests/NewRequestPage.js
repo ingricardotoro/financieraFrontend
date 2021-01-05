@@ -7,8 +7,10 @@ import TablaAmortizacionNC from '../TablaAmortizacionNC';
 import TablaAmortizacionVC from '../TablaAmortizacionVC';
 import FormReferencesNewRequest from '../../components/requests/FormReferencesNewRequest';
 import FormWarrantyNewRequest from '../../components/requests/FormWarrantyNewRequest';
+import Axios from 'axios';
+import { URL_API } from '../../config/config';
 
-export default function NewRequestPage() {
+export default function NewRequestPage({history}) {
 
     let today =new Date();
     let day = today.getDate();
@@ -91,9 +93,17 @@ export default function NewRequestPage() {
         stepper.to(step)
     }
 
-    const end = () =>{
-        alert("FIN")
-    }
+     //funcion para crear nuevas solicitudes
+     const end = async(e)=>{
+        
+        try {
+            await Axios.post(URL_API+'/requests', DataRequest)
+            history.push('/solicitudes')
+        } catch (error) {
+            console.log(error)
+        }
+    
+    } 
   
   return (
     

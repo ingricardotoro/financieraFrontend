@@ -12,43 +12,62 @@ import BlockIcon from '@material-ui/icons/Block';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import { useForm } from '../../hooks/useForm';
 import { URL_API } from '../../config/config';
+import { useEffect } from 'react';
 
 function ListRequestPage() {
 
-    const [formValues, handleInputChange] = useForm({
-
-        customerId:'5fa34c1c62e2ea3e3c29e3b5',
-        codeRequest:'S-112',
-        typeLoan:'',
-        amount:'',
-        rate:'',
-        frequency:'',
-        quota:'',
-        quotaValue:'',
-        totalInterest:'',
-        closingCost:'',
-        startDate:'',
-        sucursal:'',
-        details:'',
-        stateRequest:'Pendiente',
-       
-    })
+    const [requests, setRequests] = useState([])
+    const [requestsFilters, setRequestsFilters] = useState([])
+    const [finding, setFinding] = useState(false)
 
     const [totalRequestsRegistradas, setToTalRequestsRegistradas] = useState(0)
     const [totalRequestsPendientes, setTotalRequestsPendientes] = useState(0)
     const [totalRequestsAprobadas, setTotalRequestsAprobadas] = useState(0)
     const [totalRequestsDenegadas, setTotalRequestsDenegadas] = useState(0)
 
-    const handleSubmit = async(e)=>{
-        
-        e.preventDefault()
+    const obtenerSolicitudes = async() => {
 
-        await axios.post(URL_API+'/requests', formValues)
+        const resp_requests = await axios.get(URL_API + '/requests')
 
-        window.location.href ='/solicitudes'
+        //arreglo principal de solicitudes
+        setRequests(resp_requests.data.requests)
+            //Arreglo para realizar las busquedas
+        setRequestsFilters(resp_requests.data.requests)
+
+        setToTalRequestsRegistradas(resp_requests.data.requests.length)
+
+        //Obtenemos la cantidad total de solicitudes con estado pendiente
+        requests.map(request => (
+            request.stateRequest === 'Pendiente' ?
+            setTotalRequestsPendientes(totalRequestsPendientes + 1) :
+            null
+        ))
+
+        //no es una busqueda por filtro de busqueda
+        setFinding(false)
+
+        //Obtenemos la cantidad total de solicitdes aprobadas
+        requests.map(request => (
+            request.stateRequest === 'Aprobada' ?
+            setTotalRequestsAprobadas(totalRequestsAprobadas + 1) :
+            null
+        ))
+
+        //Obtenemos la cantidad total de solicitudes Denegadas
+        requests.map(request => (
+            request.stateRequest === 'Denegada' ?
+            setTotalRequestsDenegadas(totalRequestsDenegadas + 1) :
+            null
+        ))
+
     }
 
-    
+    useEffect(() => {
+       
+        obtenerSolicitudes()
+
+    }, [])
+
     return (
         <div className="pcoded-content">
 
@@ -130,7 +149,6 @@ function ListRequestPage() {
                         </div>
                     </div>
 
-                    
                     <div className="row">
 
                         {/* Facebook card start */}
@@ -184,90 +202,33 @@ function ListRequestPage() {
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>S-101</td>
-                                <td> <Avatar alt="Remy Sharp" src="http://0.gravatar.com/avatar/81b58502541f9445253f30497e53c280?s=50&d=identicon&r=G" /></td>
-                                <td>C-01 Ricardo Toro</td>
-                                <td>Amortizado</td>
-                                <td>LPS. 7,000.00</td>
-                                <td>8 Cuotas Semanal</td>
-                                <td>Valle Alto</td>
-                                <td><button className="btn btn-sm btn-primary "> {<InfoIcon />}</button></td>
-                                <td><button className="btn btn-sm btn-warning d-inline-flex"> {<HourglassEmptyIcon />} Pendiente</button> </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>S-102</td>
-                                <td><Avatar alt="Travis Howard" src="http://1.gravatar.com/avatar/9bc7250110c667cd35c0826059b81b75?s=50&d=identicon&r=G" /></td>
-                                <td>C-02 Davig Gomes</td>
-                                <td>Amortizado</td>
-                                <td>LPS. 10,000.00</td>
-                                <td>10 cuotas mensuales</td>
-                                <td>Central</td>
-                                <td><button className="btn btn-sm btn-primary "> {<InfoIcon />}</button></td>
-                                <td><button className="btn btn-sm btn-danger d-inline-flex"> {<BlockIcon />} Denegaa</button> </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3</th>
-                                <td>S-103</td>
-                                <td><Avatar alt="Cindy Baker" src="assets/images/avatar-1.png" /></td>
-                                <td>C-03 Jorge Osorio</td>
-                                <td>Amortizado</td>
-                                <td>LPS. 5,000.00</td>
-                                <td>7 cuotas Semanales</td>
-                                <td>Central</td>
-                                <td><button className="btn btn-sm btn-primary "> {<InfoIcon />}</button></td>
-                                <td><button className="btn btn-sm btn-success d-inline-flex"> {<CheckBoxIcon />}Aprobada</button> </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">4</th>
-                                <td>S-104</td>
-                                <td><Avatar alt="Cindy Baker" src="assets/images/avatar-2.png" /></td>
-                                <td>C-104 Nora Cruz</td>
-                                <td>Amortizado</td>
-                                <td>LPS. 9,000.00</td>
-                                <td>12 cuatoas Mensuales</td>
-                                <td>Valle Alto</td>
-                                <td><button className="btn btn-sm btn-primary "> {<InfoIcon />}</button></td>
-                                <td><button className="btn btn-sm btn-success d-inline-flex"> {<CheckBoxIcon />}Aprobada</button> </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">5</th>
-                                <td>S-105</td>
-                                <td><Avatar alt="Cindy Baker" src="assets/images/avatar-3.png" /></td>
-                                <td>C-105 Daniel Amaya</td>
-                                <td>Amortizado</td>
-                                <td>LPS. 8,000.00</td>
-                                <td>14 Cuotas Semanales</td>
-                                <td>Valle Alto</td>
-                                <td><button className="btn btn-sm btn-primary "> {<InfoIcon />}</button></td>
-                                <td><button className="btn btn-sm btn-warning d-inline-flex"> {<HourglassEmptyIcon />}Pendiente</button> </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">6</th>
-                                <td>S-106</td>
-                                <td><Avatar alt="Cindy Baker" src="assets/images/avatar-4.png" /></td>
-                                <td>C-106 Luis Manzanares</td>
-                                <td>Amortizado</td>
-                                <td>LPS. 6,500.00</td>
-                                <td>6 Cuotas Semanales</td>
-                                <td>Central</td>
-                                <td><button className="btn btn-sm btn-primary "> {<InfoIcon />}</button></td>
-                                <td><button className="btn btn-sm btn-success d-inline-flex"> {<CheckBoxIcon />}Aprobada</button> </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">7</th>
-                                <td>S-107</td>
-                                <td><Avatar alt="Cindy Baker" src="assets/images/avatar-5.png" /></td>
-                                <td>C-107 Douglas Portillo</td>
-                                <td>Amortizado</td>
-                                <td>LPS. 10,000.00</td>
-                                <td>12 Cuotas Mensuales</td>
-                                <td>Valle Alto</td>
-                                <td><button className="btn btn-sm btn-primary "> {<InfoIcon />}</button></td>
-                                <td><button className="btn btn-sm btn-danger d-inline-flex"> {<BlockIcon />}Denegada</button> </td>
-                            </tr>
+
+                            {
+                                requests.map(request => (
+                                    <tr>
+                                        <th scope="row">1</th>
+                                        <td>{request.codeRequest}</td>
+                                        <td><Avatar alt="Travis Howard" src="http://1.gravatar.com/avatar/9bc7250110c667cd35c0826059b81b75?s=50&d=identicon&r=G" /></td>
+                                        <td>{request.customerId.personId.name}</td>
+                                        <td>{request.typeLoan}</td>
+                                        <td>{request.amount}</td>
+                                        <td>{request.quota} Cuotas {request.frequency}</td>
+                                        <td>{request.sucursal}</td>
+                                        <td><button className="btn btn-sm btn-primary "> {<InfoIcon />}</button></td>
+                                        {
+                                            request.stateRequest==='Pendiente' && <td><button className="btn btn-sm btn-warning d-inline-flex"> {<HourglassEmptyIcon />} {request.stateRequest}</button> </td>
+                                        }
+                                        {
+                                            request.stateRequest==='Aprobada' &&  <td><button className="btn btn-sm btn-success d-inline-flex"> {<CheckBoxIcon />}{request.stateRequest}</button> </td>
+                                        }
+                                        {
+                                            request.stateRequest==='Denegada' &&  <td><button className="btn btn-sm btn-danger d-inline-flex"> {<BlockIcon />} {request.stateRequest}</button> </td>
+                                        }
+                                    </tr>
+                                ))
+                            }
+                                                 
+                           
                             </tbody>
                         </table>
                         </div>
@@ -280,198 +241,6 @@ function ListRequestPage() {
                 </div>
             </div>
             {/* Main-body end */}
-
-            {/* Modal */}
-            <div className="modal fade" id="modalNewRequest" tabIndex={-1} role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div className="modal-dialog modal-lg modal-dialog-centered " role="document">
-                        <div className="modal-content">
-                    <div className="modal-header">
-                        <h5 className="modal-title" id="exampleModalLabel">Crear Nueva Solicitud  <strong>Código: S-105</strong></h5>
-                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-
-                    <div className="modal-body">
-                        <div className="row">
-                            {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
-                            <div className="col-sm-12 col-md-6">
-                                <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-user"></i></span>
-                                    <input type="text" className="form-control" placeholder="Ingrese Nombre de Cliente" />
-                                </div>
-                            </div>
-
-                            <div className="col-sm-12 col-md-6">
-                                <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-edit"></i></span>
-                                    <input disabled={true} type="text" className="form-control" placeholder="Código de Cliente"/>
-                                </div>
-                            </div>
-                            
-                        </div>
-
-                        <div className="row">
-                            {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
-                            <div className="col-sm-12 col-md-6">
-                            <label htmlFor="monto">Tipo de Préstamo</label>
-                                <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-money"></i></span>
-                                    <select onChange={handleInputChange} name="typeLoan" id="typeLoan" className="form-control col-md-12"> 
-                                        <option value="opt1">Tipo de Préstamos</option>
-                                        <option value="Amortizacion">Amortizacion</option>
-                                        <option value="Interes Simple">Interes Simple</option>
-                                        <option value="Interes Acumulado">Interes Acumulado</option>
-                                        <option value="Préstamos Tipo B">Préstamos Tipo B</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div className="col-sm-12 col-md-6">
-                                <label htmlFor="monto">Monto Solicitado</label>
-                                <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1">LPS.</span>
-                                    <input onChange={handleInputChange} id="amount" name="amount" type="text" className="form-control" placeholder="Ingresar el Monto" />
-                                </div>
-                            </div>
-                            
-                        </div>
-
-
-                        <div className="row">
-                            {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
-                            <div className="col-sm-12 col-md-6">
-                                <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1">%</span>
-                                    <input onChange={handleInputChange} name="rate" id="rate" type="text" className="form-control" placeholder="Tasa de Interes en %"/>
-                                </div>         
-                            </div>
-
-                            <div className="col-sm-12 col-md-6">
-                                <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-hour-glass"></i></span>
-                                    <select onChange={handleInputChange} name="frequency" id="frequency"  className="form-control col-md-12"> 
-                                        <option value="opt1">Frecuencia de Pago</option>
-                                        <option value="Semanal">Semanal</option>
-                                        <option value="Quincenal">Quincenal</option>
-                                        <option value="Mensual">Mensual</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                        </div>
-
-
-                        <div className="row">
-                            {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
-                            <div className="col-sm-12 col-md-6">
-                            <label htmlFor="dateInicio">Número de Cuotas</label> 
-                                <div className="input-group">
-                                    <span className="input-group-addon"  id="basic-addon1"><i className="icofont icofont-listing-number"></i></span>
-                                    <input onChange={handleInputChange} name="quota" id="quota" type="text" className="form-control" placeholder="Cantidad de Cuotas"/>
-                                </div>
-                            </div>
-
-                            <div className="col-sm-12 col-md-6">
-                            <label htmlFor="dateInicio">Valor de cada cuota</label>
-                                <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1">LPS.</span>
-                                    <input onChange={handleInputChange} name="quotaValue" id="quotaValue" type="text" className="form-control" placeholder="Valor de cada cuota" />
-                                </div>
-                            </div>
-                            
-                        </div>
-
-                        <hr />
-
-                        <div className="row">
-                            
-                            <div className="col-sm-12 col-md-6">
-                                <label htmlFor="dateInicio">Fecha de Inicio</label> 
-                                <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-calendar mr-1"></i></span>
-                                    <input onChange={handleInputChange} name="startDate" id="startDate" className="form-control" type="date"/>
-                                </div>
-                            </div>
-
-                            <div className="col-sm-12 col-md-6">
-                                <label htmlFor="dateInicio">Total de Interes</label>
-                                <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1">LPS.</span>
-                                    <input onChange={handleInputChange} name="totalInterest" id="totalInterest" type="text" className="form-control" placeholder="Total de Interes" />
-                                </div>
-                            </div>
-                            
-                        </div>
-
-
-
-                        <div className="row">
-                            {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
-                            <div className="col-sm-12 col-md-6">
-                                <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-edit"></i></span>
-                                    <textarea onChange={handleInputChange} name="details" id="details" className="form-control" rows="6" placeholder="Observaciones"></textarea>  
-                                </div>
-                            </div>
-
-                            <div className="col-sm-12 col-md-6">
-                                <label htmlFor="totalInteres">Costo de Cierre y Sucursal</label>
-                                <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1">LPS.</span>
-                                    <input className="form-control" onChange={handleInputChange} name="closingCost" id="closingCost" type="text" placeholder="Costo de Cierre 4%" />
-                                </div>
-                                <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-bank-alt"></i> </span> 
-                                    <select onChange={handleInputChange} name="sucursal" id="sucursal" className="form-control col-md-12"> 
-                                        <option value="opt1">Seleccione Sucursal</option>
-                                        <option value="Central">Central</option>  
-                                        <option value="Valle Alto">Valle Alto</option>
-                                    </select>   
-                                </div>
-                            </div>
-                
-                        </div>
-
-                        <div className="row">
-
-                            <div className="col-sm-12 col-md-6">
-                                <label htmlFor="totalInteres">Nombre y Teléfono de Referencia</label>
-                                <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-user"></i></span>
-                                    <input id="referecia1" className="form-control" name="referencia1" type="text" placeholder="Nombre de Referencia" />
-                                </div>
-                                <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-iphone"></i> </span> 
-                                    <input id="telefonoRef1" className="form-control" name="telefonoRef1" type="text" placeholder="Teléfono de Referencia" />
-                                </div>
-                            </div>
-
-                            <div className="col-sm-12 col-md-6">
-                                <label htmlFor="totalInteres">Nombre y Teléfono de Referencia</label>
-                                <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-user"></i></span>
-                                    <input id="referencia2" className="form-control" name="referencia2" type="text" placeholder="Nombre de Referencia" />
-                                </div>
-                                <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-iphone"></i></span> 
-                                    <input id="telefonoRef1" className="form-control" name="telefonoRef1" type="text" placeholder="Teléfono de Referencia" />
-                                </div>
-                            </div>
-                
-                        </div>
-
-                    </div>
-
-                    <div className="modal-footer">
-                        <button type="button" className="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button onClick={handleSubmit} type="button" className="btn btn-primary">Guardar</button>
-                    </div>
-                    </div>
-                    </div>
-                </div>
-                 {/* END Modal */}
-
             
             <div id="styleSelector">
             </div>
@@ -482,13 +251,5 @@ function ListRequestPage() {
 
     )
 }
-
-/*const useStyles = makeStyles((theme) => ({
-    button: {
-      margin: theme.spacing(1),
-      color: "#fff",
-      marginRight: "5px"
-    },
-  }));*/
 
 export default ListRequestPage

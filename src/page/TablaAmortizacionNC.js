@@ -91,11 +91,10 @@ function TablaAmortizacionNC(props) {
                         
                         SaldoFinal = ((SaldoInicial) -(AbonoCapital))//f3
                         
-
                         //fecha.setDate(fecha.getDate()+days)
                         //fecha.toLocaleDateString()
                         //Lo guardamos en el arreglo de objetos
-                        console.log(fecha)
+                      
                         quotaRows[cont] = {
                             cont:cont+1,
                             SaldoInicial:SaldoInicial,//3200
