@@ -8,6 +8,10 @@ import { URL_API } from '../../config/config'
 import fondoImg from '../../config/slider8.jpg'
 import userImg from '../../user.png'
 import toastr from 'toastr'
+
+import {calcularAmortizacionNC, } from '../../helpers/CalculoAmortizacionNC'
+import {calcularAmortizacionVC} from '../../helpers/CalcularAmortizacionVC'
+
 import TablaAmortizacionNC from '../TablaAmortizacionNC'
 import TablaAmortizacionVC from '../TablaAmortizacionVC'
 
@@ -15,7 +19,6 @@ export const ViewRequestPage = (props) => {
 
     const [Request, setRequest] = useState([])
     const idRequest = props.match.params.id
-    const [cuotas, setCuotas] = useState([])
     const obtenerSolicitud = async() => {
         
         const resp_request = await Axios.get(URL_API + '/requests/'+idRequest)    
@@ -25,33 +28,50 @@ export const ViewRequestPage = (props) => {
     
     const aproveRequest = async() =>{
         
-        const resp_aproveRequest = await Axios.put(URL_API + '/requests/aprove/'+idRequest)
+        //const resp_aproveRequest = await Axios.put(URL_API + '/requests/aprove/'+idRequest)
+        const resp_aproveRequest = true
         
-        if (resp_aproveRequest.data.ok===true) {
-
+        //if (resp_aproveRequest.data.ok===true) {
+        if (resp_aproveRequest===true) {
+            console.log(1)
             const resp_MaxCode = await Axios.get(URL_API+'/loans/lastCode')
+            console.log(2)
+            console.log(resp_MaxCode.data.LastCode[0])
 
             const DataNewLoan ={
-                codeLoan:resp_MaxCode.data.LastCode[0].codeLoan+1,
-                requestId:Request._id,
-                amountInitial:Request.amount,
-                totalToPay:Request.totalAmount,
+                codeLoan:parseInt(resp_MaxCode.data.LastCode[0])+1,
+                requestId:Request?._id,
+                amountInitial:parseFloat(Request?.amount),
+                totalToPay:parseFloat(Request?.totalAmount),
                 dateaproved:Date.now(),
             }
+            console.log(3)
+            //crear el nuevo Prestamo
+           //const resp_createLoan = await Axios.post(URL_API + '/loans' , DataNewLoan)
+           const resp_createLoan = true
 
-            /*cuotas[0]= {
-                loanId,
-                dateToPay,
-                amountToPayed,
-                amountToCapital,
-                amountToInteres,
-            }*/
+           //if (resp_createLoan.data.ok===true) {
+            if (resp_createLoan===true) {
+                console.log(4)
+               let cuotas = []
+               cuotas = calcularAmortizacionNC(
+                   Request?.amount,
+                   Request?.rate,
+                   Request?.tipotasa,
+                   Request?.quota,
+                   Request?.tipoInteres,
+                   Request?.frequency,
+                   FormatDate(Request?.datestart),
+                   Request?._id
+                   )
 
-            cuotas.map(cuota => (
-                 Axios.post(URL_API+'/payments', cuota)
-            ))
+                console.table(cuotas)
+               /*cuotas.map(cuota => (
+                    Axios.post(URL_API+'/payments', cuota)
+                ))*/
+           }
 
-            try {
+            /*try {
                 const resp_newLoan =await Axios.post(URL_API+'/loans', DataNewLoan)
                 if(resp_newLoan.data.ok===true){
                     toastr.info('La Solicitud ha sido Aprobada')
@@ -59,12 +79,13 @@ export const ViewRequestPage = (props) => {
                 }
             } catch (error) {
                 console.log(error)
-            }
+            }*/
   
         }else{
             alert("Error Aprobando la Solicitud")
         }
     }
+
     const declineRequest = async() =>{
       
         const resp_declineRequest = await Axios.put(URL_API + '/requests/decline/'+idRequest)
@@ -295,7 +316,7 @@ export const ViewRequestPage = (props) => {
                                                        
                                 {
                                     (Request?.tipoCalculo === 'NumeroDeCuotas' ) && 
-                                    <TablaAmortizacionNC 
+                                    <TablaAmortizacionNC
                                         CapitalInicial={Request?.amount}
                                         Tasa={Request?.rate}
                                         TipoTasa={Request?.tipotasa}
@@ -307,7 +328,7 @@ export const ViewRequestPage = (props) => {
                                 }
                                 { 
                                     (Request?.tipoCalculo === 'ValorDeCuotas') && 
-                                    <TablaAmortizacionVC 
+                                    <TablaAmortizacionVC
                                     CapitalInicial={Request?.amount}
                                     Tasa={Request?.rate}
                                     TipoTasa={Request?.tipotasa}

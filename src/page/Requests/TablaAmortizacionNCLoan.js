@@ -2,20 +2,20 @@ import React from 'react'
 import { Fragment } from 'react'
 
 //Tabla de amortizacion por numero de cuotas
-function TablaAmortizacionVC(props) {
+function TablaAmortizacionNCLoan(props) {
 
-    let {CapitalInicial,Tasa,TipoTasa,QuotasValue,TipoInteres, Frequency, DateStart} = props
+    let {CapitalInicial,Tasa,TipoTasa,Quotas,TipoInteres, Frequency, DateStart,setCuotas, loanId,cuotasArray} = props
     //let CapitalInicial = 0.0 
     let Capitalfinal=0.0
     let InteresSemanal = 0.0
     let AbonoCapital = 0.0
     let SaldoFinal = 0.0 
-    //let TotaldeInteres =0.0
+    let TotaldeInteres =0.0
     let TotalAbonoCapital=0.0, TotaldeCuotas=0.0,TotaldeInteres2=0.0
     let Close=0.0 //Para guardar el valor a prestar mas el costo de cierre
     let tasa=0.0
     let SaldoInicial=0.0
-    let periodos =0,contador=0, days=7  // cuotas=0
+    let periodos=0, contador=0, days=7
     //let fecha = new Date (Date(DateStart));  
     let fecha = Date.parse(DateStart)+1;
 	fecha = new Date(fecha);
@@ -37,13 +37,13 @@ function TablaAmortizacionVC(props) {
 
     //Calculo de los Periodos, redondeamos al entero mas alto, 10/4  = 3,  13/4  =4
     if(Frequency==='Mensual'){ 
-        periodos=1 
+        periodos=parseInt(Quotas) 
         days=30
     }else if(Frequency==='Quincenal'){
-        periodos=2
+        periodos=Math.ceil(parseInt(Quotas) /2)
         days=14
     }else if(Frequency==='Semanal'){
-        periodos=4
+        periodos=Math.ceil(parseInt(Quotas) /4)
         days=7
     } 
 
@@ -52,7 +52,6 @@ function TablaAmortizacionVC(props) {
     if(Frequency==='Mensual'){contador=1}
 
     let quotaRows=[] // arreglo de objetos
-    let quotaValue = parseFloat(QuotasValue)
 
     //Calculo del interes Compuesto mediante numero de cuotas
     if(TipoInteres === 'Compuesto'){
@@ -60,29 +59,30 @@ function TablaAmortizacionVC(props) {
             CapitalInicial=parseFloat(CapitalInicial) + (parseFloat(Close))//3200 //este valor ira cambiando
             //let CapitalInicial1=parseFloat(CapitalInicial) + (parseFloat(Close))//3200 se usa este valor al finalnuevamente
             //Calculo de Interes Total Compuesto
-            //TotaldeInteres = (CapitalInicial*(Math.pow((1+tasa),periodos)-1))//F4
+            TotaldeInteres = (CapitalInicial*(Math.pow((1+tasa),periodos)-1))//F4
             //Calculo del valor de la cuota
-            //let quotaValue = ((parseFloat(CapitalInicial) + parseFloat(TotaldeInteres) ) / Quotas)//f4
+            let quotaValue = ((parseFloat(CapitalInicial) + parseFloat(TotaldeInteres) ) / Quotas)//f4
+
             SaldoInicial=CapitalInicial //3200
             SaldoFinal=CapitalInicial //3200 Solo para que el while de inicio debe ser distinto de 0
 
             let cont=0
 
-            while (SaldoFinal>0) {  
+            while (SaldoFinal!==0) {  
 
                 Capitalfinal = (parseFloat(CapitalInicial) + parseFloat(CapitalInicial*tasa)) //3520 f2
-                InteresSemanal=((CapitalInicial*tasa)/periodos) //80 f2
+                InteresSemanal=((CapitalInicial*tasa)/contador) //80 f2
                 AbonoCapital = (parseFloat(quotaValue) - parseFloat(InteresSemanal))//f3
                 
                 for (let i = 0; i < contador; i++) {
-                    
-                    if(SaldoInicial>0){
+
+                    if(SaldoInicial!==0){
                     
                         //Localizamos la penultima fila para prepara el valor de cuota de pago de la ultima fila
                         if(parseFloat(SaldoFinal)+parseFloat(InteresSemanal) < quotaValue){
                           
-                            AbonoCapital = parseFloat(SaldoFinal)
-                            quotaValue = parseFloat(AbonoCapital) + parseFloat(InteresSemanal)
+                            AbonoCapital = SaldoFinal
+                            quotaValue = AbonoCapital + InteresSemanal
                         }
 
                         TotaldeInteres2+=parseFloat(InteresSemanal)
@@ -90,7 +90,11 @@ function TablaAmortizacionVC(props) {
                         TotalAbonoCapital+=parseFloat(AbonoCapital)
                         
                         SaldoFinal = ((SaldoInicial) -(AbonoCapital))//f3
-
+                        
+                        //fecha.setDate(fecha.getDate()+days)
+                        //fecha.toLocaleDateString()
+                        //Lo guardamos en el arreglo de objetos
+                      
                         quotaRows[cont] = {
                             cont:cont+1,
                             SaldoInicial:SaldoInicial,//3200
@@ -101,9 +105,18 @@ function TablaAmortizacionVC(props) {
                             fecha:fecha.setDate(fecha.getDate()+days)
                         } 
 
+                         //Para la tabla de amortizacion de Prestamo
+                         setCuotas({
+                             ...cuotasArray,
+                            loanId:loanId,
+                            dateToPay:fecha.setDate(fecha.getDate()+days),
+                            amountToPayed:quotaValue,
+                            amountToCapital:AbonoCapital,
+                            amountToInteres:InteresSemanal,
+                        })
+
                         SaldoInicial= SaldoFinal
                         cont+=1 
-                        //cuotas+=1
                     
                         CapitalInicial = Capitalfinal
                     }
@@ -119,8 +132,8 @@ function TablaAmortizacionVC(props) {
       })
 
     return (
-        <Fragment >
-        <p>Tabla de Amortizacion por Valor de Cuotas</p>
+        <Fragment>
+        <p>Tabla de Amortizacion por Numero de Cuotas</p>
         <table className="table table-bordered table-hover">
             <thead className="table-ligth" >
                 <tr>
@@ -159,8 +172,10 @@ function TablaAmortizacionVC(props) {
                 </tr>
             </tfoot>
         </table>
+        
         </Fragment>
+
     )
 }
 
-export default TablaAmortizacionVC
+export default TablaAmortizacionNCLoan

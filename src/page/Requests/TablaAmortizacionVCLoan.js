@@ -2,9 +2,9 @@ import React from 'react'
 import { Fragment } from 'react'
 
 //Tabla de amortizacion por numero de cuotas
-function TablaAmortizacionVC(props) {
+function TablaAmortizacionVCLoan(props) {
 
-    let {CapitalInicial,Tasa,TipoTasa,QuotasValue,TipoInteres, Frequency, DateStart} = props
+    let {CapitalInicial,Tasa,TipoTasa,QuotasValue,TipoInteres, Frequency, DateStart,setCuotas,loanId,cuotasArray} = props
     //let CapitalInicial = 0.0 
     let Capitalfinal=0.0
     let InteresSemanal = 0.0
@@ -99,7 +99,17 @@ function TablaAmortizacionVC(props) {
                             AbonoCapital:AbonoCapital,//274
                             SaldoFinal:SaldoFinal,
                             fecha:fecha.setDate(fecha.getDate()+days)
-                        } 
+                        }
+                        
+                        //Para la tabla de amortizacion de Prestamo
+                        setCuotas({
+                            ...cuotasArray,
+                            loanId:loanId,
+                            dateToPay:fecha.setDate(fecha.getDate()+days),
+                            amountToPayed:quotaValue,
+                            amountToCapital:AbonoCapital,
+                            amountToInteres:InteresSemanal,
+                        })
 
                         SaldoInicial= SaldoFinal
                         cont+=1 
@@ -163,4 +173,4 @@ function TablaAmortizacionVC(props) {
     )
 }
 
-export default TablaAmortizacionVC
+export default TablaAmortizacionVCLoan
