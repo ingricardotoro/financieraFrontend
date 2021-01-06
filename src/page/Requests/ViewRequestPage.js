@@ -19,57 +19,86 @@ export const ViewRequestPage = (props) => {
 
     const [Request, setRequest] = useState([])
     const idRequest = props.match.params.id
+    let resp_MaxCode = []
+    let LastCode = 0 
+
     const obtenerSolicitud = async() => {
         
-        const resp_request = await Axios.get(URL_API + '/requests/'+idRequest)    
+        const resp_request = await Axios.get(URL_API + '/requests/'+idRequest) 
+        resp_MaxCode = await Axios.get(URL_API+'/loans/lastCode')
+
+        if(resp_MaxCode.data.LastCode.lenght === 0 ){
+            LastCode=0
+        }else{
+            LastCode +=1
+        }
         //arreglo principal de solicitudes
         setRequest(resp_request.data.request)
     }
     
     const aproveRequest = async() =>{
-        
-        //const resp_aproveRequest = await Axios.put(URL_API + '/requests/aprove/'+idRequest)
-        const resp_aproveRequest = true
-        
-        //if (resp_aproveRequest.data.ok===true) {
-        if (resp_aproveRequest===true) {
-            console.log(1)
-            const resp_MaxCode = await Axios.get(URL_API+'/loans/lastCode')
-            console.log(2)
-            console.log(resp_MaxCode.data.LastCode[0])
 
+        console.log(LastCode)
+        
+        const resp_aproveRequest = await Axios.put(URL_API + '/requests/aprove/'+idRequest)
+        //const resp_aproveRequest = true
+        
+        if (resp_aproveRequest.data.ok===true) {
+        //if (resp_aproveRequest===true) {
+           
             const DataNewLoan ={
-                codeLoan:parseInt(resp_MaxCode.data.LastCode[0])+1,
+                codeLoan:parseInt(LastCode),
                 requestId:Request?._id,
                 amountInitial:parseFloat(Request?.amount),
                 totalToPay:parseFloat(Request?.totalAmount),
                 dateaproved:Date.now(),
             }
-            console.log(3)
+          
             //crear el nuevo Prestamo
-           //const resp_createLoan = await Axios.post(URL_API + '/loans' , DataNewLoan)
-           const resp_createLoan = true
+           const resp_createLoan = await Axios.post(URL_API + '/loans' , DataNewLoan)
+           //const resp_createLoan = true
 
-           //if (resp_createLoan.data.ok===true) {
-            if (resp_createLoan===true) {
-                console.log(4)
+           if (resp_createLoan?.data.ok===true) {
+            //if (resp_createLoan===true) {
+                console.log("11")
                let cuotas = []
-               cuotas = calcularAmortizacionNC(
-                   Request?.amount,
-                   Request?.rate,
-                   Request?.tipotasa,
-                   Request?.quota,
-                   Request?.tipoInteres,
-                   Request?.frequency,
-                   FormatDate(Request?.datestart),
-                   Request?._id
-                   )
 
+               if (Request?.tipoCalculo==='NumeroDeCuotas') {
+                console.log("22")
+                cuotas = calcularAmortizacionNC(
+                    Request?.amount,
+                    Request?.rate,
+                    Request?.tipotasa,
+                    Request?.quota,
+                    Request?.tipoInteres,
+                    Request?.frequency,
+                    FormatDate(Request?.datestart),
+                    resp_createLoan?.data.newLoan._id
+                    )
+               }
+               if (Request?.tipoCalculo==='ValorDeCuotas') {
+                cuotas = calcularAmortizacionVC(
+                    Request?.amount,
+                    Request?.rate,
+                    Request?.tipotasa,
+                    Request?.quotaValue,
+                    Request?.tipoInteres,
+                    Request?.frequency,
+                    FormatDate(Request?.datestart),
+                    resp_createLoan?.data.newLoan._id
+                    )
+                }
+              
                 console.table(cuotas)
-               /*cuotas.map(cuota => (
+                cuotas?.map(cuota => (
                     Axios.post(URL_API+'/payments', cuota)
-                ))*/
+                ))
+
+           }else{
+               alert("NO ENTRO")
            }
+           alert("FIN")
+           //props.history.push('/solicitudes')
 
             /*try {
                 const resp_newLoan =await Axios.post(URL_API+'/loans', DataNewLoan)

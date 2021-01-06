@@ -1,6 +1,5 @@
 export const calcularAmortizacionNC = (CapitalInicial, Tasa, TipoTasa, Quotas, TipoInteres, Frequency, DateStart, loanId) => {
 
-
     let cuotasArray = []
     let Capitalfinal = 0.0
     let InteresSemanal = 0.0
@@ -109,7 +108,7 @@ export const calcularAmortizacionNC = (CapitalInicial, Tasa, TipoTasa, Quotas, T
                     cuotasArray[cont] = {
                         loanId: loanId,
                         dateToPay: fecha.setDate(fecha.getDate() + days),
-                        amountToPayed: parseFloat((quotaValue).toFixed(2)),
+                        amountToPay: parseFloat((quotaValue).toFixed(2)),
                         amountToCapital: parseFloat((AbonoCapital).toFixed(2)),
                         amountToInteres: parseFloat((InteresSemanal).toFixed(2)),
                     }
@@ -123,7 +122,7 @@ export const calcularAmortizacionNC = (CapitalInicial, Tasa, TipoTasa, Quotas, T
             }
         }
     }
-    console.log(cuotasArray)
+    //console.log(cuotasArray)
     return cuotasArray
 
 }

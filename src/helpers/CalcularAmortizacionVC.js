@@ -106,9 +106,9 @@ export const calcularAmortizacionVC = (CapitalInicial, Tasa, TipoTasa, QuotasVal
                     cuotasArray[cont] = {
                         loanId: loanId,
                         dateToPay: fecha.setDate(fecha.getDate() + days),
-                        amountToPayed: quotaValue,
-                        amountToCapital: AbonoCapital,
-                        amountToInteres: InteresSemanal,
+                        amountToPay: parseFloat((quotaValue).toFixed(2)),
+                        amountToCapital: parseFloat((AbonoCapital).toFixed(2)),
+                        amountToInteres: parseFloat((InteresSemanal).toFixed(2)),
                     }
 
                     SaldoInicial = SaldoFinal
@@ -121,6 +121,6 @@ export const calcularAmortizacionVC = (CapitalInicial, Tasa, TipoTasa, QuotasVal
             }
         }
     }
-    console.log(cuotasArray)
+    //console.log(cuotasArray)
     return cuotasArray
 }

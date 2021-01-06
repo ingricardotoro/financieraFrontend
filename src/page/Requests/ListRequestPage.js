@@ -214,7 +214,7 @@ function ListRequestPage() {
 
                             {
                                 requests.map(request => (
-                                    <tr>
+                                    <tr key={request._id}>
                                         <th scope="row">1</th>
                                         <td>{request.codeRequest}</td>
                                         <td><Avatar alt="Travis Howard" src="http://1.gravatar.com/avatar/9bc7250110c667cd35c0826059b81b75?s=50&d=identicon&r=G" /></td>
