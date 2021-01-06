@@ -4,7 +4,7 @@ import { Fragment } from 'react'
 //Tabla de amortizacion por numero de cuotas
 function TablaAmortizacionVC(props) {
 
-    console.log(props)
+    console.log()
     let {CapitalInicial,Tasa,TipoTasa,QuotasValue,TipoInteres, Frequency, DateStart} = props
     //let CapitalInicial = 0.0 
     let Capitalfinal=0.0

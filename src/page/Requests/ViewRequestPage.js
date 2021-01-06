@@ -8,30 +8,65 @@ import { URL_API } from '../../config/config'
 import fondoImg from '../../config/slider8.jpg'
 import userImg from '../../user.png'
 import toastr from 'toastr'
+import TablaAmortizacionNC from '../TablaAmortizacionNC'
+import TablaAmortizacionVC from '../TablaAmortizacionVC'
 
 export const ViewRequestPage = (props) => {
 
     const [Request, setRequest] = useState([])
     const idRequest = props.match.params.id
-
+    const [cuotas, setCuotas] = useState([])
     const obtenerSolicitud = async() => {
-
+        
         const resp_request = await Axios.get(URL_API + '/requests/'+idRequest)    
         //arreglo principal de solicitudes
         setRequest(resp_request.data.request)
     }
-
+    
     const aproveRequest = async() =>{
+        
         const resp_aproveRequest = await Axios.put(URL_API + '/requests/aprove/'+idRequest)
+        
         if (resp_aproveRequest.data.ok===true) {
-            toastr.info('La Solicitud ha sido Aprobada')
-            props.history.push('/solicitudes')
+
+            const resp_MaxCode = await Axios.get(URL_API+'/loans/lastCode')
+
+            const DataNewLoan ={
+                codeLoan:resp_MaxCode.data.LastCode[0].codeLoan+1,
+                requestId:Request._id,
+                amountInitial:Request.amount,
+                totalToPay:Request.totalAmount,
+                dateaproved:Date.now(),
+            }
+
+            /*cuotas[0]= {
+                loanId,
+                dateToPay,
+                amountToPayed,
+                amountToCapital,
+                amountToInteres,
+            }*/
+
+            cuotas.map(cuota => (
+                 Axios.post(URL_API+'/payments', cuota)
+            ))
+
+            try {
+                const resp_newLoan =await Axios.post(URL_API+'/loans', DataNewLoan)
+                if(resp_newLoan.data.ok===true){
+                    toastr.info('La Solicitud ha sido Aprobada')
+                    props.history.push('/solicitudes')
+                }
+            } catch (error) {
+                console.log(error)
+            }
+  
         }else{
             alert("Error Aprobando la Solicitud")
         }
     }
     const declineRequest = async() =>{
-        alert("hi")
+      
         const resp_declineRequest = await Axios.put(URL_API + '/requests/decline/'+idRequest)
         if (resp_declineRequest.data.ok===true) {
             toastr.info('La Solicitud ha sido Denegada')
@@ -41,6 +76,17 @@ export const ViewRequestPage = (props) => {
         }
     }
 
+    const FormatDate=(fecha) =>{
+        
+        let fechaI =new Date(fecha);
+        let day = fechaI.getDate();
+        let month = fechaI.getMonth()+1;
+        let year = fechaI.getFullYear();
+        if(day < 10 ){ day= '0'+day}
+        if(month < 10){ month = '0'+month}
+        let dateF = ''
+        return dateF  = year + '-' + month + '-' + day;    
+    }
     useEffect(() => {
        
         obtenerSolicitud()
@@ -243,7 +289,38 @@ export const ViewRequestPage = (props) => {
                                 </div>
                                 
                             </div>
+
+                            {/* Tabla de Amortizacion */}
+                            <div className="table-responsive p-l-15 p-r-15">
+                                                       
+                                {
+                                    (Request?.tipoCalculo === 'NumeroDeCuotas' ) && 
+                                    <TablaAmortizacionNC 
+                                        CapitalInicial={Request?.amount}
+                                        Tasa={Request?.rate}
+                                        TipoTasa={Request?.tipotasa}
+                                        Quotas={Request?.quota}
+                                        TipoInteres={Request?.tipoInteres}
+                                        Frequency={Request?.frequency}
+                                        DateStart={FormatDate(Request?.datestart)}
+                                    />
+                                }
+                                { 
+                                    (Request?.tipoCalculo === 'ValorDeCuotas') && 
+                                    <TablaAmortizacionVC 
+                                    CapitalInicial={Request?.amount}
+                                    Tasa={Request?.rate}
+                                    TipoTasa={Request?.tipotasa}
+                                    QuotasValue={Request?.quotaValue}
+                                    TipoInteres={Request?.tipoInteres}
+                                    Frequency={Request?.frequency}
+                                    DateStart={FormatDate(Request?.datestart)}
+                                    />  
+                                }   
+                            </div>
+
                         </div>
+
                     </div>
                 </div>
             </div>

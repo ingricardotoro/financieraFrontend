@@ -32,7 +32,6 @@ function ListCustomers() {
         photo:'',
     })
    
-   
     const [customers, setCustomers] = useState([])
     const [codeCustomer, setCodeCustomer] = useState(0)
     const [customersFilters, setCustomersFilters] = useState([])
