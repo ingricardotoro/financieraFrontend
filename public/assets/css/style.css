@@ -35,6 +35,10 @@ Custom css start
     font-family: 'Mada', sans-serif;
 }
 
+.td_border {
+    border: "1px solid grey"
+}
+
 body {
     background-color: #f3f3f3;
     font-size: 0.875em;

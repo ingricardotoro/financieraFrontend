@@ -60,11 +60,11 @@ export const ViewRequestPage = (props) => {
 
            if (resp_createLoan?.data.ok===true) {
             //if (resp_createLoan===true) {
-                console.log("11")
+               
                let cuotas = []
 
                if (Request?.tipoCalculo==='NumeroDeCuotas') {
-                console.log("22")
+                console.log("F1=",Request?.datestart)
                 cuotas = calcularAmortizacionNC(
                     Request?.amount,
                     Request?.rate,
@@ -72,7 +72,7 @@ export const ViewRequestPage = (props) => {
                     Request?.quota,
                     Request?.tipoInteres,
                     Request?.frequency,
-                    FormatDate(Request?.datestart),
+                    Request?.datestart,
                     resp_createLoan?.data.newLoan._id
                     )
                }
@@ -84,7 +84,7 @@ export const ViewRequestPage = (props) => {
                     Request?.quotaValue,
                     Request?.tipoInteres,
                     Request?.frequency,
-                    FormatDate(Request?.datestart),
+                    Request?.datestart,
                     resp_createLoan?.data.newLoan._id
                     )
                 }
@@ -95,10 +95,10 @@ export const ViewRequestPage = (props) => {
                 ))
 
            }else{
-               alert("NO ENTRO")
+               alert("Problemas al Registrar")
            }
-           alert("FIN")
-           //props.history.push('/solicitudes')
+          
+           props.history.push('/solicitudes')
 
             /*try {
                 const resp_newLoan =await Axios.post(URL_API+'/loans', DataNewLoan)

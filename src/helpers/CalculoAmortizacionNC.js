@@ -1,5 +1,6 @@
 export const calcularAmortizacionNC = (CapitalInicial, Tasa, TipoTasa, Quotas, TipoInteres, Frequency, DateStart, loanId) => {
 
+    console.log("F2=", DateStart)
     let cuotasArray = []
     let Capitalfinal = 0.0
     let InteresSemanal = 0.0
@@ -19,6 +20,8 @@ export const calcularAmortizacionNC = (CapitalInicial, Tasa, TipoTasa, Quotas, T
     let fecha = Date.parse(DateStart) + 1;
     fecha = new Date(fecha);
     fecha.setDate(fecha.getDate() + 1)
+
+    console.log("F3=", fecha)
 
     //Obtenemos el valor de la tasa mensual
     if (TipoTasa === 'Mensual') {
@@ -93,6 +96,7 @@ export const calcularAmortizacionNC = (CapitalInicial, Tasa, TipoTasa, Quotas, T
                     //fecha.setDate(fecha.getDate()+days)
                     //fecha.toLocaleDateString()
                     //Lo guardamos en el arreglo de objetos
+                    //console.log("F=", DateStart)
 
                     quotaRows[cont] = {
                         cont: cont + 1,
@@ -104,10 +108,11 @@ export const calcularAmortizacionNC = (CapitalInicial, Tasa, TipoTasa, Quotas, T
                         fecha: fecha.setDate(fecha.getDate() + days)
                     }
 
-                    //Para la tabla de amortizacion de Prestamo
+                    console.log("FX=", fecha)
+                        //Para la tabla de amortizacion de Prestamo
                     cuotasArray[cont] = {
                         loanId: loanId,
-                        dateToPay: fecha.setDate(fecha.getDate() + days),
+                        dateToPay: fecha.setDate(fecha.getDate()),
                         amountToPay: parseFloat((quotaValue).toFixed(2)),
                         amountToCapital: parseFloat((AbonoCapital).toFixed(2)),
                         amountToInteres: parseFloat((InteresSemanal).toFixed(2)),

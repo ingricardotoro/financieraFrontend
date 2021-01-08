@@ -6,7 +6,7 @@ import {Link, Redirect} from 'react-router-dom'
 import Avatar from '@material-ui/core/Avatar';
 import SearchIcon from '@material-ui/icons/Search';
 import InfoIcon from '@material-ui/icons/Info';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
+import RemoveRedEyeIcon from '@material-ui/icons/RemoveRedEye';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import BlockIcon from '@material-ui/icons/Block';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
@@ -223,7 +223,7 @@ function ListRequestPage() {
                                         <td>{request.amount}</td>
                                         <td>{request.quota} Cuotas {request.frequency}</td>
                                         <td>{request.sucursal}</td>
-                                        <td><Link to={"/solicitudes/ver/"+request._id} className="btn btn-sm btn-primary "> {<InfoIcon />}</Link></td>
+                                        <td><Link to={"/solicitudes/ver/"+request._id} className="btn btn-sm btn-primary "> {<RemoveRedEyeIcon />}</Link></td>
                                         {
                                             request.stateRequest==='Pendiente' && <td><button className="btn btn-sm btn-warning d-inline-flex"> {<HourglassEmptyIcon />} {request.stateRequest}</button> </td>
                                         }

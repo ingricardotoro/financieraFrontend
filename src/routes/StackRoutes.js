@@ -10,6 +10,7 @@ import RecordsPage from '../page/Customers/Records'
 import NewRequestPage from "../page/Requests/NewRequestPage";
 import ViewRequestPage from "../page/Requests/ViewRequestPage";
 import ListLoansPage from "../page/Loans/ListLoans";
+import ViewLoanPage from "../page/Loans/ViewLoan";
 import CalculatorPage from "../page/Calculator"
 import ListAvals from "../page/Avals/ListAvals"
 import PaysPage from "../page/PaysPage"
@@ -30,6 +31,7 @@ const StackRoutes = () => {
             <Route exact path="/solicitudes/ver/:id" component={ViewRequestPage} />
             <Route exact path="/solicitudes" component={ListRequestPage} />
 
+            <Route exact path="/prestamos/ver/:idloan/:idrequest" component={ViewLoanPage} />
             <Route exact path="/prestamos" component={ListLoansPage} />
 
             <Route exact path="/calculadora" component={CalculatorPage} />
