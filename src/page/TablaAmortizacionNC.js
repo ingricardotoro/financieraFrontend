@@ -113,7 +113,9 @@ function TablaAmortizacionNC(props) {
 
                 }
             }
+
     }
+
 
     const formatter = new Intl.NumberFormat('es-HN', {
         style: 'currency',
@@ -123,7 +125,7 @@ function TablaAmortizacionNC(props) {
 
     return (
         <Fragment>
-        <p>Tabla de Amortizacion por Numero de Cuotas</p>
+        <p>Tabla de Amortización por Número de Cuotas</p>
         <table className="table table-bordered table-hover">
             <thead className="table-ligth" >
                 <tr>

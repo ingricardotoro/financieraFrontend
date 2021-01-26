@@ -2,6 +2,10 @@ import React, { useState } from 'react'
 import TablaAmortizacionNC from './TablaAmortizacionNC'
 import TablaAmortizacionVC from './TablaAmortizacionVC';
 
+import {saveAs} from 'file-saver' 
+import Axios from 'axios';
+import { URL_API } from '../config/config';
+
  export const Calculator = () => {
 
     let today =new Date();
@@ -33,13 +37,13 @@ import TablaAmortizacionVC from './TablaAmortizacionVC';
     const [TipoCalculo, setTipoCalculo] = useState('NumeroDeCuotas') //o por ValordeCuotas
     const [tablaAmortizacionNC, setTablaAmortizacionNC] = useState(false)
     const [tablaAmortizacionVC, setTablaAmortizacionVC] = useState(false)
-    
+    const [descargar, setdescargar] = useState(false)
+   
     const {quota,quotaValue,rate,typeLoan,totalInterest,amount,frequency,tipotasa,tipoInteres,closingCostVar,totalAmount,datestart} = data
 
     const calcular=()=>{
 
         ValidarCampos() 
-        
        /****************************************************** */
         if(tipoInteres==='Compuesto'){
             if(Error===false){
@@ -59,16 +63,19 @@ import TablaAmortizacionVC from './TablaAmortizacionVC';
          //********Validar Campos Requeridos************//
          if(amount === 0 || amount==='') {
             setError(true)
+            setdescargar(false)
             setTablaAmortizacionNC(false)
             setTablaAmortizacionVC(false)
             return
         }else if( (quotaValue===0 || quotaValue==='' || parseFloat(quotaValue)<100) && (quota===0 || quota==='') ){
             setError(true)
+            setdescargar(false)
             setTablaAmortizacionNC(false)
             setTablaAmortizacionVC(false)
             return
         }else{
             setError(false)
+            setdescargar(true)
         }
     }
 
@@ -278,6 +285,17 @@ import TablaAmortizacionVC from './TablaAmortizacionVC';
 
     }
 
+    const generarPDF = async() =>{
+       
+        Axios.post(URL_API+'/reports/reportCalculator', data)
+
+        .then(()=>Axios.get(URL_API+'/reports/fetchReportCalculator', {responseType:'blob'}))
+        .then((res) => {
+            const pdfBlob = new Blob([res.data],{type:'application/pdf'})
+            saveAs(pdfBlob, 'newPDF.pdf')
+        })
+    }
+
     return (
     <div className="pcoded-content">
         <div className="pcoded-inner-content">
@@ -402,6 +420,11 @@ import TablaAmortizacionVC from './TablaAmortizacionVC';
                                         <label htmlFor="dateInicio">Calcular Préstamo</label>
                                             <div className="input-group">
                                                 <button onClick={()=> calcular() } id="btnCalcular" className="btn btn-success width-100">CALCULAR</button>
+                                                {descargar=== true 
+                                                ? <button onClick={()=> generarPDF() } id="btnDescargar" className="btn btn-primary width-20"><i class="icofont icofont-download"></i></button>
+                                                : <button disabled onClick={()=> generarPDF() } id="btnDescargar" className="btn btn-primary width-20"><i class="icofont icofont-download"></i></button>
+                                                
+                                                }
                                             </div>
                                             {Error===true ? 
                                                 <div class="alert alert-danger" role="alert">
@@ -448,6 +471,7 @@ import TablaAmortizacionVC from './TablaAmortizacionVC';
                                         TipoInteres={tipoInteres}
                                         Frequency={frequency}
                                         DateStart={datestart}
+                                        
                                     />
                                 }
                                 { 
