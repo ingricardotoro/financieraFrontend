@@ -112,6 +112,7 @@ export const calcularAmortizacionNC = (CapitalInicial, Tasa, TipoTasa, Quotas, T
                         //Para la tabla de amortizacion de Prestamo
                     cuotasArray[cont] = {
                         loanId: loanId,
+                        code: cont + 1,
                         dateToPay: fecha.setDate(fecha.getDate()),
                         amountToPay: parseFloat((quotaValue).toFixed(2)),
                         amountToCapital: parseFloat((AbonoCapital).toFixed(2)),

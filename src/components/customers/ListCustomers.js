@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import {OutTable, ExcelRenderer} from 'react-excel-renderer';
 import axios from 'axios'
 //import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
@@ -8,9 +9,11 @@ import NotInterestedIcon from '@material-ui/icons/NotInterested';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import { useForm } from '../../hooks/useForm';
 import { URL_API } from '../../config/config';
 import { Link } from 'react-router-dom';
+import Excel from '../../customers.xlsx'
 
 function ListCustomers() {
 
@@ -36,6 +39,9 @@ function ListCustomers() {
     const [codeCustomer, setCodeCustomer] = useState(0)
     const [customersFilters, setCustomersFilters] = useState([])
     const [finding, setFinding] = useState(false)
+    const [reload, setReload] = useState(false)
+
+    const [uploadCustomer, setUploadCustomer] = useState({cols:'',rows:''})
 
     const [totalCustomersRegister, setTotalCustomersRegister] = useState(0)
     const [totalCustomersWithLoanActive, setTotalCustomersWithLoanActive] = useState(0)
@@ -46,7 +52,7 @@ function ListCustomers() {
        
         obtenerClientes()
 
-    }, [])
+    }, [reload])
 
     const obtenerClientes = async()=>{
 
@@ -143,6 +149,47 @@ function ListCustomers() {
             obtenerClientes()
         }
     }
+
+    //funcion para subir excel de clientes
+    const fileHandler = (event) => {
+        let fileObj = event.target.files[0];
+    
+        //just pass the fileObj as parameter
+        ExcelRenderer(fileObj, (err, resp) => {
+            if(err){
+            console.log(err);            
+            }
+            else{
+
+            setUploadCustomer(
+                {
+                cols: resp.cols,
+                rows: resp.rows
+                } )
+            }
+            
+        });              
+    
+    }
+
+    //funcion para la carga de excel de nuevos clientes
+    const handleUploadCustomers = async(e)=>{
+
+        e.preventDefault()
+
+        await axios.post(URL_API+'/customers/upload', uploadCustomer).then((data)=>{
+            console.log("Datos Guardados." + JSON.stringify(data))
+            if(data.data.ok === true){
+                setReload(!reload)
+                document.getElementById("closeModal").click();
+            }else{
+                alert("Error al Subir Clientes")
+            }
+        })
+       
+
+    }
+    
 
     //funcion para crear nuevos clientes
     const handleSubmit = async(e)=>{
@@ -243,25 +290,32 @@ function ListCustomers() {
                     <div className="row">
 
                         {/* Facebook card start */}
-                        <div className="col-md-6 col-xl-8">
-                            <input onChange={handleFindCustomer} type="text" id="textFindCustomer" className="mt-3 form-control form-control-round" style={{borderRadius: "50px"}} placeholder="Buscar Cliente ..."  />
+                        <div className="col-md-3 col-xl-6">
+                            <input onChange={handleFindCustomer} type="text" id="textFindCustomer" className=" form-control form-control-round" style={{borderRadius: "50px"}} placeholder="Buscar Cliente ..."  />
                         </div>
                         {/* Facebook card end */}
                        
                        
                         {/* Linked in card start */}
-                        <div className="col-sm-12 col-md-3 col-xl-2">
-                            <button onClick={() => handleButtonFindCustomer()} className="col-sm-12 mt-3 btn btn-primary  btn-round f-right d-inline-flex">
+                        <div className="col-sm-12 col-md-2 col-xl-2">
+                            <button onClick={() => handleButtonFindCustomer()} className="col-sm-12 btn btn-primary  btn-round f-right d-inline-flex">
                                 {<SearchIcon />} 
                                 Buscar Cliente  
                             </button>
                         </div>
                         {/* Linked in card end */}
                         {/* Google-plus card start */}
-                        <div className=" col-sm-12 col-md-3 col-xl-2">
-                            <button className="col-sm-12 mt-3 btn btn-success btn-round f-right d-inline-flex" data-toggle="modal" data-target="#modalNewCustomer">
+                        <div className=" col-sm-12 col-md-2 col-xl-2">
+                            <button className=" btn btn-success btn-round f-right d-inline-flex" data-toggle="modal" data-target="#modalNewCustomer">
                                 {<AddCircleIcon />}     
                                 Nuevo Cliente  
+                            </button>
+                        </div>
+
+                        <div className=" col-sm-12 col-md-2 col-xl-2">
+                            <button className=" btn btn-warning btn-round f-right d-inline-flex" data-toggle="modal" data-target="#modalUpCustomers">
+                                {<ArrowUpwardIcon />}     
+                                Subir Clientes  
                             </button>
                         </div>
 
@@ -353,6 +407,53 @@ function ListCustomers() {
             
             <div id="styleSelector">
             </div>
+
+             {/* Modal */}
+             <div className="modal fade" id="modalUpCustomers" tabIndex={-1} role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div className="modal-dialog modal-lg modal-dialog-centered " role="document">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                             <h5 className="modal-title" id="exampleModalLabel">Subir Excel de Clientes </h5>
+                            <button id="closeModal" type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+
+                    <div className="modal-body">
+                    <form onSubmit={handleUploadCustomers}>
+                        <div className="row">
+                            <input value={codeCustomer} onChange={handleInputChange} name="codeCustomer" id="codeCustomer" type="hidden" />
+                             <label className="col-sm-4 col-md-6 col-form-label"><a className="btn btn-success" target="_black" href={Excel} >Descargar Excel de Muestra</a> </label> 
+                             </div>
+                        
+                        <div className="row">
+                           
+                            <div className="col-sm-12 col-md-12">
+                                <div className="input-group">
+                                     <input className="form-control" type="file" onChange={fileHandler} style={{"padding":"10px"}} />
+                                </div>
+                               {
+                                   uploadCustomer.rows === '' ? null
+                                   :<OutTable className="table table-responsive" data={uploadCustomer.rows} columns={uploadCustomer.cols} tableClassName="table table-responsive" tableHeaderRowClass="heading" />
+                                
+                                }
+                                    
+                            </div>
+                        </div>
+                    </form>
+
+                    </div>
+                    <div className="modal-footer">
+                        <button type="button" className="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" onClick={handleUploadCustomers} className="btn btn-primary">Guardar</button>
+                    </div>
+
+                    </div>
+                    </div>
+                                     
+             </div>
+            {/* END Modal */}
+
 
                 {/* Modal */}
                 <div className="modal fade" id="modalNewCustomer" tabIndex={-1} role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

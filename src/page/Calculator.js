@@ -401,7 +401,7 @@ import { URL_API } from '../config/config';
                                     </div>
 
                                     <div className="col-sm-12 col-md-3">
-                                        <label htmlFor="datestart">Fecha de Inicio</label>
+                                        <label htmlFor="datestart">Fecha de Primera Cuota</label>
                                         <div className="input-group">
                                             <p className="input-group-addon" id="basic-addon1"><i className="icofont icofont-money"></i></p>
                                             <input value={datestart} onChange={handleInputChange} name="datestart" id="datestart" type="date" className="form-control" />

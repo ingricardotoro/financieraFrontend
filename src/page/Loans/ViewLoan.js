@@ -8,12 +8,18 @@ import { URL_API } from '../../config/config'
 import fondoImg from '../../config/slider8.jpg'
 import userImg from '../../user.png'
 import toastr from 'toastr'
+import moment from 'moment'
+import PagoView from './PagoView'
+import PagarView from './PagarView'
 
 export const ViewLoan = (props) => {
 
     const [payments, setPayments] = useState([])
     const [Request, setRequest] = useState([])
+    const [viewPagar, setViewPagar] = useState(false)
+    const [viewPago, setViewPago] = useState(false)
     const [idNextPay, setIdNextPay] = useState('')
+    const [paymentID, setPaymentID] = useState('')
 
     const [dataPay, setDataPay] = useState({
         numcuotas:1,
@@ -30,6 +36,15 @@ export const ViewLoan = (props) => {
   
     const idLoan = props.match.params.idloan
     const idRequest = props.match.params.idrequest
+   
+    const [valorI, setValorI] = useState(0)// para obtener el numero i de payments
+    const [nextBool, setNextBool] = useState(false) //bandera para mostar fila de siguiente pago
+
+    let frecuency = parseInt(Request?.frequency)
+        if(Request?.frequency==='Semanal'){frecuency=7}
+        if(Request?.frequency==='Quincenal'){frecuency=14}
+
+    let tasa = Request?.rate
 
     const obtenerPagos = async() => {
         
@@ -39,14 +54,38 @@ export const ViewLoan = (props) => {
         const resp_request = await Axios.get(URL_API + '/requests/'+idRequest) 
         setRequest(resp_request.data.request)
 
+        let today  =  moment()
+        let fechaRow = moment()
+        //let fechatoday =new Date(today);
         //Obtenemos el Id del siguiente pago que se debe realizar
         let pagos = new Array
         pagos=resp_payments.data.payments
         for (let i = 0; i < pagos.length; i++) {
+         
+            fechaRow = moment(pagos[i].dateToPay)
+            
             if(pagos[i].statusPay === 'Pendiente'){
-                setIdNextPay(pagos[i]._id)
-                return
+
+                if((today.diff(fechaRow)>0)){ // determinamos si la fecha de pago ya paso  
+
+                   console.log("1")    
+                   
+                    let fechaRow2 = moment()
+                     fechaRow2 = fechaRow.add(frecuency, 'days')  
+
+                    if( (fechaRow2.diff(fechaRow)>0)){ //Pagos atrasados
+                        console.log("2")
+                        /*setValorI(i)
+                        setIdNextPay(pagos[i]._id)*/
+                    }else{ //Proximo pago a realizar
+                        console.log("3="+i)
+                        setValorI(i)
+                        setIdNextPay(pagos[i]._id)
+                        setNextBool(true)
+                    }
+                }else{console.log("NO")}
             }
+
         }
        
     }
@@ -66,6 +105,7 @@ export const ViewLoan = (props) => {
               amountToMora: amountMora,
               otherPay:otherPay,
               discount: discount,
+              frequency:frecuency,
               datePayed: Date.now()
             }
         
@@ -98,7 +138,7 @@ export const ViewLoan = (props) => {
     }
 
     const FormatDate=(fecha) =>{
-        
+
         let fechaI =new Date(fecha);
         let day = fechaI.getDate();
         let month = fechaI.getMonth()+1;
@@ -106,7 +146,87 @@ export const ViewLoan = (props) => {
         if(day < 10 ){ day= '0'+day}
         if(month < 10){ month = '0'+month}
         let dateF = ''
-        return dateF  = day + '-' + month + '-' + year;    
+
+        switch (parseInt(month)) {
+            case 1: month = 'Ene'; break;
+            case 2: month = 'Feb'; break;
+            case 3: month = 'Mar'; break;
+            case 4: month = 'Abr'; break;
+            case 5: month = 'May'; break;
+            case 6: month = 'Jun'; break;
+            case 7: month = 'Jul'; break;
+            case 8: month = 'Ago'; break;
+            case 9: month = 'Sep'; break;
+            case 10: month = 'Oct'; break;
+            case 11: month = 'Nov'; break;
+            case 12: month = 'Dic'; break;
+            default:month = '---';
+                break;
+        }
+        dateF  = day + '-' + month + '-' + year; 
+        return dateF  
+    }
+
+    //Funcion para ver el nombre del dia
+    const dias = ['domingo', 'lunes', 'martes','miércoles','jueves','viernes','sábado', 'domingo',];
+    
+    const NombreDay = (date) => {
+        let numeroDia = new Date(date).getDay();
+        let nombreDia = dias[numeroDia];
+        return nombreDia
+    }
+
+    //let DiasTotaldemora = 0
+    
+    const DiasDeMora = (dayToPay) =>{
+
+        let fechaFin = moment() //today
+        let fechaI =moment(dayToPay);
+        
+        let duration =  fechaFin.diff(fechaI,'days')
+
+        //DiasTotaldemora+=duration
+        //Se aumenta un dias para que incluya el dia de hoy
+        return duration + ' dias'
+    }
+
+    let totalMora = 0.0
+    let totalDeuda =0.0
+    let Arraymora= []
+
+    const CalcularMora = (dayToPay, cuota) =>{
+
+        let moradiaria = 0
+
+        let fechaFin    =  moment() //today
+        
+        /*let fechaI =new Date(dayToPay);
+        let fechaF =new Date(fechaFin);
+        let duration =  fechaF - fechaI*/
+        let fechaI =moment(dayToPay);
+        let duration =  fechaFin.diff(fechaI,'days')
+        duration = parseInt(duration)+1
+        //console.log("Duracion="+duration)
+
+        //console.log(new Date(fechaI) + " D= " +new Date(duration).getDate() )
+        let mora =0.0
+        if(duration>parseInt(frecuency)){
+            mora = (cuota * 0.03) 
+            moradiaria = parseFloat(mora) / parseInt(frecuency)
+        }
+
+        let moraDeCuota = parseFloat(moradiaria) * (duration)
+        totalMora+= parseFloat(moradiaria) * (duration)
+        totalDeuda+=parseFloat(cuota) + parseFloat(moraDeCuota)
+       
+        Arraymora.push({cuota,moraDeCuota,duration,fechaI})
+
+        return parseFloat(moradiaria) * (duration)
+    }
+
+    let totalAtrasado = 0.0
+    const CalcularPagoAtrasado = (couta) =>{
+            totalAtrasado+=couta
     }
 
     useEffect(() => {
@@ -114,6 +234,21 @@ export const ViewLoan = (props) => {
         obtenerPagos()
 
     }, [])
+
+    const handleViewPagar = (paymentId) =>{
+        setViewPagar(true) // ven modal de pagar
+        setViewPago(false)//cerrar modal de ver pago
+        setPaymentID(paymentId)
+    }
+    const handleViewPago = (paymentId) =>{
+        //console.log("HOLA="+paymentId)
+        setViewPagar(false) // ven modal de pagar
+        setPaymentID(paymentId)
+        setViewPago(true)//cerrar modal de ver pago
+        
+    }
+
+    const today = Date.now()
 
     return (
         <div className="pcoded-content">
@@ -132,7 +267,7 @@ export const ViewLoan = (props) => {
                         </Link>
                         </li>
                         <Link to='/prestamos'>
-                        <li className="breadcrumb-item">Volver a Prestamos
+                        <li className="breadcrumb-item">Volver a Préstamos
                         </li>
                         </Link>
                         
@@ -302,52 +437,127 @@ export const ViewLoan = (props) => {
                                                 <th scope="col">Descuento</th>
                                                 <th scope="col">Pago</th>
                                                 <th scope="col">Estado</th>
+                                                <th scope="col">Acción</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {
-                                                
-                                            }
+                                           
                                         {
                                             payments.map((payment,i)=>(
+                                                
                                                 <tr key={payment._id} >
                                                     <th scope="row">{i+1} </th>
-                                                    {payment.statusPay === 'Pendiente' ? 
+                                                    {payment.statusPay === 'Pendiente'
+                                                    
+                                                        ? 
+                                                            (new Date(payment.dateToPay).getTime() < today) ? //Pago con retraso
+                                                        
+                                                                <Fragment>
+                                                                    
+                                                                    <td>{NombreDay(new Date(payment.dateToPay))} <p> {FormatDate(new Date(payment.dateToPay))}</p></td>
+                                                                    <td><strong className="text-danger">{CalcularPagoAtrasado(payment.amountToPay), formatter.format((payment.amountToPay).toFixed(2))}</strong></td>
+                                                                    <td><strong className="text-danger">{formatter.format(((payment.amountToCapital).toFixed(2)))}</strong></td>
+                                                                    <td><strong className="text-danger">{formatter.format(((payment.amountToInteres).toFixed(2)))}</strong></td>
+                                                                    <td><strong className="text-danger">{formatter.format(CalcularMora(payment.dateToPay,payment.amountToPay))}</strong></td>
+                                                                    <td><strong className="text-danger">{formatter.format(((payment.otherPay).toFixed(2)))}</strong></td>
+                                                                    <td><strong className="text-danger">{formatter.format(((payment.discount).toFixed(2)))}</strong></td>
+                                                                    <td><strong className="text-danger">{DiasDeMora(payment.dateToPay)}</strong></td>
+                                                                    <td><strong className="text-danger">Atrasado</strong></td>
+                                                                    <td><strong className="text-warning"><button onClick={()=>handleViewPagar(payment._id)} className="btn btn-success">Pagar</button></strong></td>
+
+                                                                    
+                                                                </Fragment>
+                                                                : 
+                                                                <Fragment>
+                                                                    
+                                                                <td>{NombreDay(new Date(payment.dateToPay))} <p> {FormatDate(new Date(payment.dateToPay))}</p></td>
+                                                                <td><strong className="text-warning">{formatter.format((payment.amountToPay).toFixed(2))}</strong></td>
+                                                                <td><strong className="text-warning">{formatter.format(((payment.amountToCapital).toFixed(2)))}</strong></td>
+                                                                <td><strong className="text-warning">{formatter.format(((payment.amountToInteres).toFixed(2)))}</strong></td>
+                                                                <td><strong className="text-warning">{formatter.format(((payment.amountToMora).toFixed(2)))}</strong></td>
+                                                                <td><strong className="text-warning">{formatter.format(((payment.otherPay).toFixed(2)))}</strong></td>
+                                                                <td><strong className="text-warning">{formatter.format(((payment.discount).toFixed(2)))}</strong></td>
+                                                                 <td><strong className="text-warning">{formatter.format(((payment.amountPayed).toFixed(2)))}</strong></td> 
+                                                                <td><strong className="text-warning">{payment.statusPay}</strong></td>
+                                                                <td><strong className="text-warning"><button onClick={()=>handleViewPagar(payment._id)} className="btn btn-success">Pagar</button></strong></td>
+                                                                
+                                                            </Fragment>
+
+                                                        :null
+                                                    }
+
+                                                    {payment.statusPay === 'Pagada' ? 
                                                         <Fragment>
 
-                                                            <td>{(new Date(payment.dateToPay)).toLocaleDateString()}</td>
+                                                            <td>{NombreDay(new Date(payment.dateToPay))} <p>{FormatDate(new Date(payment.dateToPay))}</p></td>
+                                                            <td><strong className="text-success">{formatter.format((payment.amountToPay).toFixed(2))}</strong></td>
+                                                            <td><strong className="text-success">{formatter.format(((payment.amountToCapital).toFixed(2)))}</strong></td>
+                                                            <td><strong className="text-success">{formatter.format(((payment.amountToInteres).toFixed(2)))}</strong></td>
+                                                            <td><strong className="text-success">{formatter.format(((payment.amountToMora).toFixed(2)))}</strong> 
+                                                            {
+                                                                moment(payment.datePayed).format('ll') < moment(payment.dateToPay).format('ll') ?
+                                        
+                                                                <p className="text-danger"><strong><p>{DiasDeMora(payment.dateToPay)}</p> </strong></p>
+                                                                 :
+                                                                 null
+                                                                }
+                                                            
+                                                            
+                                                            </td>
+                                                            <td><strong className="text-success">{formatter.format(((payment.otherPay).toFixed(2)))}</strong></td>
+                                                            <td><strong className="text-success">{formatter.format(((payment.discount).toFixed(2)))}</strong></td>
+                                                            <td> 
+                                                                <strong className="text-success">{formatter.format(((payment.amountPayed).toFixed(2)))}</strong>
+                                                                {
+                                                                moment(payment.datePayed).format('ll') < moment(payment.dateToPay).format('ll') ?
+                                        
+                                                                <p className="text-danger"><strong>{FormatDate(payment.datePayed)}</strong></p>
+                                                                 :
+                                                                 <p>{FormatDate(payment.datePayed)}</p>
+                                                                }
+                                                            </td>
+                                                            <td><strong className="text-success">{payment.statusPay}</strong> 
+                                                                {
+                                                                moment(payment.datePayed).format('ll') < moment(payment.dateToPay).format('ll') ?
+                                        
+                                                                <p className="text-danger"><strong>Con Retraso</strong></p>
+                                                                 :
+                                                                null
+                                                                }
+                                                            </td>
+                                                            <td><strong className="text-warning"><button onClick={()=> handleViewPago(payment._id)} className="btn btn-warning">Ver</button></strong></td>
+
+                                                        </Fragment>
+                                                        : null
+                                                    }       
+
+                                                     {payment.statusPay === 'Abonado' ? 
+                                                        <Fragment>
+
+                                                            <td>{NombreDay(new Date(payment.dateToPay))} <p> {FormatDate(new Date(payment.dateToPay))}</p></td>
                                                             <td><strong className="text-warning">{formatter.format((payment.amountToPay).toFixed(2))}</strong></td>
                                                             <td><strong className="text-warning">{formatter.format(((payment.amountToCapital).toFixed(2)))}</strong></td>
                                                             <td><strong className="text-warning">{formatter.format(((payment.amountToInteres).toFixed(2)))}</strong></td>
                                                             <td><strong className="text-warning">{formatter.format(((payment.amountToMora).toFixed(2)))}</strong></td>
                                                             <td><strong className="text-warning">{formatter.format(((payment.otherPay).toFixed(2)))}</strong></td>
                                                             <td><strong className="text-warning">{formatter.format(((payment.discount).toFixed(2)))}</strong></td>
-                                                            <td><strong className="text-warning">{formatter.format(((payment.amountPayed).toFixed(2)))}</strong></td>
-                                                            <td><strong className="text-warning">{payment.statusPay}</strong></td>
-                                                        
-                                                        </Fragment>
-                                                        : null
-                                                    }
-
-                                                    {payment.statusPay === 'Pagada' ? 
-                                                        <Fragment>
-
-                                                            <td>{(new Date(payment.dateToPay)).toLocaleDateString()}</td>
-                                                            <td><strong className="text-success">{formatter.format((payment.amountToPay).toFixed(2))}</strong></td>
-                                                            <td><strong className="text-success">{formatter.format(((payment.amountToCapital).toFixed(2)))}</strong></td>
-                                                            <td><strong className="text-success">{formatter.format(((payment.amountToInteres).toFixed(2)))}</strong></td>
-                                                            <td><strong className="text-success">{formatter.format(((payment.amountToMora).toFixed(2)))}</strong></td>
-                                                            <td><strong className="text-success">{formatter.format(((payment.otherPay).toFixed(2)))}</strong></td>
-                                                            <td><strong className="text-success">{formatter.format(((payment.discount).toFixed(2)))}</strong></td>
                                                             <td> 
-                                                                <strong className="text-success">{formatter.format(((payment.amountPayed).toFixed(2)))}</strong>
-                                                                <p>{FormatDate(payment.datePayed)}</p>
+                                                                <strong className="text-warning">{formatter.format(((payment.amountPayed).toFixed(2)))}</strong>
+                                                                {
+                                                                moment(payment.datePayed).format('ll') < moment(payment.dateToPay).format('ll') ?
+                                        
+                                                                <p className="text-danger"><strong>{FormatDate(payment.datePayed)}</strong></p>
+                                                                 :
+                                                                 <p>{FormatDate(payment.datePayed)}</p>
+                                                                }
+                                                                
                                                             </td>
-                                                            <td><strong className="text-success">{payment.statusPay}</strong></td>
-                                                        
+                                                            <td><strong className="text-warning">{payment.statusPay} <p>{formatter.format(((payment.amountPayed).toFixed(2)))}</p></strong></td>
+                                                            <td><strong className="text-warning"><button onClick={()=>handleViewPagar(payment._id)} className="btn btn-success">Pagar</button></strong></td>
+
                                                         </Fragment>
                                                         : null
-                                                    }               
+                                                    }         
 
                                                    
                                                 </tr>
@@ -360,123 +570,163 @@ export const ViewLoan = (props) => {
 
                         </div>
 
+                        {/******En caso de quere ver uno de los cuotas ya pagadas */}
+                        { viewPago ===true ? <PagoView paymentID={paymentID} setViewPago={setViewPago}  /> : null}
+                         </div>
+                        {/******En caso de quere pagar una de las cuotas */}
+                        { viewPagar ===true ? <PagarView paymentID={paymentID} setViewPagar={setViewPagar} frecuency={frecuency } idLoan={idLoan} tasa={tasa} idRequest={idRequest} /> : null}
+
+
                           {/* Modal */}
-                <div className="modal fade" id="modalPagar" tabIndex={-1} role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div className="modal-dialog modal-lg modal-dialog-centered " role="document">
-                        <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title" id="exampleModalLabel">Registrar Pago</h5>
-                                <button id="closeModal" type="button" className="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">X</span>
-                            </button>
-                        </div>
-
-                        <div className="modal-body">
-                        
-                            <div className="row">
-                            
-                                <div className="col-sm-12 col-md-6" style={{textAlign:"center"}}>
-                                    <h3 className="input-group-text">Valor Requerido</h3>
-                                    <div style={{textAlign:"center"}}>
-                                        <h3 htmlFor="">LPS. {parseFloat(payments[0]?.amountToPay).toFixed(2)}</h3>
-                                    </div>
-                                    <hr />
-                                    
-                                    <div className="btn-group" role="group" >
-                                        <label >Numero de Cuotas</label>
-                                        <div className="d-flex" >
-                                            <button type="button" class="btn btn-danger">-</button>
-                                            <input value={numcuotas} onChange={handleInputChange} style={{textAlign:"center"}} type="number" min="1" className="form-control sm"  name="numcuotas"/>
-                                            <button type="button" className="btn btn-success">+</button>
-
-                                        </div>
-                                    </div>
-                                    <div className="d-flex m-auto" style={{width:"80%"}}>
-
-                                        <select value={formaDePayment} onChange={handleInputSelect}  name="formaDePayment" id="formaDePayment" className="form-control m-t-15"> 
-                                            <option selected value="Efectivo">Pago en Efectivo</option>
-                                            <option value="Targeta">Pago con Targeta</option>
-                                            <option value="Deposito">Pago con Deposito</option>
-                                            <option value="Cheque">Pago con Cheque</option>
-                                        </select>
-                                       
-                                    </div>
+                        <div className="modal fade" id="modalPagar" tabIndex={-1} role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div className="modal-dialog modal-lg modal-dialog-centered " role="document">
+                                <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title" id="exampleModalLabel">Registrar Pago</h5>
+                                        <button id="closeModal" type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">X</span>
+                                    </button>
                                 </div>
+
+                                <div className="modal-body">
                                 
-                                <div className="col-sm-12 col-md-6 btn-group">
-
-                                    <div className=" m-auto" >
-                                        <select value={typePayment} onChange={handleInputSelect}  name="typePayment" id="typePayment" className="form-control m-t-15"> 
-                                            <option selected value="Cuota">Pago de Cuota</option>
-                                            <option value="Interes">Pago de Interes</option>
-                                            <option value="Otro">Otro Pago</option>
+                                    <div className="row">
+                                    
+                                        <div className="col-sm-12 col-md-6" style={{textAlign:"center"}}>
+                                            <h3 className="input-group-text">Valor Requerido</h3>
+                                            <div style={{textAlign:"center"}}>
+                                                <h3 htmlFor="">LPS. {parseFloat(payments[0]?.amountToPay).toFixed(2)}</h3>
+                                            </div>
+                                            <hr />
                                             
-                                        </select>
+                                            <div className="btn-group" role="group" >
+                                                <label >Numero de Cuotas</label>
+                                                <div className="d-flex" >
+                                                    <button type="button" class="btn btn-danger">-</button>
+                                                    <input value={numcuotas} onChange={handleInputChange} style={{textAlign:"center"}} type="number" min="1" className="form-control sm"  name="numcuotas"/>
+                                                    <button type="button" className="btn btn-success">+</button>
+
+                                                </div>
+                                            </div>
+                                            <div className="d-flex m-auto" style={{width:"80%"}}>
+
+                                                <select value={formaDePayment} onChange={handleInputSelect}  name="formaDePayment" id="formaDePayment" className="form-control m-t-15"> 
+                                                    <option selected value="Efectivo">Pago en Efectivo</option>
+                                                    <option value="Targeta">Pago con Targeta</option>
+                                                    <option value="Deposito">Pago con Deposito</option>
+                                                    <option value="Cheque">Pago con Cheque</option>
+                                                </select>
+                                            
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="col-sm-12 col-md-6 btn-group">
+
+                                            <div className=" m-auto" >
+                                                <select value={typePayment} onChange={handleInputSelect}  name="typePayment" id="typePayment" className="form-control m-t-15"> 
+                                                    <option selected value="Cuota">Pago de Cuota</option>
+                                                    <option value="Interes">Pago de Interes</option>
+                                                    <option value="Otro">Otro Pago</option>
+                                                    
+                                                </select>
+                                            </div>
+                                            
+                                                <label >Valor a Pagar</label>
+                                                <div className="input-group input-group-lg">
+                                                    <input value={ValueToPay} name="ValueToPay" onChange={handleInputChange} type="number" min="0" className="form-control"  placeholder="Cantidad a Pagar" style={{border:"3px solid green"}} />
+                                                </div>
+                                            
+                                                <label >Valor de Descuento</label>
+                                                <div className="input-group input-group-lg">
+                                                    <input value={discount} name="discount" onChange={handleInputChange} type="number" min="0" className="form-control"  placeholder="Valor de Descuento" />
+                                                </div>
+                                        </div>
+
                                     </div>
-                                    
-                                        <label >Valor a Pagar</label>
-                                        <div className="input-group input-group-lg">
-                                            <input value={ValueToPay} name="ValueToPay" onChange={handleInputChange} type="number" min="0" className="form-control"  placeholder="Cantidad a Pagar" style={{border:"3px solid green"}} />
+
+                                    <hr />
+
+                                        <div className="col-sm-12 col-md-12">
+                                        <div className="table-responsive p-l-15 p-r-15">
+                                            <table className="table table-hover">  
+                                                <thead>
+                                                <th scope="col"># Pagos</th>
+                                                <th scope="col">Valor De Cuota</th>
+                                                <th scope="col">dias de mora</th>
+                                                <th scope="col">Total de Mora</th>
+                                                <th scope="col">Descuento</th>
+                                                <th>Total</th>
+                                                </thead>
+                                                <tbody>
+                                                        { nextBool === true ? //verificamos si hay pago proximo a pagar
+                                                        
+                                                            <tr>
+                                                                <td scope="col" style={{color:'green'}}>Próximo {NombreDay(new Date(payments[valorI]?.dateToPay))} <p>{FormatDate(payments[valorI]?.dateToPay)} </p></td>
+
+                                                                <td scope="col">LPS. {parseFloat(payments[0]?.amountToPay).toFixed(2)} </td>
+                                                        
+                                                                <td scope="col" > {"0 dias de atraso"} </td>
+                                                        
+                                                                <td scope="col">LPS. 0 </td>
+                                                            
+                                                                <td scope="col">LPS. 0.0</td>
+
+                                                                <td scope="col">LPS. {(parseFloat(payments[0]?.amountToPay)).toFixed(2)}</td>
+
+                                                            </tr>
+                                                        : null}
+                                                    
+
+                                                    {Arraymora.map((row, index )=> (
+
+                                                        <tr>
+                                                            <td scope="col" style={{color:'red'}}>Pago Atrasado <p>{FormatDate(row.fechaI)} </p></td>
+
+                                                            <td scope="col">LPS. {parseFloat(row.cuota).toFixed(2)}</td>
+                                                    
+                                                            <td scope="col" style={{color:'red'}}> {(row.duration) + " dias de atraso"} </td>
+                                                    
+                                                            <td scope="col">LPS. {parseFloat(row.moraDeCuota).toFixed(2)} </td>
+                                                        
+                                                            <td scope="col">LPS. 0.0</td>
+
+                                                            <td scope="col">LPS. {(parseFloat(row.cuota) + parseFloat(row.moraDeCuota)).toFixed(2)}</td>
+
+                                                        </tr>
+                                                ))
+                                                    }
+                                                        <tr>
+                                                            <td scope="col">#</td>
+                                                            <td scope="col">Total Adeudado</td>
+                                                            <td scope="col"> </td>
+                                                            <td scope="col"> </td>
+                                                            <td scope="col"></td>
+                                                            <td scope="col">LPS. {(parseFloat(totalDeuda)+ parseFloat(payments[0]?.amountToPay)).toFixed(2)}</td>
+
+                                                        </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
                                         </div>
                                     
-                                        <label >Valor de Descuento</label>
-                                        <div className="input-group input-group-lg">
-                                            <input value={discount} name="discount" onChange={handleInputChange} type="number" min="0" className="form-control"  placeholder="Valor de Descuento" />
-                                        </div>
+
+                                    <div className="modal-footer">
+                                        <button id="cerrarModal" name="cerrarModal" type="button" className="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                        <button onClick={()=>pagar()} type="button"  className="btn btn-primary">Pagar</button>
+                                    </div>
+
                                 </div>
+                                </div>
+                                </div>
+                            </div>
+                                {/* END Modal */}
 
                             </div>
-
-                            <hr />
-
-                                <div className="col-sm-12 col-md-12">
-                                <div className="table-responsive p-l-15 p-r-15">
-                                    <table className="table table-hover">  
-                                        <thead>
-                                        <th scope="col"># De Cuota</th>
-                                        <th scope="col">Valor De Cuota</th>
-                                        <th scope="col">Valor Atrasado</th>
-                                        <th scope="col">Mora (0 dias)</th>
-                                        <th scope="col">Descuento</th>
-                                        <th>Total</th>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td scope="col">1</td>
-
-                                                <td scope="col">LPS. {parseFloat(payments[0]?.amountToPay).toFixed(2)}</td>
-                                           
-                                                <td scope="col">LPS. 0.0</td>
-                                           
-                                                <td scope="col">LPS. 0.0</td>
-                                            
-                                                <td scope="col">LPS. 0.0</td>
-
-                                                <td scope="col">LPS. {parseFloat(payments[0]?.amountToPay).toFixed(2)}</td>
-
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                </div>
-                            
-
-                            <div className="modal-footer">
-                                <button id="cerrarModal" name="cerrarModal" type="button" className="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                                <button onClick={()=>pagar()} type="button"  className="btn btn-primary">Pagar</button>
-                            </div>
-
                         </div>
-                        </div>
-                        </div>
-                     </div>
-                 {/* END Modal */}
-
-                    </div>
-                </div>
             </div>
         </div>
-    </div>
+    
     )
 }
 

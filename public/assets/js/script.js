@@ -9,6 +9,8 @@ $(document).ready(function() {
     $(".main-menu").attr('id', bodyClass);
     //add id to main menu for mobile menu end
 
+
+
     // card js start
     var emailbody = $(window).height();
     $('.user-body').css('min-height', emailbody);
@@ -143,6 +145,7 @@ $(document).ready(function() {
         //loader start
     $('.theme-loader').fadeOut(300);
     //loader end
+
 });
 
 /* Search header start */

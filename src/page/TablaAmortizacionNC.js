@@ -20,7 +20,7 @@ function TablaAmortizacionNC(props) {
     let fecha = Date.parse(DateStart)+1;
 	fecha = new Date(fecha);
     fecha.setDate(fecha.getDate()+1)
-   
+
     //Obtenemos el valor de la tasa mensual
     if(TipoTasa==='Mensual'){
         tasa=parseInt(Tasa)/100
@@ -94,16 +94,28 @@ function TablaAmortizacionNC(props) {
                         //fecha.setDate(fecha.getDate()+days)
                         //fecha.toLocaleDateString()
                         //Lo guardamos en el arreglo de objetos
-                      
-                        quotaRows[cont] = {
-                            cont:cont+1,
-                            SaldoInicial:SaldoInicial,//3200
-                            InteresSemanal:InteresSemanal,//80
-                            quotaValue:quotaValue,//354
-                            AbonoCapital:AbonoCapital,//274
-                            SaldoFinal:SaldoFinal,
-                            fecha:fecha.setDate(fecha.getDate()+days)
-                        } 
+                        if(cont === 0){
+                            quotaRows[cont] = {
+                                cont:cont+1,
+                                SaldoInicial:SaldoInicial,//3200
+                                InteresSemanal:InteresSemanal,//80
+                                quotaValue:quotaValue,//354
+                                AbonoCapital:AbonoCapital,//274
+                                SaldoFinal:SaldoFinal,
+                                fecha:fecha.setDate(fecha.getDate())
+                            } 
+                        }else{
+
+                            quotaRows[cont] = {
+                                cont:cont+1,
+                                SaldoInicial:SaldoInicial,//3200
+                                InteresSemanal:InteresSemanal,//80
+                                quotaValue:quotaValue,//354
+                                AbonoCapital:AbonoCapital,//274
+                                SaldoFinal:SaldoFinal,
+                                fecha:fecha.setDate(fecha.getDate()+days)
+                            } 
+                        }
 
                         SaldoInicial= SaldoFinal
                         cont+=1 
@@ -122,6 +134,44 @@ function TablaAmortizacionNC(props) {
         currency: 'LPS',
         minimumFractionDigits: 2
       })
+
+      const dias = ['domingo', 'lunes', 'martes','miércoles','jueves','viernes','sábado', 'domingo',];
+      //funcion para obtener el nombre del
+    const NombreDay = (date) => {
+        let numeroDia = new Date(date).getDay();
+        let nombreDia = dias[numeroDia];
+        return nombreDia
+    }
+
+    const FormatDate=(fecha) =>{
+
+        let fechaI =new Date(fecha);
+        let day = fechaI.getDate();
+        let month = fechaI.getMonth()+1;
+        let year = fechaI.getFullYear();
+        if(day < 10 ){ day= '0'+day}
+        if(month < 10){ month = '0'+month}
+        let dateF = ''
+
+        switch (parseInt(month)) {
+            case 1: month = 'Ene'; break;
+            case 2: month = 'Feb'; break;
+            case 3: month = 'Mar'; break;
+            case 4: month = 'Abr'; break;
+            case 5: month = 'May'; break;
+            case 6: month = 'Jun'; break;
+            case 7: month = 'Jul'; break;
+            case 8: month = 'Ago'; break;
+            case 9: month = 'Sep'; break;
+            case 10: month = 'Oct'; break;
+            case 11: month = 'Nov'; break;
+            case 12: month = 'Dic'; break;
+            default:month = '---';
+                break;
+        }
+
+        return dateF  = day + '-' + month + '-' + year;    
+    }
 
     return (
         <Fragment>
@@ -143,7 +193,7 @@ function TablaAmortizacionNC(props) {
                    quotaRows.map((cuota,i)=>(
                     <tr key={i}>
                         <th scope="row">{cuota.cont} </th>
-                        <td>{(new Date(cuota.fecha)).toLocaleDateString()}</td>
+                        <td>{NombreDay(fecha) +" "+ FormatDate(new Date(cuota.fecha))}</td>
                         <td>{formatter.format((cuota.SaldoInicial).toFixed(2))}</td>
                         <td>{formatter.format(((cuota.quotaValue).toFixed(2)))}</td>
                         <td>{formatter.format(((cuota.InteresSemanal).toFixed(2)))}</td>
