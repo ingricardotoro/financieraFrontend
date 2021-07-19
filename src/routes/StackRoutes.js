@@ -14,6 +14,7 @@ import ViewLoanPage from "../page/Loans/ViewLoan";
 import CalculatorPage from "../page/Calculator"
 import ListAvals from "../page/Avals/ListAvals"
 import PaysPage from "../page/PaysPage"
+import ReportsPage from "../page/Reports"
 import TestPage from "../page/Test"
 
 const StackRoutes = () => {
@@ -36,6 +37,8 @@ const StackRoutes = () => {
 
             <Route exact path="/calculadora" component={CalculatorPage} />
             <Route exact path="/pagos" component={PaysPage} />
+
+             <Route exact path="/reportes" component={ReportsPage} /> 
 
             <Route exact path="/test" component={TestPage} />
 

@@ -165,6 +165,15 @@ function Sidebar() {
 
                             </li>      
 
+                            <li className="pcoded-hasmenu">
+                                <a  href="/reportes">
+                                    <span className="pcoded-micon"><i className="ti-pencil-alt"></i></span>
+                                    <span className="pcoded-mtext" data-i18n="nav.dash.main">Reportes</span>
+                                    <span className="pcoded-mcaret"></span>
+                                </a>
+
+                            </li>      
+
 
                           </ul>
 

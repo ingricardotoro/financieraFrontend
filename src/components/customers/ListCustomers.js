@@ -349,7 +349,7 @@ function ListCustomers() {
                                         <tr className={customer.active ? null : "desactivado"}  key={customer._id}>
                                             <th scope="row">1</th>
                                             <td> <Avatar alt="Remy Sharp" src="assets/images/avatar-4.png" /></td>
-                                            <td>{customer.codeCustomer}</td>
+                                            <td>C-{customer.codeCustomer}</td>
                                             <td>{customer.personId.name}</td>
                                             <td>{customer.personId.lastname}</td>    
                                             <td>{customer.personId.identidad}</td>
@@ -460,7 +460,7 @@ function ListCustomers() {
                     <div className="modal-dialog modal-lg modal-dialog-centered " role="document">
                         <div className="modal-content">
                     <div className="modal-header">
-                        <h5 className="modal-title" id="exampleModalLabel">Crear Nuevo Cliente  <strong>Código: {codeCustomer} </strong></h5>
+                        <h5 className="modal-title" id="exampleModalLabel">Crear Nuevo Cliente  <strong>Código:C-{codeCustomer} </strong></h5>
                             <button id="closeModal" type="button" className="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                         </button>
