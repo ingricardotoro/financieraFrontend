@@ -263,7 +263,7 @@ function ListAvals() {
                                             <td>{aval.personId.lastname}</td>    
                                             <td>{aval.personId.identidad}</td>
                                             <td>{aval.personId.phone1}</td>
-                                            <td><Link to ={`clientes/expediente/${aval._id}`} className="btn btn-sm btn-success "> {<InfoIcon />}</Link></td>
+                                            <td><Link to ={`avales/expediente/${aval._id}`} className="btn btn-sm btn-success "> {<InfoIcon />}</Link></td>
                                             <td>
                                                 {aval.active === true 
                                                     ? <button onClick={() => DesactivarAval(aval._id)} className="btn btn-sm btn-danger"> {<NotInterestedIcon />}</button> 
@@ -285,7 +285,7 @@ function ListAvals() {
                                                 <td>{aval.personId.lastname}</td>    
                                                 <td>{aval.personId.identidad}</td>
                                                 <td>{aval.personId.phone1}</td>
-                                                <td><Link to ={`clientes/expediente/${aval.personId._id}`} className="btn btn-sm btn-success "> {<InfoIcon />}</Link></td>
+                                                <td><Link to ={`avales/expediente/${aval.personId._id}`} className="btn btn-sm btn-success "> {<InfoIcon />}</Link></td>
                                                 <td>
                                                     {aval.active === true 
                                                         ? <button onClick={() => DesactivarAval(aval._id)} className="btn btn-sm btn-danger"> {<NotInterestedIcon />}</button> 

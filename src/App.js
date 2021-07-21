@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer } from "react";
 import './App.css';
-
+import {ToastContainer} from 'react-toastify'
 import { AuthContext } from "./auth/AuthContext";
 import { authReducer } from "./auth/authReducer";
 import {AppRouter} from "./routes/AppRouter";
@@ -24,9 +24,10 @@ export const App=()=> {
     <div className="App">
       <AuthContext.Provider value={{user,dispatch}} >
 
-        <AppRouter />
-    
+          <AppRouter />
+
       </AuthContext.Provider>
+      <ToastContainer />
     </div>
   );
 }

@@ -7,15 +7,33 @@ import SearchIcon from '@material-ui/icons/Search';
 import InfoIcon from '@material-ui/icons/Info';
 import NotInterestedIcon from '@material-ui/icons/NotInterested';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-
+import { makeStyles } from '@material-ui/core/styles';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import { useForm } from '../../hooks/useForm';
 import { URL_API } from '../../config/config';
 import { Link } from 'react-router-dom';
-import Excel from '../../customers.xlsx'
+
+import {toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+
+import Excel from '../../customers.xlsx';
+
+const useStyles = makeStyles((theme) => ({
+   
+    small: {
+      width: theme.spacing(3),
+      height: theme.spacing(3),
+    },
+    large: {
+      width: theme.spacing(7),
+      height: theme.spacing(7),
+    },
+  }));
 
 function ListCustomers() {
+
+    const classes = useStyles();
 
     const [formValues, handleInputChange] = useForm({
         //codeCustomer:'',
@@ -37,6 +55,7 @@ function ListCustomers() {
    
     const [customers, setCustomers] = useState([])
     const [codeCustomer, setCodeCustomer] = useState(0)
+    const [numCustomer, setNumCustomer] = useState(0)
     const [customersFilters, setCustomersFilters] = useState([])
     const [finding, setFinding] = useState(false)
     const [reload, setReload] = useState(false)
@@ -47,6 +66,7 @@ function ListCustomers() {
     const [totalCustomersWithLoanActive, setTotalCustomersWithLoanActive] = useState(0)
     const [totalCustomersSolved, setTotalCustomersSolved] = useState(0)
     const [totalCustomersDefaulter, setTotalCustomersDefaulter] = useState(0)
+    const [selectedFile, setSelectedFile] = useState(null)
 
     useEffect(() => {
        
@@ -93,9 +113,11 @@ function ListCustomers() {
 
         //obtenemos el siguente codigo de cliente a ingresar
         if(resp_MaxCode.data.LastCode[0]){
-            setCodeCustomer(resp_MaxCode.data.LastCode[0].codeCustomer+1)
+            setCodeCustomer(resp_MaxCode.data.LastCode[0].numCustomer+1)
+            setNumCustomer(resp_MaxCode.data.LastCode[0].numCustomer+1)
         }else{
             setCodeCustomer(1)
+            setNumCustomer(1)
         }
       
     }
@@ -119,7 +141,10 @@ function ListCustomers() {
     const filterItems = (query)=> {
         return customers.filter(function(el) {
             return (el.personId.name.toLowerCase().indexOf(query.toLowerCase()) > -1 ||
-                    el.personId.lastname.toLowerCase().indexOf(query.toLowerCase()) > -1
+                    el.personId.lastname.toLowerCase().indexOf(query.toLowerCase()) > -1 ||
+                    el.personId.identidad.toLowerCase().indexOf(query.toLowerCase()) > -1 ||
+                    el.personId.phone1.toLowerCase().indexOf(query.toLowerCase()) > -1 ||
+                    el.codeCustomer.toLowerCase().indexOf(query.toLowerCase()) > -1
                     )
         })
       }
@@ -127,7 +152,7 @@ function ListCustomers() {
     //funcion para mostrar los valores que han sido filtrados y buscados
     const handleFindCustomer =(e)=>{
         
-        if(e.target.value!=0){
+        if(e.target.value!==0){
             let filters = filterItems(e.target.value)
             setCustomersFilters(filters)
             setFinding(true)
@@ -141,7 +166,7 @@ function ListCustomers() {
     const handleButtonFindCustomer = ()=>{
        
         let query = document.getElementById("textFindCustomer").value
-        if(query!=0){
+        if(query!==0){
             let filters = filterItems(query)
             setCustomersFilters(filters)
             setFinding(true)
@@ -186,23 +211,44 @@ function ListCustomers() {
                 alert("Error al Subir Clientes")
             }
         })
-       
 
     }
-    
 
+    //funcion para controlar el archivo de imagen
+    const handleFileChange = (e) =>{
+
+        const [file] = e.target.files;//destructuracion
+        const isValidSize = file.size < 10 *1024 *1024 //tamaño maximo de 10 megas
+        const isNameOfOneImageRegEx = /.(jpe?g|gif|png|svg)$/i; //para validar el tipo de archivo , solo imagenes
+        const isValidType = isNameOfOneImageRegEx.test(file.name)
+
+        if(!isValidSize) return toast.error("Imagen supera el peso permitido (10 Mg)")
+        if(!isValidType) return toast.error("Solo se permiten imágenes")
+        
+        const reader  = new FileReader();
+
+        //le pasamos el file
+        reader.readAsDataURL(file) 
+
+        //la siguietne funcion que se ejecuta al terminar de cargar el archivo
+        reader.onloadend = ()=>{
+            setSelectedFile(reader.result)
+        }
+    }
+    
     //funcion para crear nuevos clientes
     const handleSubmit = async(e)=>{
         
         e.preventDefault()
 
         formValues.codeCustomer = codeCustomer
+        formValues.numCustomer = codeCustomer
 
         await axios.post(URL_API+'/customers', formValues)
 
         obtenerClientes()
      
-        document.getElementById("closeModal").click();
+        document.getElementById("closeModalCustomer").click();
     } 
 
     return (
@@ -290,19 +336,19 @@ function ListCustomers() {
                     <div className="row">
 
                         {/* Facebook card start */}
-                        <div className="col-md-3 col-xl-6">
+                        <div className="col-md-5 col-xl-8">
                             <input onChange={handleFindCustomer} type="text" id="textFindCustomer" className=" form-control form-control-round" style={{borderRadius: "50px"}} placeholder="Buscar Cliente ..."  />
                         </div>
                         {/* Facebook card end */}
                        
                        
                         {/* Linked in card start */}
-                        <div className="col-sm-12 col-md-2 col-xl-2">
+                        {/* <div className="col-sm-12 col-md-2 col-xl-2">
                             <button onClick={() => handleButtonFindCustomer()} className="col-sm-12 btn btn-primary  btn-round f-right d-inline-flex">
                                 {<SearchIcon />} 
                                 Buscar Cliente  
                             </button>
-                        </div>
+                        </div> */}
                         {/* Linked in card end */}
                         {/* Google-plus card start */}
                         <div className=" col-sm-12 col-md-2 col-xl-2">
@@ -349,7 +395,7 @@ function ListCustomers() {
                                         <tr className={customer.active ? null : "desactivado"}  key={customer._id}>
                                             <th scope="row">1</th>
                                             <td> <Avatar alt="Remy Sharp" src="assets/images/avatar-4.png" /></td>
-                                            <td>C-{customer.codeCustomer}</td>
+                                            <td>{customer.codeCustomer}</td>
                                             <td>{customer.personId.name}</td>
                                             <td>{customer.personId.lastname}</td>    
                                             <td>{customer.personId.identidad}</td>
@@ -376,7 +422,7 @@ function ListCustomers() {
                                                 <td>{customer.personId.lastname}</td>    
                                                 <td>{customer.personId.identidad}</td>
                                                 <td>{customer.personId.phone1}</td>
-                                                <td><Link to ={`clientes/expediente/${customer.personId._id}`} className="btn btn-sm btn-success "> {<InfoIcon />}</Link></td>
+                                                <td><Link to ={`clientes/expediente/${customer._id}`} className="btn btn-sm btn-success "> {<InfoIcon />}</Link></td>
                                                 <td>
                                                     {customer.active === true 
                                                         ? <button onClick={() => DesactivarCliente(customer._id)} className="btn btn-sm btn-danger"> {<NotInterestedIcon />}</button> 
@@ -455,174 +501,180 @@ function ListCustomers() {
             {/* END Modal */}
 
 
-                {/* Modal */}
-                <div className="modal fade" id="modalNewCustomer" tabIndex={-1} role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div className="modal-dialog modal-lg modal-dialog-centered " role="document">
-                        <div className="modal-content">
-                    <div className="modal-header">
-                        <h5 className="modal-title" id="exampleModalLabel">Crear Nuevo Cliente  <strong>Código:C-{codeCustomer} </strong></h5>
-                            <button id="closeModal" type="button" className="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
+            {/* Modal */}
+            <div className="modal fade" id="modalNewCustomer" tabIndex={-1} role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog modal-lg modal-dialog-centered " role="document">
+                    <div className="modal-content">
+                <div className="modal-header">
+                    <h5 className="modal-title" id="exampleModalLabel">Crear Nuevo Cliente  <strong>Código:C{codeCustomer} </strong></h5>
+                        <button id="closeModalCustomer" type="button" className="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                    </button>
+                </div>
 
-                    <div className="modal-body">
-                        <form onSubmit={handleSubmit}>
-                        <div className="row">
-                            <input value={codeCustomer} onChange={handleInputChange} name="codeCustomer" id="codeCustomer" type="hidden" />
-                            {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
-                            <div className="col-sm-12 col-md-6">
-                                <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-edit"></i></span>
-                                    <input onChange={handleInputChange} name="name" id="name" type="text" className="form-control" placeholder="Ingrese Nombres" />
-                                </div>
-                            </div>
+                <div className="modal-body">
 
-                            <div className="col-sm-12 col-md-6">
-                                <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-edit"></i></span>
-                                    <input onChange={handleInputChange} name="lastname" id="lastname" type="text" className="form-control" placeholder="Ingrese Apellidos"/>
-                                </div>
+                    <form onSubmit={handleSubmit}>
+
+                    <div className="row">
+                        <input value={codeCustomer} onChange={handleInputChange} name="codeCustomer" id="codeCustomer" type="hidden" />
+                        <input value={numCustomer} onChange={handleInputChange} name="numCustomer" id="numCustomer" type="hidden" />
+                        
+                        {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
+                        <div className="col-sm-12 col-md-6">
+                            <div className="input-group">
+                                <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-edit"></i></span>
+                                <input onChange={handleInputChange} name="name" id="name" type="text" className="form-control" placeholder="Ingrese Nombres" />
                             </div>
-                            
                         </div>
 
-                        <div className="row">
-                            {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
-                            <div className="col-sm-12 col-md-6">
-                                <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-edit"></i></span>
-                                    <input onChange={handleInputChange} name="identidad" id="identidad" type="text" className="form-control" placeholder="Identidad: 0801199916151" />
-                                </div>
+                        <div className="col-sm-12 col-md-6">
+                            <div className="input-group">
+                                <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-edit"></i></span>
+                                <input onChange={handleInputChange} name="lastname" id="lastname" type="text" className="form-control" placeholder="Ingrese Apellidos"/>
                             </div>
-
-                            <div className="col-sm-12 col-md-6">
-                                <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-edit"></i></span>
-                                    <input onChange={handleInputChange} name="rtn" id="rtn" type="text" className="form-control" placeholder="RTN. 08011999161512" />
-                                </div>
-                            </div>
-                            
-                        </div>
-
-
-                        <div className="row">
-                            {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
-                            <div className="col-sm-12 col-md-6">
-                                <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-iphone"></i></span>
-                                    <input onChange={handleInputChange}  name="phone1" id="phone1" type="text" className="form-control" placeholder="Teléfono-1"/>
-                                </div>
-                            </div>
-
-                            <div className="col-sm-12 col-md-6">
-                                <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-iphone"></i></span>
-                                    <input onChange={handleInputChange}  name="phone2" id="phone2" type="text" className="form-control" placeholder="Teléfono-2"/>
-                                </div>
-                            </div>
-                            
-                        </div>
-
-
-                        <div className="row">
-                            {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
-                            <div className="col-sm-12 col-md-6">
-                                <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1">@</span>
-                                    <input onChange={handleInputChange}  name="email1" id="email1" type="text" className="form-control" placeholder="Email-1"/>
-                                </div>
-                            </div>
-
-                            <div className="col-sm-12 col-md-6">
-                                <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1">@</span>
-                                    <input onChange={handleInputChange}  name="email2" id="email2" type="text" className="form-control" placeholder="Email-2" />
-                                </div>
-                            </div>
-                            
-                        </div>
-
-                        <hr />
-
-                        <div className="row">
-                            {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
-                            <div className="col-sm-12 col-md-6">
-                                <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-location-pin"></i></span>
-                                    <select onChange={handleInputChange}  name="city" id="city" className="form-control col-md-12"> 
-                                        <option value="opt1">Selecione Localidad</option>
-                                        <option value="Olanchito">Olanchito</option>
-                                        <option value="Ceiba">La Ceiba</option>
-                                        <option value="Tocoa">Tocoa</option>
-                                        <option value="Saba">Sabá</option>
-                                        <option value="Arenal">Arenal</option>
-                                        <option value="jocon">Jocón</option>
-                                        <option value="otra">Otra</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div className="col-sm-12 col-md-6">
-                                <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-calendar mr-1"></i> Nacimiento</span>
-                                    <input onChange={handleInputChange}  name="fec_nac" id="fec_nac" className="form-control" type="date"/>
-                                </div>
-                            </div>
-                            
-                        </div>
-
-
-                        <div className="row">
-                            {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
-                            <div className="col-sm-12 col-md-6">
-                                <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-location-arrow"></i></span>
-                                    <textarea onChange={handleInputChange}  name="location" id="location" className="form-control" rows="5" placeholder="Dirección completa"></textarea>  
-                                </div>
-                            </div>
-
-                            <div className="col-sm-12 col-md-6">
-                                <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-fix-tools "></i></span>
-                                    <input onChange={handleInputChange}  name="profesion" id="profesion" type="text" className="form-control" placeholder="Profesión" />
-                                </div>
-                                <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-group-students"></i></span>
-                                    <select onChange={handleInputChange}  name="gender" id="gender"  className="form-control col-md-12"> 
-                                        <option value="opt1">Selecione Género</option>
-                                        <option value="Femenino">Femenino</option>
-                                        <option value="Masculino">Masculino</option>
-                                    </select>
-                                </div>
-                            </div>
-                    
-                        </div>
-
-
-                        <div className="row">
-                            {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
-                            <div className="col-sm-12 col-md-12">
-                                <div className="input-group">
-                                    <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-paper-clip mr-1"></i>Fotografia </span>
-                                    <input onChange={handleInputChange}  name="photo" id="photo" type="file" className="form-control"></input>
-                                </div>
-                            </div>
-
-                
                         </div>
                         
-                        </form>
                     </div>
 
-                    <div className="modal-footer">
-                        <button type="button" className="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="submit" onClick={handleSubmit} className="btn btn-primary">Guardar</button>
+                    <div className="row">
+                        {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
+                        <div className="col-sm-12 col-md-6">
+                            <div className="input-group">
+                                <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-edit"></i></span>
+                                <input onChange={handleInputChange} name="identidad" id="identidad" type="text" className="form-control" placeholder="Identidad: 0801199916151" />
+                            </div>
+                        </div>
+
+                        <div className="col-sm-12 col-md-6">
+                            <div className="input-group">
+                                <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-edit"></i></span>
+                                <input onChange={handleInputChange} name="rtn" id="rtn" type="text" className="form-control" placeholder="RTN. 08011999161512" />
+                            </div>
+                        </div>
+                        
                     </div>
+
+
+                    <div className="row">
+                        {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
+                        <div className="col-sm-12 col-md-6">
+                            <div className="input-group">
+                                <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-iphone"></i></span>
+                                <input onChange={handleInputChange}  name="phone1" id="phone1" type="text" className="form-control" placeholder="Teléfono-1"/>
+                            </div>
+                        </div>
+
+                        <div className="col-sm-12 col-md-6">
+                            <div className="input-group">
+                                <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-iphone"></i></span>
+                                <input onChange={handleInputChange}  name="phone2" id="phone2" type="text" className="form-control" placeholder="Teléfono-2"/>
+                            </div>
+                        </div>
+                        
                     </div>
+
+
+                    <div className="row">
+                        {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
+                        <div className="col-sm-12 col-md-6">
+                            <div className="input-group">
+                                <span className="input-group-addon" id="basic-addon1">@</span>
+                                <input onChange={handleInputChange}  name="email1" id="email1" type="text" className="form-control" placeholder="Email-1"/>
+                            </div>
+                        </div>
+
+                        <div className="col-sm-12 col-md-6">
+                            <div className="input-group">
+                                <span className="input-group-addon" id="basic-addon1">@</span>
+                                <input onChange={handleInputChange}  name="email2" id="email2" type="text" className="form-control" placeholder="Email-2" />
+                            </div>
+                        </div>
+                        
                     </div>
+
+                    <hr />
+
+                    <div className="row">
+                        {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
+                        <div className="col-sm-12 col-md-6">
+                            <div className="input-group">
+                                <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-location-pin"></i></span>
+                                <select onChange={handleInputChange}  name="city" id="city" className="form-control col-md-12"> 
+                                    <option value="opt1">Selecione Localidad</option>
+                                    <option value="Olanchito">Olanchito</option>
+                                    <option value="Ceiba">La Ceiba</option>
+                                    <option value="Tocoa">Tocoa</option>
+                                    <option value="Saba">Sabá</option>
+                                    <option value="Arenal">Arenal</option>
+                                    <option value="jocon">Jocón</option>
+                                    <option value="otra">Otra</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="col-sm-12 col-md-6">
+                            <div className="input-group">
+                                <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-calendar mr-1"></i> Nacimiento</span>
+                                <input onChange={handleInputChange}  name="fec_nac" id="fec_nac" className="form-control" type="date"/>
+                            </div>
+                        </div>
+                        
+                    </div>
+
+
+                    <div className="row">
+                        {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
+                        <div className="col-sm-12 col-md-6">
+                            <div className="input-group">
+                                <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-location-arrow"></i></span>
+                                <textarea onChange={handleInputChange}  name="location" id="location" className="form-control" rows="5" placeholder="Dirección completa"></textarea>  
+                            </div>
+                        </div>
+
+                        <div className="col-sm-12 col-md-6">
+                            <div className="input-group">
+                                <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-fix-tools "></i></span>
+                                <input onChange={handleInputChange}  name="profesion" id="profesion" type="text" className="form-control" placeholder="Profesión" />
+                            </div>
+                            <div className="input-group">
+                                <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-group-students"></i></span>
+                                <select onChange={handleInputChange}  name="gender" id="gender"  className="form-control col-md-12"> 
+                                    <option value="opt1">Selecione Género</option>
+                                    <option value="Femenino">Femenino</option>
+                                    <option value="Masculino">Masculino</option>
+                                </select>
+                            </div>
+                        </div>
+                
+                    </div>
+
+
+                    <div className="row">
+                        {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
+                        <div className="col-sm-6 col-md-9">
+                            <div className="input-group">
+                                <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-paper-clip mr-1"></i>Fotografia </span>
+                                <input accept='image/*' onChange={handleFileChange}  name="photo" id="photo" type="file" className="form-control"></input>
+                            </div>
+                        </div>
+                        <div align="center" className="col-sm-6 col-md-3">
+                            <Avatar className={classes.large} src={selectedFile} />
+                        </div>
+            
+                    </div>
+                    
+                    </form>
                 </div>
-                 {/* END Modal */}
+
+                <div className="modal-footer">
+                    <button type="button" className="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" onClick={handleSubmit} className="btn btn-primary">Guardar</button>
+                </div>
+                </div>
+                </div>
+            </div>
+                {/* END Modal */}
         
         </div> 
            

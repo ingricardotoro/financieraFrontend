@@ -18,6 +18,9 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
     const [inputValue1, setInputValue1] = useState('')
     const [inputValue2, setInputValue2] = useState('')
 
+    const [DataNewAval, setDataNewAval] = useState([])
+    const [LastAval, setLastAval] = useState(0)
+
     const [avals, setAvals] = useState([])
 
     useEffect (() => {  
@@ -26,8 +29,19 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
   
     const obtenerAvales = async()=>{
   
-        const resp_avlas = await Axios.get(URL_API +'/avals')
-        setAvals(resp_avlas.data.avals)
+       await Axios.get(URL_API +'/avals').then((data)=>{
+            setAvals(data.data.avals)
+        })
+
+        //const resp_lastCode = await Axios.get(URL_API +'/avals/lastCode')   
+        await Axios.get(URL_API +'/avals/lastCode').then((res)=>{
+            console.log("res="+JSON.stringify(res.data.LastCode[0]))
+            if(res.data.LastCode[0]===undefined){setLastAval(1)}
+            else{setLastAval(parseInt(res.data.LastCode[0])+1)}
+        })  
+        //console.log("Num"+resp_lastCode.data.lastCode)
+        //setLastAval(parseInt(resp_lastCode.data.lastCode)+1)
+        
     }
 
     const handleInputChange = ({ target }) => {
@@ -37,6 +51,34 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
             [target.name]: target.value
         })
        
+    }
+
+    const handleNewAval = ({ target }) => {
+
+        setDataNewAval({
+            ...DataNewAval,
+           codeAval: 'A'+LastAval,  
+           numAval: LastAval,  
+            [target.name]: target.value
+        })
+       
+    }
+
+    
+    //funcion para crear nuevos avales
+    const handleSubmit = async(e)=>{
+        
+        e.preventDefault()
+    
+        await Axios.post(URL_API+'/avals', DataNewAval)
+        reset()
+        obtenerAvales()
+        document.getElementById("closeModal").click();
+
+    } 
+
+    const reset = () => {
+        setDataRequest([])
     }
 
     const handleCustomSelect1 = (event,newValue)=>{
@@ -73,7 +115,7 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
   
     return (
         <div className="container">
-            
+           
             <div className="row">
 
                 <div className="col-sm-12 col-md-4">
@@ -131,6 +173,8 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
                 <div className="col-sm-4 col-md-4">
                    
                     <p></p>
+                   
+                    {avals?.length>0 ?
                     <Autocomplete
                         options={avals}
                         value={data.value1}
@@ -161,6 +205,8 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
                             />                            
                         )}
                     />
+                    :<p>No hay Avales Registrados</p>
+                    }
                 </div>
 
                 <div className="col-sm-4 col-md-4">
@@ -187,7 +233,7 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
 
                 <div className="col-sm-4 col-md-4">
                    <p></p>
-                
+                   {avals?.length>0 ?
                     <Autocomplete
                         options={avals}
                         value={data.value2}
@@ -218,6 +264,8 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
                             />                            
                         )}
                     />
+                    :<p>No hay Avales Registrados</p>
+                    }
                 </div>
 
                 <div className="col-sm-4 col-md-4">
@@ -251,28 +299,29 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
                     <div className="modal-dialog modal-lg modal-dialog-centered " role="document">
                         <div className="modal-content">
                     <div className="modal-header">
-                        <h5 className="modal-title" id="exampleModalLabel">Crear Nuevo Aval  <strong>Código: 01</strong></h5>
-                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                        <h5 className="modal-title" id="exampleModalLabel">Crear Nuevo Aval  <strong>Código: {'A'+LastAval}</strong></h5>
+                        <button type="button" id="closeModal" name="closeModal" className="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                         </button>
                     </div>
 
                     <div className="modal-body">
-                        <form >
-                        <div className="row">
-                            <input value={"C-110"} onChange={handleInputChange} name="codeCustomer" id="codeCustomer" type="hidden" />
+                         <form >
+                            <div className="row">
+                            <input value={'A'+LastAval} name="codeAval" id="codeAval" type="hidden" />
+                            <input value={LastAval} name="numAval" id="numAval" type="hidden" />
                             {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">
                                     <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-edit"></i></span>
-                                    <input onChange={handleInputChange} name="name" id="name" type="text" className="form-control" placeholder="Ingrese Nombres" />
+                                    <input onChange={handleNewAval} name="name" id="name" type="text" className="form-control" placeholder="Ingrese Nombres" />
                                 </div>
                             </div>
 
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">
                                     <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-edit"></i></span>
-                                    <input onChange={handleInputChange} name="lastname" id="lastname" type="text" className="form-control" placeholder="Ingrese Apellidos"/>
+                                    <input onChange={handleNewAval} name="lastname" id="lastname" type="text" className="form-control" placeholder="Ingrese Apellidos"/>
                                 </div>
                             </div>
                             
@@ -283,14 +332,14 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">
                                     <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-edit"></i></span>
-                                    <input onChange={handleInputChange} name="identidad" id="identidad" type="text" className="form-control" placeholder="Identidad: 0801199916151" />
+                                    <input onChange={handleNewAval} name="identidad" id="identidad" type="text" className="form-control" placeholder="Identidad: 0801199916151" />
                                 </div>
                             </div>
 
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">
                                     <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-edit"></i></span>
-                                    <input onChange={handleInputChange} name="rtn" id="rtn" type="text" className="form-control" placeholder="RTN. 08011999161512" />
+                                    <input onChange={handleNewAval} name="rtn" id="rtn" type="text" className="form-control" placeholder="RTN. 08011999161512" />
                                 </div>
                             </div>
                             
@@ -302,14 +351,14 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">
                                     <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-iphone"></i></span>
-                                    <input onChange={handleInputChange}  name="phone1" id="phone1" type="text" className="form-control" placeholder="Teléfono-1"/>
+                                    <input onChange={handleNewAval}  name="phone1" id="phone1" type="text" className="form-control" placeholder="Teléfono-1"/>
                                 </div>
                             </div>
 
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">
                                     <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-iphone"></i></span>
-                                    <input onChange={handleInputChange}  name="phone2" id="phone2" type="text" className="form-control" placeholder="Teléfono-2"/>
+                                    <input onChange={handleNewAval}  name="phone2" id="phone2" type="text" className="form-control" placeholder="Teléfono-2"/>
                                 </div>
                             </div>
                             
@@ -321,14 +370,14 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">
                                     <span className="input-group-addon" id="basic-addon1">@</span>
-                                    <input onChange={handleInputChange}  name="email1" id="email1" type="text" className="form-control" placeholder="Email-1"/>
+                                    <input onChange={handleNewAval}  name="email1" id="email1" type="text" className="form-control" placeholder="Email-1"/>
                                 </div>
                             </div>
 
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">
                                     <span className="input-group-addon" id="basic-addon1">@</span>
-                                    <input onChange={handleInputChange}  name="email2" id="email2" type="text" className="form-control" placeholder="Email-2" />
+                                    <input onChange={handleNewAval}  name="email2" id="email2" type="text" className="form-control" placeholder="Email-2" />
                                 </div>
                             </div>
                             
@@ -341,7 +390,7 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">
                                     <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-location-pin"></i></span>
-                                    <select onChange={handleInputChange}  name="city" id="city" className="form-control col-md-12"> 
+                                    <select onChange={handleNewAval}  name="city" id="city" className="form-control col-md-12"> 
                                         <option value="opt1">Selecione Localidad</option>
                                         <option value="Olanchito">Olanchito</option>
                                         <option value="Ceiba">La Ceiba</option>
@@ -357,12 +406,11 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">
                                     <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-ui-calendar mr-1"></i> Nacimiento</span>
-                                    <input onChange={handleInputChange}  name="fec_nac" id="fec_nac" className="form-control" type="date"/>
+                                    <input onChange={handleNewAval}  name="fec_nac" id="fec_nac" className="form-control" type="date"/>
                                 </div>
                             </div>
                             
                         </div>
-
 
 
                         <div className="row">
@@ -370,18 +418,18 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">
                                     <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-location-arrow"></i></span>
-                                    <textarea onChange={handleInputChange}  name="location" id="location" className="form-control" rows="5" placeholder="Dirección completa"></textarea>  
+                                    <textarea onChange={handleNewAval}  name="location" id="location" className="form-control" rows="5" placeholder="Dirección completa"></textarea>  
                                 </div>
                             </div>
 
                             <div className="col-sm-12 col-md-6">
                                 <div className="input-group">
                                     <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-fix-tools "></i></span>
-                                    <input onChange={handleInputChange}  name="profesion" id="profesion" type="text" className="form-control" placeholder="Profesión" />
+                                    <input onChange={handleNewAval}  name="profesion" id="profesion" type="text" className="form-control" placeholder="Profesión" />
                                 </div>
                                 <div className="input-group">
                                     <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-group-students"></i></span>
-                                    <select onChange={handleInputChange}  name="gender" id="gender"  className="form-control col-md-12"> 
+                                    <select onChange={handleNewAval}  name="gender" id="gender"  className="form-control col-md-12"> 
                                         <option value="opt1">Selecione Género</option>
                                         <option value="Femenino">Femenino</option>
                                         <option value="Masculino">Masculino</option>
@@ -397,7 +445,7 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
                             <div className="col-sm-12 col-md-12">
                                 <div className="input-group">
                                     <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-paper-clip mr-1"></i>Fotografia </span>
-                                    <input onChange={handleInputChange}  name="photo" id="photo" type="file" className="form-control"></input>
+                                    <input onChange={handleNewAval}  name="photo" id="photo" type="file" className="form-control"></input>
                                 </div>
                             </div>
 
@@ -408,8 +456,9 @@ function FormReferencesNewRequest({DataRequest, setDataRequest}) {
 
                     <div className="modal-footer">
                         <button type="button" className="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="submit" className="btn btn-primary">Guardar</button>
+                        <button type="button" onClick={handleSubmit} className="btn btn-primary">Guardar</button>
                     </div>
+                    
                     </div>
                     </div>
                 </div>
