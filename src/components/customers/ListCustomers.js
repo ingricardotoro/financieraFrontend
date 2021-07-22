@@ -11,7 +11,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import { useForm } from '../../hooks/useForm';
-import { URL_API } from '../../config/config';
+import { URL_API, URL_ROOT } from '../../config/config';
 import { Link } from 'react-router-dom';
 
 import {toast} from 'react-toastify'
@@ -67,6 +67,7 @@ function ListCustomers() {
     const [totalCustomersSolved, setTotalCustomersSolved] = useState(0)
     const [totalCustomersDefaulter, setTotalCustomersDefaulter] = useState(0)
     const [selectedFile, setSelectedFile] = useState(null)
+    const [fileData, setFileData] = useState(null)
 
     useEffect(() => {
        
@@ -225,6 +226,8 @@ function ListCustomers() {
         if(!isValidSize) return toast.error("Imagen supera el peso permitido (10 Mg)")
         if(!isValidType) return toast.error("Solo se permiten imágenes")
         
+        setFileData(file)
+
         const reader  = new FileReader();
 
         //le pasamos el file
@@ -243,6 +246,7 @@ function ListCustomers() {
 
         formValues.codeCustomer = codeCustomer
         formValues.numCustomer = codeCustomer
+        formValues.file = fileData
 
         await axios.post(URL_API+'/customers', formValues)
 
@@ -394,7 +398,7 @@ function ListCustomers() {
 
                                         <tr className={customer.active ? null : "desactivado"}  key={customer._id}>
                                             <th scope="row">1</th>
-                                            <td> <Avatar alt="Remy Sharp" src="assets/images/avatar-4.png" /></td>
+                                            <td> <Avatar alt="Remy Sharp" src={URL_ROOT +customer.personId.photo} /></td>
                                             <td>{customer.codeCustomer}</td>
                                             <td>{customer.personId.name}</td>
                                             <td>{customer.personId.lastname}</td>    
@@ -416,7 +420,7 @@ function ListCustomers() {
 
                                             <tr className={customer.active ? null : "desactivado"}  key={customer._id}>
                                                 <th scope="row">1</th>
-                                                <td> <Avatar alt="Remy Sharp" src="assets/images/avatar-4.png" /></td>
+                                                <td> <Avatar alt={customer.personId.name} src={URL_ROOT +customer.personId.photo} /></td>
                                                 <td>{customer.codeCustomer}</td>
                                                 <td>{customer.personId.name}</td>
                                                 <td>{customer.personId.lastname}</td>    

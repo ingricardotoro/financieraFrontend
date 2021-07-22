@@ -6,9 +6,12 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import SaveIcon from '@material-ui/icons/Save';
 import userLogo from '../../user.png'
 import Axios from 'axios';
-import { URL_API } from '../../config/config';
+import { URL_API, URL_ROOT } from '../../config/config';
 import { useForm } from '../../hooks/useForm';
 import moment from 'moment';
+
+import {toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -65,9 +68,14 @@ function DataCustomer({idCustomer}) {
     const [profesion, setProfesion] = useState('')
     const [genero, setGenero] = useState('')
     const [personId, setPersonId] = useState('')
+    const [photo, setPhoto] = useState('')
 
     const [fec_nac, setFec_nac] = useState(null)
     const [flatEdit, setFlatEdit] = useState(false)
+
+    const [fileData, setFileData] = useState(null)
+    const [flatPhoto, setFlatPhoto] = useState(false)
+
     let fec =null
     const classes = useStyles();
 
@@ -94,6 +102,7 @@ function DataCustomer({idCustomer}) {
         setProfesion(resp_customer.data.customer.personId.profesion)
         setGenero(resp_customer.data.customer.personId.gender)
         setPersonId(resp_customer.data.customer.personId._id)
+        setPhoto(resp_customer.data.customer.personId.photo)
 
         fec = new Date(resp_customer.data.customer.personId.fec_nac)
         fec = moment(fec).add(1, 'days');
@@ -109,6 +118,22 @@ function DataCustomer({idCustomer}) {
     const handleCancelEdit =()=>{
         setFlatEdit(false)
         getCustomerById(idCustomer)
+    }
+
+    //funcion para controlar el archivo de imagen
+    const handleFileChange = (e) =>{
+
+        const [file] = e.target.files;//destructuracion
+        const isValidSize = file.size < 10 *1024 *1024 //tamaño maximo de 10 megas
+        const isNameOfOneImageRegEx = /.(jpe?g|gif|png|svg)$/i; //para validar el tipo de archivo , solo imagenes
+        const isValidType = isNameOfOneImageRegEx.test(file.name)
+
+        if(!isValidSize) return toast.error("Imagen supera el peso permitido (10 Mg)")
+        if(!isValidType) return toast.error("Solo se permiten imágenes")
+
+        setFileData(file)
+        setFlatPhoto(true)
+
     }
 
 
@@ -130,22 +155,33 @@ function DataCustomer({idCustomer}) {
             profesion,
             city,
             location,
-            personId
-            //photo,
+            personId,
         }
-        //console.log(data)
+
+        const dataPhoto = new FormData() 
+        if(flatPhoto===true){
+
+            dataPhoto.append('file', fileData)
+            await Axios.post(URL_API+'/customers/subirfoto/'+personId, dataPhoto)
+
+        }
+    
         await Axios.put(URL_API+'/customers/update/'+idCustomer, data)
+
+
         getCustomerById(idCustomer)
         setFlatEdit(false)
+        toast.success('Los datos se han actualizado')
+        document.getElementById("photo").value = "";
     }
 
     return (
         <div>
-            {console.log("NAMe="+name)}
+           
             <div className="row">
                 <div className="col-sm-6 col-md-6">
                    
-                    <Avatar alt={name}  className={classes.large}  src={userLogo} />
+                    <Avatar alt={name}  className={classes.large}  src={URL_ROOT+photo} />
                    
                 </div>
                 <div className="col-sm-6 col-md-6">
@@ -265,8 +301,10 @@ function DataCustomer({idCustomer}) {
                                 <option value="jocon">Jocón</option>
                                 <option value="otra">Otra</option>
                             </select>
-                           
+
                         </div>
+
+                        
                     </div>
 
                     <div className="col-sm-12 col-md-6">
@@ -276,24 +314,27 @@ function DataCustomer({idCustomer}) {
                             <input disabled={!flatEdit} value={fec_nac}  onChange={(e)=>{setFec_nac(e.target.value)}}  name="fec_nac" id="fec_nac" className="form-control" type="date"/>
                         </div>
                     </div>
-                    
+ 
                 </div>
 
 
                 <div className="row">
-                    {/* <label className="col-sm-4 col-md-6 col-form-label">Nombre de Cliente</label> */}
+                   
                     <div className="col-sm-12 col-md-6">
                         <div className="input-group">
                             <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-location-arrow"></i></span>
-                            <textarea disabled={!flatEdit} value={location} onChange={(e)=>{setLocation(e.target.value)}}  name="location" id="location" className="form-control" rows="5" placeholder="Dirección completa"></textarea>  
+                            <textarea disabled={!flatEdit} value={location} onChange={(e)=>{setLocation(e.target.value)}}  name="location" id="location" className="form-control" rows="3" placeholder="Dirección completa"></textarea>  
                         </div>
                     </div>
 
-                    <div className="col-sm-12 col-md-6">
+                    <div className="col-sm-12 col-md-3" >
                         <div className="input-group">
                             <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-fix-tools "></i></span>
                             <input disabled={!flatEdit} value={profesion} onChange={(e)=>{setProfesion(e.target.value)}}  name="profesion" id="profesion" type="text" className="form-control" placeholder="Profesión" />
                         </div>
+                    </div>
+
+                    <div className="col-sm-12 col-md-3" >
                         <div className="input-group">
                             <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-group-students"></i></span>
                             <select disabled={!flatEdit} value={genero} onChange={(e)=>{setGenero(e.target.value)}}  name="gender" id="gender"  className="form-control col-md-12"> 
@@ -301,6 +342,13 @@ function DataCustomer({idCustomer}) {
                                 <option value="Femenino">Femenino</option>
                                 <option value="Masculino">Masculino</option>
                             </select>
+                        </div>
+                    </div>
+
+                    <div className="col-sm-12 col-md-6" >
+                        <div className="input-group">
+                            <span className="input-group-addon" id="basic-addon1"><i className="icofont icofont-paper-clip mr-1"></i>Fotografia </span>
+                            <input disabled={!flatEdit} accept='image/*' onChange={handleFileChange}  name="photo" id="photo" type="file" className="form-control"></input>
                         </div>
                     </div>
             
