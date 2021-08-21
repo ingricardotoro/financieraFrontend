@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Fragment } from 'react'
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { URL_API } from '../../config/config'
+import { URL_API, URL_ROOT } from '../../config/config'
 import fondoImg from '../../config/slider8.jpg'
 import userImg from '../../user.png'
 import toastr from 'toastr'
@@ -38,7 +38,7 @@ export const ViewRequestPage = (props) => {
     
     const aproveRequest = async() =>{
 
-        console.log(LastCode)
+        //console.log(LastCode)
         
         const resp_aproveRequest = await Axios.put(URL_API + '/requests/aprove/'+idRequest)
         //const resp_aproveRequest = true
@@ -181,7 +181,7 @@ export const ViewRequestPage = (props) => {
                                         <button className="btn btn-default btn-outline-default btn-icon b-lft"><i className="icofont icofont-ui-user" /></button>
                                         <button className="btn btn-default btn-outline-default btn-icon b-rgt"><i className="icofont icofont-ui-message" /></button>
                                         <div className="middle-user">
-                                            <img className="img-fluid" src={userImg} alt="Profile-user" />
+                                            <img className="img-fluid" src={URL_ROOT+Request?.customerId?.personId?.photo} alt="Profile-user" />
                                         </div>
                                         </div>
                                         <div className="card-block text-center">  
@@ -201,7 +201,7 @@ export const ViewRequestPage = (props) => {
                                            
                                             </div>
                                             <div className="col-6">
-                                            <h4 className="text-primary">AA</h4>
+                                            <h4 className="text-primary">--</h4>
                                             <span className="text-muted text-uppercase">Categoría</span>
                                             
                                             </div>

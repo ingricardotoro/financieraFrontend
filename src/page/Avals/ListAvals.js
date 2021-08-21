@@ -76,13 +76,13 @@ function ListAvals() {
             //setCodeAval(resp_MaxCode.data.LastCode[0].codeAval+1)
             setValues({
                ...values,
-                codeAval: parseInt(resp_MaxCode.data.LastCode[0].codeAval)+1
+               numAval: parseInt(resp_MaxCode.data.LastCode[0].codeAval)+1
             })
         }else{
            
             setValues({
                ...values,
-                codeAval: 1
+               numAval: 1
             })
         }
       
@@ -239,7 +239,7 @@ function ListAvals() {
                             <tr>
                                 <th>#</th>
                                 <th>Foto</th>
-                                <th>Código</th>
+                                {/* <th>Código</th> */}
                                 <th>Nombre</th>
                                 <th>Apellido</th>
                                 <th>Identidad</th>
@@ -258,7 +258,7 @@ function ListAvals() {
                                         <tr className={aval.active ? null : "desactivado"}  key={aval._id}>
                                             <th scope="row">1</th>
                                             <td> <Avatar alt="Remy Sharp" src="assets/images/avatar-4.png" /></td>
-                                            <td>{aval.codeAval}</td>
+                                            {/* <td>{aval.codeAval}</td> */}
                                             <td>{aval.personId.name}</td>
                                             <td>{aval.personId.lastname}</td>    
                                             <td>{aval.personId.identidad}</td>
@@ -280,7 +280,7 @@ function ListAvals() {
                                             <tr className={aval.active ? null : "desactivado"}  key={aval._id}>
                                                 <th scope="row">1</th>
                                                 <td> <Avatar alt="Remy Sharp" src="assets/images/avatar-4.png" /></td>
-                                                <td>{aval.codeAval}</td>
+                                                {/* <td>{aval.codeAval}</td> */}
                                                 <td>{aval.personId.name}</td>
                                                 <td>{aval.personId.lastname}</td>    
                                                 <td>{aval.personId.identidad}</td>

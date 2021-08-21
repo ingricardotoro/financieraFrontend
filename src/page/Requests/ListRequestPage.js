@@ -11,8 +11,31 @@ import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import BlockIcon from '@material-ui/icons/Block';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import { useForm } from '../../hooks/useForm';
-import { URL_API } from '../../config/config';
+import { URL_API, URL_ROOT } from '../../config/config';
 import { useEffect } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+      display: 'flex',
+      '& > *': {
+        margin: theme.spacing(1),
+      },
+    },
+    small: {
+      width: theme.spacing(3),
+      height: theme.spacing(3),
+    },
+    large: {
+      width: theme.spacing(6),
+      height: theme.spacing(6),
+      margin: 'auto',
+      //marginTop:'10px',
+      marginBottom:'10px'
+
+    },
+  }));
 
 function ListRequestPage() {
 
@@ -25,42 +48,26 @@ function ListRequestPage() {
     const [totalRequestsAprobadas, setTotalRequestsAprobadas] = useState(0)
     const [totalRequestsDenegadas, setTotalRequestsDenegadas] = useState(0)
 
+    const classes = useStyles();
+
     const obtenerSolicitudes = async() => {
 
         const resp_requests = await axios.get(URL_API + '/requests')
-
-        //arreglo principal de solicitudes
+        let cont1 = 0, cont2 =0, cont3 =0
+       
         setRequests(resp_requests.data.requests)
-     
+        let requestArray = resp_requests.data.requests
+    
           //Obtenemos la cantidad total de solicitudes con estado pendiente
-          requests?.map(request => (
-            request.stateRequest === 'Pendiente' ?
-            setTotalRequestsPendientes(totalRequestsPendientes + 1)
-            /*setTotalRequestsPendientes( (prevState) => ({
-                totalRequestsPendientes: prevState.totalRequestsPendientes + 1
-              }))*/
-              :null
-            //setTotalRequestsPendientes(totalRequestsPendientes + 1) :
-            
-        ))
-
-        //Obtenemos la cantidad total de solicitdes aprobadas
-        requests.map(request => (
-            request.stateRequest === 'Aprobada' ?
-            setTotalRequestsAprobadas( (prevState) => ({
-                totalRequestsAprobadas: prevState.totalRequestsAprobadas + 1
-              }))
-            //setTotalRequestsAprobadas(totalRequestsAprobadas + 1) :
-            : null
-        ))
-
-        //Obtenemos la cantidad total de solicitudes Denegadas
-        requests.map(request => (
-            request.stateRequest === 'Denegada' ?
-            setTotalRequestsDenegadas(totalRequestsDenegadas + 1) :
-            null
-        ))
-            //Arreglo para realizar las busquedas
+          requestArray.map(request => (request.stateRequest === 'Pendiente' ? cont1 +=1:null) )
+          requestArray.map(request => (request.stateRequest === 'Aprobada' ? cont2 +=1:null) )
+          requestArray.map(request => (request.stateRequest === 'Denegada' ? cont3 +=1:null) )
+       
+        setTotalRequestsPendientes(cont1)
+        setTotalRequestsAprobadas(cont2)
+        setTotalRequestsDenegadas(cont3)
+       
+        //Arreglo para realizar las busquedas
         setRequestsFilters(resp_requests.data.requests)
 
         setToTalRequestsRegistradas(resp_requests.data.requests.length)
@@ -198,7 +205,7 @@ function ListRequestPage() {
                             <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Código</th>
+                                {/* <th>Código</th> */}
                                 <th>Foto</th>
                                 <th>Cliente</th>
                                 <th>Préstamo</th>
@@ -213,15 +220,15 @@ function ListRequestPage() {
                             <tbody>
 
                             {
-                                requests.map(request => (
+                                requests.map((request,index) => (
                                     <tr key={request._id}>
-                                        <th scope="row">1</th>
-                                        <td>{request.codeRequest}</td>
-                                        <td><Avatar alt="Travis Howard" src="http://1.gravatar.com/avatar/9bc7250110c667cd35c0826059b81b75?s=50&d=identicon&r=G" /></td>
+                                        <th scope="row">{index+1} </th>
+                                        {/* <td>{request.codeRequest}</td> */}
+                                        <td> <Avatar alt={request.customerId.personId.name}  className={classes.large}  src={URL_ROOT +request.customerId.personId.photo} /> </td>
                                         <td>{request.customerId.personId.name}</td>
                                         <td>{request.typeLoan}</td>
                                         <td>{request.amount}</td>
-                                        <td>{request.quota} Cuotas {request.frequency}</td>
+                                        <td>{request.quota} {request.frequency}</td>
                                         <td>{request.sucursal}</td>
                                         <td><Link to={"/solicitudes/ver/"+request._id} className="btn btn-sm btn-primary "> {<RemoveRedEyeIcon />}</Link></td>
                                         {

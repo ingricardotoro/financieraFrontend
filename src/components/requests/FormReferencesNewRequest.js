@@ -8,15 +8,15 @@ import { URL_API } from '../../config/config';
 function FormReferencesNewRequest({DataRequest, setDataRequest}) {
 
     const [data, setData] = useState({
-        value1:0,
-        value2:0,
+        value1:'',
+        value2:'',
         NameAval1:'',
         NameAval2:'',
         PhoneAval1:'',
         PhoneAval2:''
     })
-    const [inputValue1, setInputValue1] = useState('')
-    const [inputValue2, setInputValue2] = useState('')
+    const [inputValue1, setInputValue1] = useState(null)
+    const [inputValue2, setInputValue2] = useState(null)
 
     const [DataNewAval, setDataNewAval] = useState([])
     const [LastAval, setLastAval] = useState(0)

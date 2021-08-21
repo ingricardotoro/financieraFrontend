@@ -17,32 +17,23 @@ function ListLoans() {
 
     const obtenerLoans = async()=>{
 
+        let cont1 = 0, cont2 =0, cont3 =0
+
         const resp_loans = await Axios.get(URL_API+'/loans')
         setLoans(resp_loans.data.loans)
-        
+
+        let loansArray = resp_loans.data.loans
+
         setTotalLoansRegister(resp_loans.data.loans.length)
 
-        //Obtenemos la cantidad total de prestamos activo
-        loans.map(loan =>(
-            loan.LoanActive ===  true 
-            ? setTotalLoansRegister(totalLoansRegister+1)
-            : null
-        )) 
+        loansArray.map(loan => (loan.LoanActive ? cont1 +=1:null) )
+        loansArray.map(loan => (loan.Enmora ? cont2 +=1:null) )
+        loansArray.map(loan => (!loan.Enmora ? cont3 +=1:null) )
 
-        //Obtenemos la cantidad total de prestamos En Mora
-        loans.map(loan =>(
-            loan.Enmora ===  true 
-            ? setTotalLoansDefaulter(totalLoansDefaulter+1)
-            : null
-        )) 
-
-        //Obtenemos la cantidad total de prestamos Al Dia
-        loans.map(loan =>(
-            loan.Enmora ===  false 
-            ? setTotalLoansSolved(totalLoansSolved+1)
-            : null
-        )) 
-
+        setTotalLoansRegister(cont1)
+        setTotalLoansDefaulter(cont2)
+        setTotalLoansSolved(cont3)
+        
     }
 
     useEffect(() => {
@@ -139,7 +130,7 @@ function ListLoans() {
                             <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Código</th>
+                                {/* <th>Código</th> */}
                                 <th>Cliente</th>
                                 <th>Tipo Préstamos</th>
                                 <th>Capital</th>
@@ -153,11 +144,11 @@ function ListLoans() {
                             <tbody>
                                
                                 {
-                                    loans?.map((loan)=> ( 
+                                    loans?.map((loan,index)=> ( 
                                         
                                         <tr>
-                                            <td></td>
-                                            <td>{loan.codeLoan} </td>
+                                            <td>{index+1} </td>
+                                            {/* <td>{loan.codeLoan} </td> */}
                                             <td>{loan.requestId?.customerId?.personId?.name} {loan.requestId?.customerId?.personId?.lastname}</td>
                                             <td>{loan.requestId?.typeLoan}</td>
                                             <td>LPS. {parseFloat(loan.amountInitial).toFixed(2)}</td>

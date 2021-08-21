@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Fragment } from 'react'
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { URL_API } from '../../config/config'
+import { URL_API, URL_ROOT } from '../../config/config'
 import fondoImg from '../../config/slider8.jpg'
 import userImg from '../../user.png'
 import toastr from 'toastr'
@@ -58,7 +58,7 @@ export const ViewLoan = (props) => {
         let fechaRow = moment()
         //let fechatoday =new Date(today);
         //Obtenemos el Id del siguiente pago que se debe realizar
-        let pagos = new Array
+        let pagos = []
         pagos=resp_payments.data.payments
         for (let i = 0; i < pagos.length; i++) {
          
@@ -248,6 +248,10 @@ export const ViewLoan = (props) => {
         
     }
 
+    const verAval = (id)=>{
+        alert(id)
+    }
+
     const today = Date.now()
 
     return (
@@ -288,7 +292,7 @@ export const ViewLoan = (props) => {
                                         <button className="btn btn-default btn-outline-default btn-icon b-lft"><i className="icofont icofont-ui-user" /></button>
                                         <button className="btn btn-default btn-outline-default btn-icon b-rgt"><i className="icofont icofont-ui-message" /></button>
                                         <div className="middle-user">
-                                            <img className="img-fluid" src={userImg} alt="Profile-user" />
+                                            <img className="img-fluid" src={URL_ROOT  +Request?.customerId?.personId?.photo} alt={'Cliente'} />
                                         </div>
                                         </div>
                                         <div className="card-block text-center">  
@@ -308,7 +312,7 @@ export const ViewLoan = (props) => {
                                            
                                             </div>
                                             <div className="col-6">
-                                            <h4 className="text-primary">AA</h4>
+                                            <h4 className="text-primary">--</h4>
                                             <span className="text-muted text-uppercase">Categoría</span>
                                             
                                             </div>
@@ -375,7 +379,7 @@ export const ViewLoan = (props) => {
                                                                            
                                         <div className="table-responsive">
                                             <table className="table table-hover">
-                                            
+                                            {console.log(Request)}
                                             <tbody>
                                                 <tr>
                                                     <th>Ref. Familiar</th>
@@ -402,13 +406,14 @@ export const ViewLoan = (props) => {
                                                     <td>{Request?.refPhone2}</td>
                                                 </tr>
                                                 <tr>
-                                                    <th>Aval 1</th>
-                                                    <td>{Request?.aval1Id}</td>
+                                                    <th>Avales</th>
+                                                    <td>
+                                                        <button onClick={()=>{verAval(Request?.aval1Id)}} className='btn btn-warning btn-xs mr-3'>Aval 1</button> 
+                                                        <button onClick={()=>{verAval(Request?.aval2Id)}} className='btn btn-warning btn-xs'>Aval 2</button> 
+
+                                                    </td>
                                                 </tr>
-                                                <tr>
-                                                    <th>Aval 2</th>
-                                                    <td>{Request?.aval2Id}</td>
-                                                </tr>
+                                               
                                                 
                                             </tbody>
                                         </table>
