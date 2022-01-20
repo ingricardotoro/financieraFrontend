@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { URL_API, URL_ROOT } from '../../config/config';
 import fondoImg from '../../config/slider8.jpg';
-import userImg from '../../user.png';
+import userImg from '../../user2.png';
 import toastr from 'toastr';
 import moment from 'moment';
 import PagoView from './PagoView';
@@ -346,7 +346,10 @@ export const ViewLoan = (props) => {
                           <img
                             className="img-fluid"
                             src={
-                              URL_ROOT + Request?.customerId?.personId?.photo
+                              Request?.customerId?.personId?.photo
+                                ? URL_ROOT +
+                                  Request?.customerId?.personId?.photo
+                                : userImg
                             }
                             alt={'Cliente'}
                           />

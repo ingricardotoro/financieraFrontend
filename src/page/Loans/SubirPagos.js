@@ -1,8 +1,12 @@
 import React from 'react';
 import { OutTable, ExcelRenderer } from 'react-excel-renderer';
 import axios from 'axios';
+
 import { useState } from 'react';
 import { URL_API } from '../../config/config';
+
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function SubirPagos() {
   const [uploadPagos, setUploadPagos] = useState({ cols: '', rows: '' });
@@ -16,11 +20,18 @@ function SubirPagos() {
       .then((data) => {
         //console.log("Datos Guardados." + JSON.stringify(data))
         if (data.data.ok === true) {
-          console.log('LISTO!!!');
+          toast.success('Los datos se han Ingreso Exitosamente');
+          setUploadPagos({
+            cols: '',
+            rows: '',
+          });
+          //console.log('LISTO!!!');
           //setReload(!reload)
           //document.getElementById("closeModal").click();
         } else {
-          alert('Error al Subir PAGOS');
+          return toast.error('Error Ingresando los datos');
+
+          //alert('Error al Subir PAGOS');
         }
       });
   };
